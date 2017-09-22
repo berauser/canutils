@@ -1,0 +1,6 @@
+
+ADD_EXECUTABLE( test main.cpp )
+
+FIND_LIBRARY( GMOCK gmock_main )
+
+TARGET_LINK_LIBRARIES( test SHARED ${GMOCK} )

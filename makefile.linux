@@ -1,0 +1,21 @@
+
+BUILD_DIR  := build
+SOURCE_DIR := src
+
+CMAKE_OPTIONS :=
+
+.PHONY: all
+all:
+	@mkdir -p $(BUILD_DIR)
+	@(cd $(BUILD_DIR) && \
+		cmake .. $(CMAKE_OPTIONS) \
+	)
+	@$(MAKE) -C $(BUILD_DIR) all
+
+.PHONY: clean
+clean:
+	@$(MAKE) -C $(BUILD_DIR) clean
+
+.PHONY: dist-clean
+dist-clean:
+	@rm -rf $(BUILD_DIR)
