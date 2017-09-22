@@ -1,0 +1,10 @@
+# cmake files
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
+
+# eclipse
+.project
+.cproject
+.settings
