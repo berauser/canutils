@@ -35,7 +35,9 @@ public:
 
 	virtual int addFilter(const SocketCan::CANFilter& filter) override final;
 	virtual int removeFilter(const SocketCan::CANFilter& filter) override final;
+	virtual int clearFilter() override final;
 	virtual std::list<SocketCan::CANFilter> getFilterList() override final;
+
 
 protected:
 	virtual int openDevice() = 0;

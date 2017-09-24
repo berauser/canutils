@@ -101,6 +101,12 @@ std::list<SocketCan::CANFilter> SocketCanImpl::getFilterList()
 	return filterList;
 }
 
+int SocketCanImpl::clearFilter()
+{
+	filterList.clear();
+	return setFilter(filterList);
+}
+
 void SocketCanImpl::recvLoop()
 {
 	thread_local int recvbytes;

@@ -30,6 +30,11 @@ public:
 		{
 			return (this->id == f1.id && this->mask == f1.mask);
 		}
+
+		bool operator!=(const CANFilter& f1) const
+		{
+			return (this->id != f1.id || this->mask != f1.mask);
+		}
 	};
 
 public:
@@ -54,6 +59,7 @@ public:
 
 	virtual int addFilter(const CANFilter& filter) = 0;
 	virtual int removeFilter(const CANFilter& filter) = 0;
+	virtual int clearFilter() = 0;
 	virtual std::list<CANFilter> getFilterList() = 0;
 };
 
