@@ -28,7 +28,7 @@ int main()
 
 	Recevier receiver;
 
-	socketcan->addListener( receiver );
+	socketcan->setListener( &receiver );
 	socketcan->open();
 
 	sleep( 15 );

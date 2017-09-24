@@ -1,2 +1,3 @@
 
 ADD_SUBDIRECTORY( sample1 )
+ADD_SUBDIRECTORY( sample2 )
