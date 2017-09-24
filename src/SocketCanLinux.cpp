@@ -127,7 +127,7 @@ int SocketCanLinux::getFiledescriptor() const
 
 int SocketCanLinux::read(CANMessage* message)
 {
-	// TODO use select!!!
+	// TODO use select or something that can closed by shutdown!!!
 	thread_local int recvbytes;
 	memset(message, 0x00, sizeof(CANMessage));
 
@@ -162,6 +162,11 @@ int SocketCanLinux::read(CANMessage* message)
 int SocketCanLinux::setFilter(const std::list<CANFilter>& filterList)
 {
 	FTRACE("DEBUG", "SocketCanLinux::setFilter( <list> )");
+	if (socketfd == SOCKET_INVALID)
+	{
+		throw std::logic_error("Device not open");
+	}
+
 	if (filterList.size() > 0)
 	{
 		CANFilter* rfilter = new CANFilter[filterList.size()];

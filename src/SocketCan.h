@@ -47,9 +47,8 @@ public:
 
 	virtual int write(const CANMessage& msg) = 0;
 
-	virtual int addListener(SocketCanListener& listener) = 0;
-	virtual int removeListener(SocketCanListener& listener) = 0;
-	virtual std::list<SocketCanListener*> getListeners() const = 0;
+	virtual int setListener(SocketCanListener* listener) = 0;
+	virtual SocketCanListener* getListener() = 0;
 
 	virtual const std::string& getDevice() const = 0;
 

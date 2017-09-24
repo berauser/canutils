@@ -15,7 +15,7 @@ namespace CanSocket
 {
 
 SocketCanImpl::SocketCanImpl(const std::string& device_arg)
-		: SocketCan(device_arg), device(device_arg)
+		: SocketCan(device_arg), device(device_arg), listener(nullptr)
 {
 	filterList.clear();
 }
@@ -63,24 +63,16 @@ int SocketCanImpl::close()
 	return ret;
 }
 
-int SocketCanImpl::addListener(SocketCanListener& listener)
+int SocketCanImpl::setListener(SocketCanListener* listener)
 {
 	FTRACE(FFDC_SOCKETCAN_DEBUG, "SocketCanImpl::addListener( %p )", &listener);
-	listeners.push_back(&listener);
+	this->listener = listener;
 	return 0;
 }
 
-int SocketCanImpl::removeListener(SocketCanListener& listener)
+SocketCanListener*  SocketCanImpl::getListener()
 {
-	FTRACE(FFDC_SOCKETCAN_DEBUG, "SocketCanImpl::removeListener( %p )",
-			&listener);
-	listeners.remove(&listener);
-	return 0;
-}
-
-std::list<SocketCanListener*> SocketCanImpl::getListeners() const
-{
-	return listeners;
+	return listener;
 }
 
 const std::string& SocketCanImpl::getDevice() const
@@ -138,7 +130,7 @@ void SocketCanImpl::recvLoop()
 			break;
 		}
 
-		for (auto listener : listeners)
+		if( listener != nullptr )
 		{
 			listener->recvMessage(message);
 		}

@@ -28,9 +28,8 @@ public:
 
 	virtual int write(const CANMessage& msg) = 0;
 
-	virtual int addListener(SocketCanListener& listener);
-	virtual int removeListener(SocketCanListener& listener);
-	virtual std::list<SocketCanListener*> getListeners() const;
+	virtual int setListener(SocketCanListener* listener);
+	virtual SocketCanListener* getListener();
 
 	virtual const std::string& getDevice() const override final;
 
@@ -53,7 +52,7 @@ private:
 
 protected:
 	std::string device;
-	std::list<SocketCanListener*> listeners;
+	SocketCanListener* listener;
 	std::list<SocketCan::CANFilter> filterList;
 
 	std::thread recvThread;
