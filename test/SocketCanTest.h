@@ -9,6 +9,7 @@
 #define TEST_SOCKETCANTEST_H_
 
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 namespace CanSocket
 {
