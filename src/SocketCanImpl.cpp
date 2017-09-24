@@ -7,6 +7,8 @@
 
 #include "SocketCanImpl.h"
 
+#include "logger.h"
+
 #include <stdexcept>
 
 namespace CanSocket
@@ -25,18 +27,25 @@ SocketCanImpl::~SocketCanImpl()
 
 int SocketCanImpl::open()
 {
+	FTRACE(FFDC_SOCKETCAN_DEBUG, "SocketCanImpl::open()");
 	if (isOpen())
 	{
+		FTRACE(FFDC_SOCKETCAN_ERROR, "Device is already opened");
 		throw std::logic_error("Device already opened");
 	}
 
-	recvThread = std::thread(&SocketCanImpl::recvLoop, this);
+	int ret = openDevice();
+	if ( ret == 0 )
+	{
+		recvThread = std::thread(&SocketCanImpl::recvLoop, this);
+	}
 
-	return openDevice(device);
+	return ret;
 }
 
 int SocketCanImpl::close()
 {
+	FTRACE(FFDC_SOCKETCAN_DEBUG, "SocketCanImpl::close()");
 	if (!isOpen())
 	{
 		return 0;
@@ -44,22 +53,27 @@ int SocketCanImpl::close()
 
 	int ret = closeDevice();
 
-	if (recvThread.joinable())
-	{
-		recvThread.join();
-	}
+	FTRACE(FFDC_SOCKETCAN_DEBUG, "SocketCanImpl::close() - wait for thread ");
+//	FIXME do not join now linux socketcan does not return
+//	if (recvThread.joinable())
+//	{
+//		recvThread.join();
+//	}
 
 	return ret;
 }
 
 int SocketCanImpl::addListener(SocketCanListener& listener)
 {
+	FTRACE(FFDC_SOCKETCAN_DEBUG, "SocketCanImpl::addListener( %p )", &listener);
 	listeners.push_back(&listener);
 	return 0;
 }
 
 int SocketCanImpl::removeListener(SocketCanListener& listener)
 {
+	FTRACE(FFDC_SOCKETCAN_DEBUG, "SocketCanImpl::removeListener( %p )",
+			&listener);
 	listeners.remove(&listener);
 	return 0;
 }
@@ -76,12 +90,16 @@ const std::string& SocketCanImpl::getDevice() const
 
 int SocketCanImpl::addFilter(const SocketCan::CANFilter& filter)
 {
+	FTRACE(FFDC_SOCKETCAN_DEBUG, "SocketCanImpl::addFilter( <%x:%x> )",
+			filter.id, filter.mask);
 	filterList.push_back(filter);
 	return setFilter(filterList);
 }
 
 int SocketCanImpl::removeFilter(const SocketCan::CANFilter& filter)
 {
+	FTRACE(FFDC_SOCKETCAN_DEBUG, "SocketCanImpl::removeFilter( <%x:%x> )",
+			filter.id, filter.mask);
 	filterList.remove(filter);
 	return setFilter(filterList);
 }
@@ -96,23 +114,27 @@ void SocketCanImpl::recvLoop()
 	thread_local int recvbytes;
 	thread_local CANMessage message;
 
-	while (true)
+	FTRACE(FFDC_SOCKETCAN_DEBUG, "SocketCanImpl::recvLoop() - start");
+	while ( isOpen() )
 	{
 		/* */
 		recvbytes = read(&message);
 		if (recvbytes < 0)
 		{
 			/* error */
+			FTRACE(FFDC_SOCKETCAN_ERROR, "SocketCanImpl::recvLoop() - error");
 			break;
 		}
 		else if (recvbytes == 0)
 		{
 			/* Ordinarily close */
+			FTRACE(FFDC_SOCKETCAN_INFO, "SocketCanImpl::recvLoop() - shutdown");
 			break;
 		}
 		else if (recvbytes != sizeof(CANMessage))
 		{
 			/* wrong size */
+			FTRACE(FFDC_SOCKETCAN_DEBUG, "SocketCanImpl::recvLoop() - wrong size");
 			break;
 		}
 
@@ -123,6 +145,7 @@ void SocketCanImpl::recvLoop()
 	}
 
 	/* close the current device */
+	FTRACE(FFDC_SOCKETCAN_DEBUG, "SocketCanImpl::recvLoop() - close");
 	close();
 }
 

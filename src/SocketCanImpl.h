@@ -39,7 +39,7 @@ public:
 	virtual std::list<SocketCan::CANFilter> getFilterList() override final;
 
 protected:
-	virtual int openDevice(const std::string& device) = 0;
+	virtual int openDevice() = 0;
 	virtual int closeDevice() = 0;
 
 	virtual int getFiledescriptor() const = 0;

@@ -29,7 +29,7 @@ public:
 	int write(const CANMessage& msg) override;
 
 protected:
-	virtual int openDevice(const std::string& device) override;
+	virtual int openDevice() override;
 	virtual int closeDevice() override;
 
 	virtual int getFiledescriptor() const override;

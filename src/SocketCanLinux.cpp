@@ -9,13 +9,16 @@
 
 #include "logger.h"
 
+#include <cstring>
 #include <stdexcept>
 
 #include <fcntl.h>
 #include <unistd.h>
+#include <errno.h>
 #include <string.h>
 #include <net/if.h>
 #include <sys/ioctl.h>
+#include <sys/socket.h>
 #include <linux/can.h>
 #include <linux/can/raw.h>
 
@@ -47,11 +50,19 @@ int SocketCanLinux::write(const CANMessage& message)
 		throw std::logic_error("Device not open");
 	}
 
+	FTRACE("DEBUG", "SocketCanLinux::write() - %x [%d] %x %x %x %x %x %x %x %x",
+			message.can_id, message.can_dlc, message.data[0], message.data[1],
+			message.data[2], message.data[3], message.data[4], message.data[5],
+			message.data[6], message.data[7]);
+
 	return ::write(socketfd, &message, sizeof(CANMessage));
 }
 
-int SocketCanLinux::openDevice(const std::string& device)
+int SocketCanLinux::openDevice()
 {
+	const std::string device = getDevice();
+
+	STRACE("DEBUG", "SocketCanLinux::openDevice( %s )", device.c_str());
 	if (socketfd != SOCKET_INVALID)
 	{
 		throw std::logic_error("Device already opened");
@@ -59,6 +70,8 @@ int SocketCanLinux::openDevice(const std::string& device)
 
 	struct ifreq ifr;
 	struct sockaddr_can addr;
+	memset(&ifr, 0, sizeof(struct ifreq));
+	memset(&addr, 0, sizeof(struct sockaddr_can));
 
 	socketfd = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 	if (socketfd < 0)
@@ -92,11 +105,13 @@ int SocketCanLinux::openDevice(const std::string& device)
 
 int SocketCanLinux::closeDevice()
 {
+	FTRACE("DEBUG", "SocketCanLinux::closeDevice()");
 	if (socketfd == SOCKET_INVALID)
 	{
 		return 0;
 	}
 
+	FTRACE("DEBUG", "SocketCanLinux::closeDevice() - close");
 	int ret = ::close(socketfd);
 	if (ret == 0)
 	{
@@ -112,8 +127,9 @@ int SocketCanLinux::getFiledescriptor() const
 
 int SocketCanLinux::read(CANMessage* message)
 {
+	// TODO use select!!!
 	thread_local int recvbytes;
-	memset(&message, 0x00, sizeof(CANMessage));
+	memset(message, 0x00, sizeof(CANMessage));
 
 	if (socketfd == SOCKET_INVALID)
 	{
@@ -122,18 +138,22 @@ int SocketCanLinux::read(CANMessage* message)
 
 	recvbytes = ::read(socketfd, message, sizeof(CANMessage));
 
-	FTRACE( "DEBUG", "%s: Readed: %x [%d] %x %x %x %x %x %x %x %x", __FILE__, message->can_id, message->can_dlc,
-			message->data[0], message->data[1], message->data[2], message->data[3],
-			message->data[4], message->data[5], message->data[6], message->data[7] );
+	FTRACE("DEBUG", "SocketCanLinux::read() - %x [%d] %x %x %x %x %x %x %x %x",
+			message->can_id, message->can_dlc, message->data[0],
+			message->data[1], message->data[2], message->data[3],
+			message->data[4], message->data[5], message->data[6],
+			message->data[7]);
 
 	if (recvbytes < 0)
 	{
 		/* error */
+		FTRACE("DEBUG", "SocketCanLinux::read() - close");
 		closeDevice();
 	}
 	else if (recvbytes == 0)
 	{
 		/* closed */
+		FTRACE("DEBUG", "SocketCanLinux::read() - shutdown");
 		closeDevice();
 	}
 	return recvbytes;
@@ -141,6 +161,7 @@ int SocketCanLinux::read(CANMessage* message)
 
 int SocketCanLinux::setFilter(const std::list<CANFilter>& filterList)
 {
+	FTRACE("DEBUG", "SocketCanLinux::setFilter( <list> )");
 	if (filterList.size() > 0)
 	{
 		CANFilter* rfilter = new CANFilter[filterList.size()];

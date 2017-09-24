@@ -15,18 +15,18 @@ namespace CanSocket
 
 #define MAX_DATA_LENGTH 8
 
-enum struct CANFlag	: uint32_t
+enum struct CANFlag : uint32_t
 {
 	Extended = 0x80000000U, //!< Extended
-	Remote = 0x40000000U, //!< Remote
-	Error = 0x20000000U //!< Error
+	Remote   = 0x40000000U, //!< Remote
+	Error    = 0x20000000U //!< Error
 };
 
 enum struct CANMask : uint32_t
 {
 	Standard = 0x000007FFU,
 	Extended = 0x1FFFFFFFU,
-	Error = 0x1FFFFFFFU
+	Error    = 0x1FFFFFFFU
 };
 
 struct CANMessage final

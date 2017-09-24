@@ -7,7 +7,10 @@
 
 #include "SocketCanFactory.h"
 
+#include "logger.h"
 #include "SocketCanLinux.h"
+
+#include <stdexcept>
 
 namespace CanSocket
 {
@@ -28,10 +31,10 @@ SocketCanFactory::~SocketCanFactory()
 
 SocketCan* SocketCanFactory::createSocketCan(const std::string& device)
 {
+	STRACE( FFDC_SOCKETCAN_INFO, "SocketCanFactory::createSocketCan( %s )", device.c_str() );
 	if (device.empty())
 	{
-		/* TODO here we should throw an excpetion */
-		return nullptr;
+		throw std::invalid_argument( "Device is empty" );
 	}
 
 	return new SocketCanCreate(device);
