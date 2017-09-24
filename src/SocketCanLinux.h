@@ -8,39 +8,40 @@
 #ifndef SRC_SOCKETCANLINUX_H_
 #define SRC_SOCKETCANLINUX_H_
 
-#include "SocketCan.h"
+#include "SocketCanImpl.h"
 
 #include <string>
 #include <thread>
 
-namespace SocketCan {
+namespace CanSocket
+{
 
-class SocketCanLinux final : public SocketCan
+class SocketCanLinux final : public SocketCanImpl
 {
 
 public:
 	SocketCanLinux() = delete;
-	SocketCanLinux( const std::string& device );
+	SocketCanLinux(const std::string& device);
 	virtual ~SocketCanLinux();
 
-	bool open() override;
-	bool close() override;
+	virtual bool isOpen();
 
-	int write( const CANMessage& msg ) override;
-	int registerListener( SocketCanListener& listener ) override;
+	int write(const CANMessage& msg) override;
 
-	SocketCanLinux& operator=( const SocketCanLinux& src );
-	SocketCanLinux& operator=( SocketCanLinux&& src );
+protected:
+	virtual int openDevice(const std::string& device) override;
+	virtual int closeDevice() override;
 
-	const int getFiledescriptor() const override;
-	const std::string& getDevice() const override;
+	virtual int getFiledescriptor() const override;
+
+	virtual int read(CANMessage* message) override;
+
+	virtual int setFilter(const std::list<CANFilter>& filterList) override;
 
 private:
 	int socketfd;
-
-	std::thread recvThread;
 };
 
-} /* namespace SocketCan */
+} /* namespace CanSocket */
 
 #endif /* SRC_SOCKETCANLINUX_H_ */

@@ -10,41 +10,55 @@
 
 #include "SocketCan.h"
 
-namespace SocketCan {
+#include <thread>
 
-class SocketCanImpl : public SocketCan
+namespace CanSocket
 {
+
+class SocketCanImpl: public SocketCan
+{
+public:
 	SocketCanImpl() = delete;
-	SocketCanImpl( const std::string& device_arg );
+	SocketCanImpl(const std::string& device_arg);
 	virtual ~SocketCanImpl();
 
-	virtual bool open() override final;
-	virtual bool close() override final;
+	virtual int open() override final;
+	virtual int close() override final;
+	virtual bool isOpen() = 0;
 
-	virtual int write( const CANMessage& msg ) = 0;
-	virtual int registerListener( SocketCanListener& listener );
+	virtual int write(const CANMessage& msg) = 0;
 
-	virtual SocketCanImpl& operator=( const SocketCanImpl& src ) = 0;
-	virtual SocketCanImpl& operator=( SocketCanImpl&& src ) = 0;
+	virtual int addListener(SocketCanListener& listener);
+	virtual int removeListener(SocketCanListener& listener);
+	virtual std::list<SocketCanListener*> getListeners() const;
 
-	virtual const int getFiledescriptor() const override final;
 	virtual const std::string& getDevice() const override final;
 
-	virtual int addFilter   ( const SocketCan::CANFilter& filter ) override final;
-	virtual int removeFilter( const SocketCan::CANFilter& filter ) override final;
+	virtual int addFilter(const SocketCan::CANFilter& filter) override final;
+	virtual int removeFilter(const SocketCan::CANFilter& filter) override final;
 	virtual std::list<SocketCan::CANFilter> getFilterList() override final;
 
 protected:
+	virtual int openDevice(const std::string& device) = 0;
+	virtual int closeDevice() = 0;
 
-	virtual bool openDevice ( const std::string& device ) = 0;
-	virtual bool closeDevice() = 0;;
+	virtual int getFiledescriptor() const = 0;
 
-	virtual int setFilter( const std::list<CANFilter>& filterList ) = 0;
+	virtual int read(CANMessage* message) = 0;
+
+	virtual int setFilter(const std::list<CANFilter>& filterList) = 0;
+
+private:
+	virtual void recvLoop() final;
+
 protected:
 	std::string device;
+	std::list<SocketCanListener*> listeners;
 	std::list<SocketCan::CANFilter> filterList;
+
+	std::thread recvThread;
 };
 
-} /* namespace SocketCan */
+} /* namespace CanSocket */
 
 #endif /* SRC_SOCKETCANIMPL_H_ */

@@ -24,6 +24,10 @@ ADD_LIBRARY	( CANBuffer_shared SHARED
 			${CANBuffer_src}
 		)
 
+TARGET_LINK_LIBRARIES	( CANBuffer_shared
+				pthread
+			)
+
 SET_TARGET_PROPERTIES	( CANBuffer_shared PROPERTIES
 		VERSION     ${VERSION_STRING}
 		SOVERSION   ${VERSION_STRING}
