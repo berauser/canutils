@@ -16,8 +16,9 @@ PROJECT( CANBuffer )
 #
 ################################################################################
 
-OPTION( BUILD_TEST "Build test"        FALSE )
-OPTION( USE_GCOV   "Enable gcov flags" FALSE )
+OPTION( BUILD_EXAMPLE "Build exmaples"    FALSE )
+OPTION( BUILD_TEST    "Build test"        FALSE )
+OPTION( USE_GCOV      "Enable gcov flags" FALSE )
 
 ################################################################################
 #
@@ -65,7 +66,16 @@ ENDIF( USE_GCOV )
 # add sources
 #
 ################################################################################
+SET( EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin"  CACHE INTERNAL "" )
+SET( LIBRARY_OUTPUT_PATH    "${PROJECT_SOURCE_DIR}/lib" CACHE INTERNAL "" )
 
 ADD_SUBDIRECTORY( src )
-ADD_SUBDIRECTORY( examples )
-#ADD_SUBDIRECTORY( test )
+
+IF   ( BUILD_EXAMPLE )
+	ADD_SUBDIRECTORY( examples )
+ENDIF( BUILD_EXAMPLE )
+
+IF   ( BUILD_TEST )
+	ADD_SUBDIRECTORY( test )
+ENDIF( BUILD_TEST )
+

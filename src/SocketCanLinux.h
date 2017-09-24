@@ -11,6 +11,7 @@
 #include "SocketCan.h"
 
 #include <string>
+#include <thread>
 
 namespace SocketCan {
 
@@ -36,6 +37,8 @@ public:
 
 private:
 	int socketfd;
+
+	std::thread recvThread;
 };
 
 } /* namespace SocketCan */

@@ -9,5 +9,10 @@ cmake_install.cmake
 .cproject
 .settings
 
+# output
+*.xml
+
 # build directory
+bin/
+lib/
 build/
