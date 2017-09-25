@@ -21,7 +21,7 @@ class SocketCanLinux final : public SocketCanImpl
 
 public:
 	SocketCanLinux() = delete;
-	SocketCanLinux(const std::string& device);
+	explicit SocketCanLinux(const std::string& device);
 	virtual ~SocketCanLinux();
 
 	virtual bool isOpen();

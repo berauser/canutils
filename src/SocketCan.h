@@ -44,7 +44,7 @@ public:
 
 public:
 	SocketCan() = delete;
-	SocketCan(const std::string& device_arg)
+	explicit SocketCan(const std::string& device_arg)
 	{
 	}
 	virtual ~SocketCan()

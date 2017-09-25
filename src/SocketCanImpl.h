@@ -19,7 +19,7 @@ class SocketCanImpl: public SocketCan
 {
 public:
 	SocketCanImpl() = delete;
-	SocketCanImpl(const std::string& device_arg);
+	explicit SocketCanImpl(const std::string& device_arg);
 	virtual ~SocketCanImpl();
 
 	virtual int open() override final;
