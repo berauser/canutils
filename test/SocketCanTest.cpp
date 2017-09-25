@@ -48,13 +48,11 @@ TEST_F( SocketCanTest, init )
 	EXPECT_EQ(nullptr, socketcan->getListener());
 	EXPECT_EQ(0, socketcan->getFilterList().size());
 
-//	EXPECT_EQ(0, socketcan->open());
-//	EXPECT_EQ(true, socketcan->isOpen());
-//
-//	sleep(1);
-//
-//	EXPECT_EQ(0, socketcan->close());
-//	EXPECT_EQ(false, socketcan->isOpen());
+	EXPECT_EQ(0, socketcan->open());
+	EXPECT_EQ(true, socketcan->isOpen());
+
+	EXPECT_EQ(0, socketcan->close());
+	EXPECT_EQ(false, socketcan->isOpen());
 
 	delete socketcan;
 }
@@ -81,17 +79,19 @@ TEST_F( SocketCanTest, filter )
 
 	EXPECT_EQ(0, socketcan->getFilterList().size());
 
-//	EXPECT_EQ(0, socketcan->open());
-//	EXPECT_EQ(true, socketcan->isOpen());
 
-	SocketCan::CANFilter filter1
-	{ 0x123, 0x7FF };
-	SocketCan::CANFilter filter2
-	{ 0x123, 0x3FF };
-	SocketCan::CANFilter filter3
-	{ 0x007, 0x007 };
-	SocketCan::CANFilter filter4
-	{ 0x007, 0x007 };
+	SocketCan::CANFilter filter1 { 0x123, 0x7FF };
+	SocketCan::CANFilter filter2 { 0x123, 0x3FF };
+	SocketCan::CANFilter filter3 { 0x007, 0x007 };
+	SocketCan::CANFilter filter4 { 0x007, 0x007 };
+
+	ASSERT_THROW( socketcan->addFilter( filter1 ),    std::logic_error ); // device not open
+	ASSERT_THROW( socketcan->removeFilter( filter1 ), std::logic_error ); // device not open
+	ASSERT_THROW( socketcan->clearFilter(),           std::logic_error ); // device not open
+
+	EXPECT_EQ(0, socketcan->open());
+	EXPECT_EQ(true, socketcan->isOpen());
+
 	EXPECT_EQ(0, socketcan->addFilter(filter1)); // 1
 	EXPECT_EQ(0, socketcan->addFilter(filter2)); // 2
 	EXPECT_EQ(0, socketcan->addFilter(filter3)); // 3
@@ -133,8 +133,8 @@ TEST_F( SocketCanTest, filter )
 	EXPECT_EQ(0, socketcan->clearFilter());
 	EXPECT_EQ(0, socketcan->getFilterList().size());
 
-//	EXPECT_EQ(0, socketcan->close());
-//	EXPECT_EQ(false, socketcan->isOpen());
+	EXPECT_EQ(0, socketcan->close());
+	EXPECT_EQ(false, socketcan->isOpen());
 
 	delete socketcan;
 }

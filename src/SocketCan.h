@@ -25,15 +25,16 @@ public:
 	{
 		uint32_t id;
 		uint32_t mask;
+		bool inverted;
 
 		bool operator==(const CANFilter& f1) const
 		{
-			return (this->id == f1.id && this->mask == f1.mask);
+			return (this->id == f1.id && this->mask == f1.mask && this->inverted == f1.inverted);
 		}
 
 		bool operator!=(const CANFilter& f1) const
 		{
-			return (this->id != f1.id || this->mask != f1.mask);
+			return (this->id != f1.id || this->mask != f1.mask || this->inverted != f1.inverted );
 		}
 	};
 

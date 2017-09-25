@@ -16,7 +16,7 @@ namespace CanSocket
 namespace Test
 {
 
-class CANFilter : public ::testing::Test
+class CANFilterTest : public ::testing::Test
 {
 protected:
 	virtual void SetUp();
