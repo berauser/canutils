@@ -19,7 +19,8 @@ XML_RESULT="$OUTPUT_DIR_XML/coverage.xml"
 
 ( cd $BUILD_DIR/ && \
     mkdir -p $OUTPUT_DIR && \
-    lcov --capture --directory . --output-file $COVERAGE_INFO \
+    lcov --capture --directory . --output-file $COVERAGE_INFO.unfiltered && \
+    lcov --remove $COVERAGE_INFO.unfiltered '/usr/include/*' -o $COVERAGE_INFO \
 ) || ( echo "Failed to run lcov..."; exit 2 )
 
 ( cd $BUILD_DIR/ && \
