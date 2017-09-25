@@ -37,7 +37,7 @@ int SocketCanImpl::open()
 	int ret = openDevice();
 	if ( ret == 0 )
 	{
-		recvThread = std::thread(&SocketCanImpl::recvLoop, this);
+		recvThread = Thread(&SocketCanImpl::recvLoop, this);
 	}
 
 	return ret;
@@ -54,11 +54,13 @@ int SocketCanImpl::close()
 	int ret = closeDevice();
 
 	FTRACE(FFDC_SOCKETCAN_DEBUG, "SocketCanImpl::close() - wait for thread ");
+	recvThread.cancel();
+
 //	FIXME do not join now linux socketcan does not return
-//	if (recvThread.joinable())
-//	{
-//		recvThread.join();
-//	}
+	if (recvThread.joinable())
+	{
+		recvThread.join();
+	}
 
 	return ret;
 }
@@ -96,15 +98,15 @@ int SocketCanImpl::removeFilter(const SocketCan::CANFilter& filter)
 	return setFilter(filterList);
 }
 
-std::list<SocketCan::CANFilter> SocketCanImpl::getFilterList()
-{
-	return filterList;
-}
-
 int SocketCanImpl::clearFilter()
 {
 	filterList.clear();
 	return setFilter(filterList);
+}
+
+std::list<SocketCan::CANFilter> SocketCanImpl::getFilterList()
+{
+	return filterList;
 }
 
 void SocketCanImpl::recvLoop()

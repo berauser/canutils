@@ -10,7 +10,7 @@
 
 #include "SocketCan.h"
 
-#include <thread>
+#include "Thread.h"
 
 namespace CanSocket
 {
@@ -57,7 +57,7 @@ protected:
 	SocketCanListener* listener;
 	std::list<SocketCan::CANFilter> filterList;
 
-	std::thread recvThread;
+	Thread recvThread;
 };
 
 } /* namespace CanSocket */
