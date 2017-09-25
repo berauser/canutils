@@ -28,6 +28,12 @@ public:
 
 	int write(const CANMessage& msg) override;
 
+	virtual int enableLoopback( bool enable ) override;
+	virtual bool loopbackEnabled()  const override;
+
+	virtual int receiveOwnMessage( bool enable ) override;
+	virtual bool receiveOwnMessageEnabled() const override;
+
 protected:
 	virtual int openDevice() override;
 	virtual int closeDevice() override;

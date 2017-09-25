@@ -54,11 +54,9 @@ int SocketCanImpl::close()
 	int ret = closeDevice();
 
 	FTRACE(FFDC_SOCKETCAN_DEBUG, "SocketCanImpl::close() - wait for thread ");
-	recvThread.cancel();
-
-//	FIXME do not join now linux socketcan does not return
 	if (recvThread.joinable())
 	{
+		recvThread.cancel();
 		recvThread.join();
 	}
 

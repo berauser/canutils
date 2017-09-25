@@ -38,6 +38,10 @@ public:
 		}
 	};
 
+	enum struct CANErrorMask {
+		none = 0x00L
+	};
+
 public:
 	SocketCan() = delete;
 	SocketCan(const std::string& device_arg)
@@ -62,6 +66,15 @@ public:
 	virtual int removeFilter(const CANFilter& filter) = 0;
 	virtual int clearFilter() = 0;
 	virtual std::list<CANFilter> getFilterList() = 0;
+
+	virtual int enableLoopback( bool enable ) = 0;
+	virtual bool loopbackEnabled()  const = 0;
+
+	virtual int receiveOwnMessage( bool enable ) = 0;
+	virtual bool receiveOwnMessageEnabled() const = 0;
+
+//	virtual int setErrFilterMask( /**/ )
+//	virtual /* */ getErrFilterMask() const = 0;
 };
 
 } /* namespace CanSocket */
