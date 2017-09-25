@@ -8,8 +8,7 @@
 #include "SocketCanTest.h"
 
 #include "SocketCanFactory.h"
-
-#include <unistd.h>
+#include "MockListener.h"
 
 #include <stdexcept>
 
@@ -17,12 +16,6 @@ namespace CanSocket
 {
 namespace Test
 {
-
-class MockListener: public SocketCanListener
-{
-public:
-	MOCK_METHOD1(recvMessage, void(const CANMessage&));
-};
 
 void SocketCanTest::SetUp()
 {
@@ -50,6 +43,8 @@ TEST_F( SocketCanTest, init )
 
 	EXPECT_EQ(0, socketcan->open());
 	EXPECT_EQ(true, socketcan->isOpen());
+
+	ASSERT_THROW( socketcan->open(), std::logic_error );
 
 	EXPECT_EQ(0, socketcan->close());
 	EXPECT_EQ(false, socketcan->isOpen());
@@ -138,6 +133,53 @@ TEST_F( SocketCanTest, filter )
 
 	delete socketcan;
 }
+
+TEST_F( SocketCanTest, loopback_basic )
+{
+	CanSocket::SocketCanFactory factory;
+	CanSocket::SocketCan* socketcan = factory.createSocketCan("vcan0");
+
+	/* closed socket shoulkd throw an error */
+	ASSERT_THROW( socketcan->enableLoopback( true ),  std::logic_error );
+	ASSERT_THROW( socketcan->enableLoopback( false ), std::logic_error );
+	ASSERT_THROW( socketcan->loopbackEnabled(),       std::logic_error );
+
+	EXPECT_EQ(0, socketcan->open());
+
+	EXPECT_EQ   ( 0, socketcan->enableLoopback( true ) );
+	EXPECT_TRUE ( socketcan->loopbackEnabled() );
+
+	EXPECT_EQ   ( 0, socketcan->enableLoopback( false ) );
+	EXPECT_FALSE( socketcan->loopbackEnabled() );
+
+	EXPECT_EQ(0, socketcan->close());
+
+	delete socketcan;
+}
+
+TEST_F( SocketCanTest, receive_own_basic )
+{
+	CanSocket::SocketCanFactory factory;
+	CanSocket::SocketCan* socketcan = factory.createSocketCan("vcan0");
+
+	/* closed socket shoulkd throw an error */
+	ASSERT_THROW( socketcan->receiveOwnMessage( true ),  std::logic_error );
+	ASSERT_THROW( socketcan->receiveOwnMessage( false ), std::logic_error );
+	ASSERT_THROW( socketcan->receiveOwnMessageEnabled(), std::logic_error );
+
+	EXPECT_EQ(0, socketcan->open());
+
+	EXPECT_EQ   ( 0, socketcan->receiveOwnMessage( true ) );
+	EXPECT_TRUE ( socketcan->receiveOwnMessageEnabled() );
+
+	EXPECT_EQ   ( 0, socketcan->receiveOwnMessage( false ) );
+	EXPECT_FALSE( socketcan->receiveOwnMessageEnabled() );
+
+	EXPECT_EQ(0, socketcan->close());
+
+	delete socketcan;
+}
+
 
 } /* namespace Test */
 } /* namespace CanSocket */
