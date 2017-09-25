@@ -49,6 +49,8 @@ TEST_F( SocketCanTest, init )
 	EXPECT_EQ(0, socketcan->close());
 	EXPECT_EQ(false, socketcan->isOpen());
 
+	EXPECT_EQ(0, socketcan->close());
+
 	delete socketcan;
 }
 
@@ -180,6 +182,31 @@ TEST_F( SocketCanTest, receive_own_basic )
 	delete socketcan;
 }
 
+TEST_F( SocketCanTest, read_write_basic )
+{
+	CanSocket::SocketCanFactory factory;
+	CanSocket::SocketCan* socketcan = factory.createSocketCan("vcan0");
+
+	MockListener listener;
+	EXPECT_EQ( 0, socketcan->setListener( &listener ) );
+
+	CANMessage message{ 0x123, 8, ( 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 ) };
+	ASSERT_THROW( socketcan->write( message ), std::logic_error );
+
+	EXPECT_EQ(0, socketcan->open());
+
+	EXPECT_EQ   ( 0, socketcan->receiveOwnMessage( true ) );
+	EXPECT_TRUE ( socketcan->receiveOwnMessageEnabled() );
+
+	EXPECT_EQ( sizeof( CANMessage ), socketcan->write( message ));
+
+//	EXPECT_CALL( listener, recvMessage(_) )
+//		.Times(1);
+
+	EXPECT_EQ(0, socketcan->close());
+
+	delete socketcan;
+}
 
 } /* namespace Test */
 } /* namespace CanSocket */
