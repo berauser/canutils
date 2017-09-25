@@ -97,7 +97,7 @@ bool SocketCanLinux::loopbackEnabled() const
 		STRACE( FFDC_SOCKETCAN_ERROR, "SocketCanLinux::loopbackEnabled() - %s", strerror(errno) );
 		return -1;
 	}
-	return 0;
+	return ( loopback == 1 );
 }
 
 int SocketCanLinux::receiveOwnMessage(bool enable)
@@ -140,7 +140,7 @@ bool SocketCanLinux::receiveOwnMessageEnabled() const
 		STRACE( FFDC_SOCKETCAN_ERROR, "SocketCanLinux::enableReceiveOwnMessage() - %s", strerror(errno) );
 		return -1;
 	}
-	return 0;
+	return ( own_msgs == 1 );
 }
 
 int SocketCanLinux::openDevice()
