@@ -13,7 +13,7 @@ SOURCE_DIR=$1
 [ "$2" = "" ] && OUTPUT="$(pwd)/cppcheck.xml" || OUTPUT="$(readlink -f $(dirname $2))/$(basename $2)"
 mkdir -p $(dirname $OUTPUT)
 
-cppcheck --enable=all --inconclusive --xml --xml-version=2 $SOURCE_DIR 2> $OUTPUT
+cppcheck --enable=all --inconclusive --suppress=missingIncludeSystem --check-config --xml --xml-version=2 $SOURCE_DIR 2> $OUTPUT
 
 echo ""
 echo "Result: $OUTPUT"
