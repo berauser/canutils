@@ -52,6 +52,18 @@ struct CANFilter
 		return (this->can_id != f1.can_id || this->can_mask != f1.can_mask);
 	}
 
+	CANFilter& operator&=(const CANFilterFlags& flag)
+	{
+		can_id &= static_cast<uint32_t>(flag);
+		return *this;
+	}
+
+	CANFilter& operator|=(const CANFilterFlags& flag)
+	{
+		can_id |= static_cast<uint32_t>(flag);
+		return *this;
+	}
+
 	CANFilter operator&(const CANFilterFlags& flag) const
 	{
 		return CANFilter(can_id & static_cast<uint32_t>(flag), can_mask);

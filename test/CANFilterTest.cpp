@@ -44,8 +44,9 @@ TEST_F( CANFilterTest, create )
 TEST_F( CANFilterTest, bit_operator_and )
 {
 	CANFilter f1(0x7FF, 0x7FF);
-	CANFilter f2 = f1 & CANFilter::CANFilterFlags::Invert;
-	CANFilter f3 = CANFilter(0x7FF, 0x7FF) & CANFilter::CANFilterFlags::Invert;
+	CANFilter f2 = f1; f2 &= CANFilter::CANFilterFlags::Invert;
+	CANFilter f3 = f1 & CANFilter::CANFilterFlags::Invert;
+	CANFilter f4 = CANFilter(0x7FF, 0x7FF) & CANFilter::CANFilterFlags::Invert;
 
 	EXPECT_EQ(f1.can_mask, f2.can_mask);
 	EXPECT_EQ(
@@ -55,13 +56,17 @@ TEST_F( CANFilterTest, bit_operator_and )
 
 	EXPECT_EQ(f2.can_id, f3.can_id);
 	EXPECT_EQ(f2.can_mask, f3.can_mask);
+
+	EXPECT_EQ(f2.can_id, f4.can_id);
+	EXPECT_EQ(f2.can_mask, f4.can_mask);
 }
 
 TEST_F( CANFilterTest, bit_operator_or )
 {
 	CANFilter f1(0x000, 0x7FF);
-	CANFilter f2 = f1 | CANFilter::CANFilterFlags::Invert;
-	CANFilter f3 = CANFilter(0x000, 0x7FF) | CANFilter::CANFilterFlags::Invert;
+	CANFilter f2 = f1; f2 |= CANFilter::CANFilterFlags::Invert;
+	CANFilter f3 = f1     |  CANFilter::CANFilterFlags::Invert;
+	CANFilter f4 = CANFilter(0x000, 0x7FF) | CANFilter::CANFilterFlags::Invert;
 
 	EXPECT_EQ(f1.can_mask, f2.can_mask);
 	EXPECT_EQ(
@@ -71,6 +76,9 @@ TEST_F( CANFilterTest, bit_operator_or )
 
 	EXPECT_EQ(f2.can_id, f3.can_id);
 	EXPECT_EQ(f2.can_mask, f3.can_mask);
+
+	EXPECT_EQ(f2.can_id, f4.can_id);
+	EXPECT_EQ(f2.can_mask, f4.can_mask);
 }
 
 TEST_F( CANFilterTest, compare )
