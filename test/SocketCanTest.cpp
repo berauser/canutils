@@ -77,10 +77,10 @@ TEST_F( SocketCanTest, filter )
 	EXPECT_EQ(0, socketcan->getFilterList().size());
 
 
-	SocketCan::CANFilter filter1 { 0x123, 0x7FF };
-	SocketCan::CANFilter filter2 { 0x123, 0x3FF };
-	SocketCan::CANFilter filter3 { 0x007, 0x007 };
-	SocketCan::CANFilter filter4 { 0x007, 0x007 };
+	CANFilter filter1 { 0x123, 0x7FF };
+	CANFilter filter2 { 0x123, 0x3FF };
+	CANFilter filter3 { 0x007, 0x007 };
+	CANFilter filter4 { 0x007, 0x007 };
 
 	ASSERT_THROW( socketcan->addFilter( filter1 ),    std::logic_error ); // device not open
 	ASSERT_THROW( socketcan->removeFilter( filter1 ), std::logic_error ); // device not open
@@ -96,8 +96,8 @@ TEST_F( SocketCanTest, filter )
 
 	EXPECT_EQ(3, socketcan->getFilterList().size());
 
-	std::list<SocketCan::CANFilter> flist = socketcan->getFilterList();
-	std::list<SocketCan::CANFilter>::iterator it;
+	std::list<CANFilter> flist = socketcan->getFilterList();
+	std::list<CANFilter>::iterator it;
 
 	/* search all filters */
 	it = std::find(flist.begin(), flist.end(), filter1);
@@ -262,19 +262,21 @@ TEST_F( SocketCanTest, receive_filter_not_inverted )
 	CANMessage message5{ 0x441, 8, ( 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55 ) };
 
 	/* setup filter */
-	CanSocket::SocketCan::CANFilter filter1{ 0x111, 0x7FF, false }; /* recv 0x111 */
-	CanSocket::SocketCan::CANFilter filter2{ 0x440, 0x7F0, false }; /* recv 0x440 and 0x441 */
+	CanSocket::CANFilter filter1{ 0x111, 0x7FF }; /* recv 0x111 */
+	CanSocket::CANFilter filter2{ 0x440, 0x7F0 }; /* recv 0x440 and 0x441 */
 
 	/* setup listener */
 	MockListener listener;
 	EXPECT_EQ( 0, socketcan_rx->setListener( &listener ) );
+
+	EXPECT_TRUE( false ); // TODO add filter to socketcan_rx
 
 	/* open the device and try send and receive */
 	EXPECT_EQ( 0, socketcan_tx->open());
 	EXPECT_EQ( 0, socketcan_rx->open());
 
 	/* write frames */
-	EXPECT_CALL( listener, recvMessage(::testing::_) ).Times(::testing::AtLeast(5));
+	EXPECT_CALL( listener, recvMessage(::testing::_) ).Times(::testing::AtLeast(3));
 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message1 ));
 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message2 ));
 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message3 ));

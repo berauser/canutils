@@ -33,10 +33,10 @@ public:
 
 	virtual const std::string& getDevice() const override final;
 
-	virtual int addFilter(const SocketCan::CANFilter& filter) override final;
-	virtual int removeFilter(const SocketCan::CANFilter& filter) override final;
+	virtual int addFilter(const CANFilter& filter) override final;
+	virtual int removeFilter(const CANFilter& filter) override final;
 	virtual int clearFilter() override final;
-	virtual std::list<SocketCan::CANFilter> getFilterList() override final;
+	virtual std::list<CANFilter> getFilterList() override final;
 
 
 protected:
@@ -55,7 +55,7 @@ private:
 protected:
 	std::string device;
 	SocketCanListener* listener;
-	std::list<SocketCan::CANFilter> filterList;
+	std::list<CANFilter> filterList;
 
 	Thread recvThread;
 };

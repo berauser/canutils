@@ -80,18 +80,18 @@ const std::string& SocketCanImpl::getDevice() const
 	return device;
 }
 
-int SocketCanImpl::addFilter(const SocketCan::CANFilter& filter)
+int SocketCanImpl::addFilter(const CANFilter& filter)
 {
 	FTRACE(FFDC_SOCKETCAN_DEBUG, "SocketCanImpl::addFilter( <%x:%x> )",
-			filter.id, filter.mask);
+			filter.can_id, filter.can_mask);
 	filterList.push_back(filter);
 	return setFilter(filterList);
 }
 
-int SocketCanImpl::removeFilter(const SocketCan::CANFilter& filter)
+int SocketCanImpl::removeFilter(const CANFilter& filter)
 {
 	FTRACE(FFDC_SOCKETCAN_DEBUG, "SocketCanImpl::removeFilter( <%x:%x> )",
-			filter.id, filter.mask);
+			filter.can_id, filter.can_mask);
 	filterList.remove(filter);
 	return setFilter(filterList);
 }
@@ -102,7 +102,7 @@ int SocketCanImpl::clearFilter()
 	return setFilter(filterList);
 }
 
-std::list<SocketCan::CANFilter> SocketCanImpl::getFilterList()
+std::list<CANFilter> SocketCanImpl::getFilterList()
 {
 	return filterList;
 }

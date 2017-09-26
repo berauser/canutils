@@ -13,6 +13,7 @@
 #include <cstdint>
 
 #include "CANMessage.h"
+#include "CANFilter.h"
 #include "SocketCanListener.h"
 
 namespace CanSocket
@@ -21,24 +22,8 @@ namespace CanSocket
 class SocketCan
 {
 public:
-	struct CANFilter
+	enum struct CANErrorMask
 	{
-		uint32_t id;
-		uint32_t mask;
-		bool inverted;
-
-		bool operator==(const CANFilter& f1) const
-		{
-			return (this->id == f1.id && this->mask == f1.mask && this->inverted == f1.inverted);
-		}
-
-		bool operator!=(const CANFilter& f1) const
-		{
-			return (this->id != f1.id || this->mask != f1.mask || this->inverted != f1.inverted );
-		}
-	};
-
-	enum struct CANErrorMask {
 		none = 0x00L
 	};
 
@@ -67,10 +52,10 @@ public:
 	virtual int clearFilter() = 0;
 	virtual std::list<CANFilter> getFilterList() = 0;
 
-	virtual int enableLoopback( bool enable ) = 0;
-	virtual bool loopbackEnabled()  const = 0;
+	virtual int enableLoopback(bool enable) = 0;
+	virtual bool loopbackEnabled() const = 0;
 
-	virtual int receiveOwnMessage( bool enable ) = 0;
+	virtual int receiveOwnMessage(bool enable) = 0;
 	virtual bool receiveOwnMessageEnabled() const = 0;
 
 //	virtual int setErrFilterMask( /**/ )
