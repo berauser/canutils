@@ -198,6 +198,9 @@ TEST_F( SocketCanTest, read_write_basic )
 	EXPECT_CALL( listener, recvMessage(::testing::_) ).Times(::testing::AtLeast(0));
 	ASSERT_THROW( socketcan_tx->write( message ), std::logic_error );
 
+	/* wait for receiving */
+	sleep(1);
+
 	/* open the device and try send and receive */
 	EXPECT_EQ( 0, socketcan_tx->open());
 	EXPECT_EQ( 0, socketcan_rx->open());
@@ -205,6 +208,9 @@ TEST_F( SocketCanTest, read_write_basic )
 	/* we send and receive one message */
 	EXPECT_CALL( listener, recvMessage(::testing::_) ).Times(::testing::AtLeast(1));
 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message ));
+
+	/* wait for receiving */
+	sleep(1);
 
 	/* cleanup */
 	EXPECT_EQ(0, socketcan_rx->close());
@@ -214,14 +220,14 @@ TEST_F( SocketCanTest, read_write_basic )
 	delete socketcan_tx;
 }
 
-TEST_F( SocketCanTest, read_write_extende )
+TEST_F( SocketCanTest, read_write_extended )
 {
 	SocketCanFactory factory;
 	SocketCan* socketcan_tx = factory.createSocketCan("vcan0");
 	SocketCan* socketcan_rx = factory.createSocketCan("vcan0");
 
 	/* message to send */
-	CANMessage message( 0x123, false, 8, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 );
+	CANMessage message( 0x123, true, 8, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 );
 
 	/* setup listener */
 	MockListener listener;
@@ -231,6 +237,9 @@ TEST_F( SocketCanTest, read_write_extende )
 	EXPECT_CALL( listener, recvMessage(::testing::_) ).Times(::testing::AtLeast(0));
 	ASSERT_THROW( socketcan_tx->write( message ), std::logic_error );
 
+	/* wait for receiving */
+	sleep(1);
+
 	/* open the device and try send and receive */
 	EXPECT_EQ( 0, socketcan_tx->open());
 	EXPECT_EQ( 0, socketcan_rx->open());
@@ -239,12 +248,21 @@ TEST_F( SocketCanTest, read_write_extende )
 	EXPECT_CALL( listener, recvMessage(message) ).Times(::testing::AtLeast(1));
 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message ));
 
+	/* wait for receiving */
+	sleep(1);
+
 	/* cleanup */
 	EXPECT_EQ(0, socketcan_rx->close());
 	EXPECT_EQ(0, socketcan_tx->close());
 
 	delete socketcan_rx;
 	delete socketcan_tx;
+}
+
+TEST_F( SocketCanTest, add_remove_filter )
+{
+	/* TODO add and remove filter */
+	EXPECT_TRUE( false );
 }
 
 TEST_F( SocketCanTest, receive_filter_not_inverted )
@@ -254,11 +272,11 @@ TEST_F( SocketCanTest, receive_filter_not_inverted )
 	SocketCan* socketcan_rx = factory.createSocketCan("vcan0");
 
 	/* message to send */
-	CANMessage message1( 0x111, 8, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11 );
-	CANMessage message2( 0x222, 8, 0x22, 0x22, 0x22, 0x22, 0x22, 0x22, 0x22, 0x22 );
-	CANMessage message3( 0x333, 8, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33 );
-	CANMessage message4( 0x440, 8, 0x44, 0x44, 0x44, 0x44, 0x44, 0x44, 0x44, 0x44 );
-	CANMessage message5( 0x441, 8, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55 );
+	CANMessage message1( 0x111, false, 8, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11 );
+	CANMessage message2( 0x222, false, 8, 0x22, 0x22, 0x22, 0x22, 0x22, 0x22, 0x22, 0x22 );
+	CANMessage message3( 0x333, false, 8, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33 );
+	CANMessage message4( 0x440, false, 8, 0x44, 0x44, 0x44, 0x44, 0x44, 0x44, 0x44, 0x44 );
+	CANMessage message5( 0x441, false, 8, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55 );
 
 	/* setup filter */
 	CANFilter filter1( 0x111, 0x7FF ); /* recv 0x111 */
@@ -268,13 +286,15 @@ TEST_F( SocketCanTest, receive_filter_not_inverted )
 	MockListener listener;
 	EXPECT_EQ( 0, socketcan_rx->setListener( &listener ) );
 
-	EXPECT_TRUE( false ); // TODO add filter to socketcan_rx
-
 	/* open the device and try send and receive */
 	EXPECT_EQ( 0, socketcan_tx->open());
 	EXPECT_EQ( 0, socketcan_rx->open());
 
+	EXPECT_EQ( 0, socketcan_rx->addFilter( filter1 ) );
+	EXPECT_EQ( 0, socketcan_rx->addFilter( filter2 ) );
+
 	/* write frames */
+	/* receive only three frames 0x111, 0x440, 0x441 */
 	EXPECT_CALL( listener, recvMessage(::testing::_) ).Times(::testing::AtLeast(3));
 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message1 ));
 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message2 ));
@@ -282,6 +302,8 @@ TEST_F( SocketCanTest, receive_filter_not_inverted )
 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message4 ));
 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message5 ));
 
+	/* wait for receiving */
+	sleep(1);
 
 	/* cleanup */
 	EXPECT_EQ(0, socketcan_rx->close());
@@ -291,6 +313,56 @@ TEST_F( SocketCanTest, receive_filter_not_inverted )
 	delete socketcan_tx;
 }
 
+TEST_F( SocketCanTest, receive_filter_inverted )
+{
+	SocketCanFactory factory;
+	SocketCan* socketcan_tx = factory.createSocketCan("vcan0");
+	SocketCan* socketcan_rx = factory.createSocketCan("vcan0");
+
+	/* message to send */
+	CANMessage message1( 0x111, false, 8, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11 );
+	CANMessage message2( 0x222, false, 8, 0x22, 0x22, 0x22, 0x22, 0x22, 0x22, 0x22, 0x22 );
+	CANMessage message3( 0x333, false, 8, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33 );
+	CANMessage message4( 0x440, false, 8, 0x44, 0x44, 0x44, 0x44, 0x44, 0x44, 0x44, 0x44 );
+	CANMessage message5( 0x441, false, 8, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55 );
+
+	/* setup filter */
+	CANFilter filter1( 0x111, 0x7FF ); /* recv 0x111 */
+	CANFilter filter2( 0x440, 0x7F0 ); /* recv 0x440 and 0x441 */
+
+	/* setup listener */
+	MockListener listener;
+	EXPECT_EQ( 0, socketcan_rx->setListener( &listener ) );
+
+	/* open the device and try send and receive */
+	EXPECT_EQ( 0, socketcan_tx->open());
+	EXPECT_EQ( 0, socketcan_rx->open());
+
+	EXPECT_EQ( 0, socketcan_rx->addFilter( filter1 ) );
+	EXPECT_EQ( 0, socketcan_rx->addFilter( filter2 ) );
+
+	/* TODO implement inverted test */
+	EXPECT_TRUE( false );
+
+	/* write frames */
+	/* receive only three frames 0x111, 0x440, 0x441 */
+	EXPECT_CALL( listener, recvMessage(::testing::_) ).Times(::testing::AtLeast(3));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message1 ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message2 ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message3 ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message4 ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message5 ));
+
+	/* wait for receiving */
+	sleep(1);
+
+	/* cleanup */
+	EXPECT_EQ(0, socketcan_rx->close());
+	EXPECT_EQ(0, socketcan_tx->close());
+
+	delete socketcan_rx;
+	delete socketcan_tx;
+}
 
 } /* namespace Test */
 } /* namespace CanSocket */
