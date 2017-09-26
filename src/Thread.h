@@ -23,6 +23,7 @@ public:
 	Thread& operator=(Thread&& __t) noexcept
 	{
 		std::thread::operator=( std::forward<std::thread>(__t) );
+		return *this;
 	}
 
 	Thread(Thread&& __t) noexcept : std::thread( std::forward<std::thread>(__t) )
