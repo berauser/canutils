@@ -27,7 +27,7 @@ void SocketCanTest::TearDown()
 
 TEST_F( SocketCanTest, init )
 {
-	CanSocket::SocketCanFactory factory;
+	SocketCanFactory factory;
 
 	/* invalid argument */
 	ASSERT_THROW(factory.createSocketCan(""), std::invalid_argument);
@@ -56,8 +56,8 @@ TEST_F( SocketCanTest, init )
 
 TEST_F( SocketCanTest, registerListener )
 {
-	CanSocket::SocketCanFactory factory;
-	CanSocket::SocketCan* socketcan = factory.createSocketCan("vcan0");
+	SocketCanFactory factory;
+	SocketCan* socketcan = factory.createSocketCan("vcan0");
 
 	EXPECT_EQ(nullptr, socketcan->getListener());
 
@@ -71,16 +71,15 @@ TEST_F( SocketCanTest, registerListener )
 
 TEST_F( SocketCanTest, filter )
 {
-	CanSocket::SocketCanFactory factory;
-	CanSocket::SocketCan* socketcan = factory.createSocketCan("vcan0");
+	SocketCanFactory factory;
+	SocketCan* socketcan = factory.createSocketCan("vcan0");
 
 	EXPECT_EQ(0, socketcan->getFilterList().size());
 
-
-	CANFilter filter1 { 0x123, 0x7FF };
-	CANFilter filter2 { 0x123, 0x3FF };
-	CANFilter filter3 { 0x007, 0x007 };
-	CANFilter filter4 { 0x007, 0x007 };
+	CANFilter filter1 ( 0x123, 0x7FF );
+	CANFilter filter2 ( 0x123, 0x3FF );
+	CANFilter filter3 ( 0x007, 0x007 );
+	CANFilter filter4 ( 0x007, 0x007 );
 
 	ASSERT_THROW( socketcan->addFilter( filter1 ),    std::logic_error ); // device not open
 	ASSERT_THROW( socketcan->removeFilter( filter1 ), std::logic_error ); // device not open
@@ -138,8 +137,8 @@ TEST_F( SocketCanTest, filter )
 
 TEST_F( SocketCanTest, loopback_basic )
 {
-	CanSocket::SocketCanFactory factory;
-	CanSocket::SocketCan* socketcan = factory.createSocketCan("vcan0");
+	SocketCanFactory factory;
+	SocketCan* socketcan = factory.createSocketCan("vcan0");
 
 	/* closed socket shoulkd throw an error */
 	ASSERT_THROW( socketcan->enableLoopback( true ),  std::logic_error );
@@ -161,8 +160,8 @@ TEST_F( SocketCanTest, loopback_basic )
 
 TEST_F( SocketCanTest, receive_own_basic )
 {
-	CanSocket::SocketCanFactory factory;
-	CanSocket::SocketCan* socketcan = factory.createSocketCan("vcan0");
+	SocketCanFactory factory;
+	SocketCan* socketcan = factory.createSocketCan("vcan0");
 
 	/* closed socket shoulkd throw an error */
 	ASSERT_THROW( socketcan->receiveOwnMessage( true ),  std::logic_error );
@@ -184,12 +183,12 @@ TEST_F( SocketCanTest, receive_own_basic )
 
 TEST_F( SocketCanTest, read_write_basic )
 {
-	CanSocket::SocketCanFactory factory;
-	CanSocket::SocketCan* socketcan_tx = factory.createSocketCan("vcan0");
-	CanSocket::SocketCan* socketcan_rx = factory.createSocketCan("vcan0");
+	SocketCanFactory factory;
+	SocketCan* socketcan_tx = factory.createSocketCan("vcan0");
+	SocketCan* socketcan_rx = factory.createSocketCan("vcan0");
 
 	/* message to send */
-	CANMessage message{ 0x123, 8, ( 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 ) };
+	CANMessage message( 0x123, false, 8, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 );
 
 	/* setup listener */
 	MockListener listener;
@@ -217,12 +216,12 @@ TEST_F( SocketCanTest, read_write_basic )
 
 TEST_F( SocketCanTest, read_write_extende )
 {
-	CanSocket::SocketCanFactory factory;
-	CanSocket::SocketCan* socketcan_tx = factory.createSocketCan("vcan0");
-	CanSocket::SocketCan* socketcan_rx = factory.createSocketCan("vcan0");
+	SocketCanFactory factory;
+	SocketCan* socketcan_tx = factory.createSocketCan("vcan0");
+	SocketCan* socketcan_rx = factory.createSocketCan("vcan0");
 
 	/* message to send */
-	CANMessage message{ 0x123, 8, ( 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 ) };
+	CANMessage message( 0x123, false, 8, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 );
 
 	/* setup listener */
 	MockListener listener;
@@ -250,20 +249,20 @@ TEST_F( SocketCanTest, read_write_extende )
 
 TEST_F( SocketCanTest, receive_filter_not_inverted )
 {
-	CanSocket::SocketCanFactory factory;
-	CanSocket::SocketCan* socketcan_tx = factory.createSocketCan("vcan0");
-	CanSocket::SocketCan* socketcan_rx = factory.createSocketCan("vcan0");
+	SocketCanFactory factory;
+	SocketCan* socketcan_tx = factory.createSocketCan("vcan0");
+	SocketCan* socketcan_rx = factory.createSocketCan("vcan0");
 
 	/* message to send */
-	CANMessage message1{ 0x111, 8, ( 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11 ) };
-	CANMessage message2{ 0x222, 8, ( 0x22, 0x22, 0x22, 0x22, 0x22, 0x22, 0x22, 0x22 ) };
-	CANMessage message3{ 0x333, 8, ( 0x33, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33 ) };
-	CANMessage message4{ 0x440, 8, ( 0x44, 0x44, 0x44, 0x44, 0x44, 0x44, 0x44, 0x44 ) };
-	CANMessage message5{ 0x441, 8, ( 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55 ) };
+	CANMessage message1( 0x111, 8, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11 );
+	CANMessage message2( 0x222, 8, 0x22, 0x22, 0x22, 0x22, 0x22, 0x22, 0x22, 0x22 );
+	CANMessage message3( 0x333, 8, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33 );
+	CANMessage message4( 0x440, 8, 0x44, 0x44, 0x44, 0x44, 0x44, 0x44, 0x44, 0x44 );
+	CANMessage message5( 0x441, 8, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55 );
 
 	/* setup filter */
-	CanSocket::CANFilter filter1{ 0x111, 0x7FF }; /* recv 0x111 */
-	CanSocket::CANFilter filter2{ 0x440, 0x7F0 }; /* recv 0x440 and 0x441 */
+	CANFilter filter1( 0x111, 0x7FF ); /* recv 0x111 */
+	CANFilter filter2( 0x440, 0x7F0 ); /* recv 0x440 and 0x441 */
 
 	/* setup listener */
 	MockListener listener;

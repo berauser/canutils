@@ -25,7 +25,7 @@ void CANMessageTest::TearDown()
 
 TEST_F( CANMessageTest, compare )
 {
-	CANMessage message1{ 0x111, 8,  (0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77) };
+	CANMessage message1( 0x111, false, 8, 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77 );
 
 	EXPECT_EQ( static_cast<uint32_t>(0x111), message1.can_id  );
 	EXPECT_EQ( static_cast<uint8_t> (8),     message1.can_dlc );
@@ -38,6 +38,20 @@ TEST_F( CANMessageTest, compare )
 	EXPECT_EQ( static_cast<uint8_t>(0x55), message1.data[5] );
 	EXPECT_EQ( static_cast<uint8_t>(0x66), message1.data[6] );
 	EXPECT_EQ( static_cast<uint8_t>(0x77), message1.data[7] );
+}
+
+TEST_F( CANMessageTest, flag )
+{
+	/* TODO */
+	/* implement */
+	/* using flag invert with ~ */
+}
+
+TEST_F( CANMessageTest, mask )
+{
+	/* TODO */
+	/* implement */
+	/* using flag invert with ~ */
 }
 
 } /* namespace Test */
