@@ -13,7 +13,7 @@ class Recevier : public SocketCanListener
 		std::cout << std::hex << message.can_id << " ";
 		std::cout << std::dec << "[" << static_cast<uint32_t>(message.can_dlc) << "] ";
 
-		for( int i = 0; (i < message.can_dlc) && (i < MAX_DATA_LENGTH) ; ++i )
+		for( int i = 0; (i < message.can_dlc) && (i < CAN_MAX_DATA_LENGTH) ; ++i )
 		{
 			std::cout << std::hex << static_cast <uint32_t>(message.data[i]) << " ";
 		}
