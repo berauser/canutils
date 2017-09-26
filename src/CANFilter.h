@@ -24,6 +24,17 @@ struct CANFilter
 		can_mask = mask;
 	}
 
+	void invert()
+	{
+		can_id = can_id | static_cast<uint32_t>(CANFilterFlags::Invert);
+	}
+
+	bool isInverted()
+	{
+		return ( ( can_id & static_cast<uint32_t>(CANFilterFlags::Invert) )
+				== static_cast<uint32_t>(CANFilterFlags::Invert) );
+	}
+
 	CANFilter& operator=(const CANFilter& f1)
 	{
 		can_id = f1.can_id;

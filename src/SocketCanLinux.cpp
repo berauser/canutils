@@ -30,7 +30,8 @@ namespace CanSocket
 SocketCanLinux::SocketCanLinux(const std::string& device_arg)
 		: SocketCanImpl(device_arg), socketfd( SOCKET_INVALID)
 {
-	static_assert( sizeof( CANMessage ) == sizeof( can_frame ), "CANMessage and can_frame has not the same size" );
+	static_assert( sizeof( CANMessage ) == sizeof( can_frame  ), "CANMessage and can_frame has not the same size" );
+	static_assert( sizeof( CANFilter  ) == sizeof( can_filter ), "CANFilter and can_filter has not the same size" );
 }
 
 SocketCanLinux::~SocketCanLinux()
