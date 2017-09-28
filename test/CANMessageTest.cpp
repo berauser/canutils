@@ -42,16 +42,54 @@ TEST_F( CANMessageTest, compare )
 
 TEST_F( CANMessageTest, flag )
 {
-	/* TODO */
-	/* implement */
-	/* using flag invert with ~ */
+	CANMessage message( 0x000 );
+
+	/* test logical or */
+	EXPECT_EQ( 0x80000000U, (message | CANMessage::CANFlag::Extended).can_id );
+	EXPECT_EQ( 0x40000000U, (message | CANMessage::CANFlag::Remote).can_id );
+	EXPECT_EQ( 0x20000000U, (message | CANMessage::CANFlag::Error).can_id );
+
+	EXPECT_EQ( ~0x80000000U, (message | ~CANMessage::CANFlag::Extended).can_id );
+	EXPECT_EQ( ~0x40000000U, (message | ~CANMessage::CANFlag::Remote).can_id );
+	EXPECT_EQ( ~0x20000000U, (message | ~CANMessage::CANFlag::Error).can_id );
+
+
+	message.can_id = ~message.can_id;
+
+	/* test logical and */
+	EXPECT_EQ( 0xFFFFFFFFU & 0x80000000U, (message & CANMessage::CANFlag::Extended).can_id );
+	EXPECT_EQ( 0xFFFFFFFFU & 0x40000000U, (message & CANMessage::CANFlag::Remote).can_id );
+	EXPECT_EQ( 0xFFFFFFFFU & 0x20000000U, (message & CANMessage::CANFlag::Error).can_id );
+
+	EXPECT_EQ( 0xFFFFFFFFU & ~0x80000000U, (message & ~CANMessage::CANFlag::Extended).can_id );
+	EXPECT_EQ( 0xFFFFFFFFU & ~0x40000000U, (message & ~CANMessage::CANFlag::Remote).can_id );
+	EXPECT_EQ( 0xFFFFFFFFU & ~0x20000000U, (message & ~CANMessage::CANFlag::Error).can_id );
 }
 
 TEST_F( CANMessageTest, mask )
 {
-	/* TODO */
-	/* implement */
-	/* using flag invert with ~ */
+	CANMessage message( 0x000 );
+
+	/* test logical or */
+	EXPECT_EQ( 0x000007FFU, (message | CANMessage::CANMask::Standard).can_id );
+	EXPECT_EQ( 0x1FFFFFFFU, (message | CANMessage::CANMask::Extended).can_id );
+	EXPECT_EQ( 0x1FFFFFFFU, (message | CANMessage::CANMask::Error).can_id );
+
+	EXPECT_EQ( ~0x000007FFU, (message | ~CANMessage::CANMask::Standard).can_id );
+	EXPECT_EQ( ~0x1FFFFFFFU, (message | ~CANMessage::CANMask::Extended).can_id );
+	EXPECT_EQ( ~0x1FFFFFFFU, (message | ~CANMessage::CANMask::Error).can_id );
+
+
+	message.can_id = ~message.can_id;
+
+	/* test logical and */
+	EXPECT_EQ( 0xFFFFFFFFU & 0x000007FFU, (message & CANMessage::CANMask::Standard).can_id );
+	EXPECT_EQ( 0xFFFFFFFFU & 0x1FFFFFFFU, (message & CANMessage::CANMask::Extended).can_id );
+	EXPECT_EQ( 0xFFFFFFFFU & 0x1FFFFFFFU, (message & CANMessage::CANMask::Error).can_id );
+
+	EXPECT_EQ( 0xFFFFFFFFU & ~0x000007FFU, (message & ~CANMessage::CANMask::Standard).can_id );
+	EXPECT_EQ( 0xFFFFFFFFU & ~0x1FFFFFFFU, (message & ~CANMessage::CANMask::Extended).can_id );
+	EXPECT_EQ( 0xFFFFFFFFU & ~0x1FFFFFFFU, (message & ~CANMessage::CANMask::Error).can_id );
 }
 
 } /* namespace Test */

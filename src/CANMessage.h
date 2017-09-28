@@ -22,8 +22,6 @@ struct CANMessage final
 		Extended = 0x80000000U, //!< Extended
 		Remote = 0x40000000U, //!< Remote
 		Error = 0x20000000U //!< Error
-
-		/* TODO implement operator~ ( const CANFlag& flag ) const */
 	};
 
 	CANMessage& operator&=(const CANFlag& flag)
@@ -145,6 +143,42 @@ struct CANMessage final
 	uint8_t reserved2;
 	uint8_t data[CAN_MAX_DATA_LENGTH];
 };
+
+inline constexpr CANMessage::CANFlag
+operator~(CANMessage::CANFlag x)
+{
+	return static_cast<CANMessage::CANFlag>(~static_cast<uint32_t>(x));
+}
+
+inline constexpr CANMessage::CANFlag
+operator&(CANMessage::CANFlag f1, CANMessage::CANFlag f2)
+{
+	return static_cast<CANMessage::CANFlag>(static_cast<uint32_t>(f1)&static_cast<uint32_t>(f2));
+}
+
+inline constexpr CANMessage::CANFlag
+operator|(CANMessage::CANFlag f1, CANMessage::CANFlag f2)
+{
+	return static_cast<CANMessage::CANFlag>(static_cast<uint32_t>(f1)|static_cast<uint32_t>(f2));
+}
+
+inline constexpr CANMessage::CANMask
+operator~(CANMessage::CANMask x)
+{
+	return static_cast<CANMessage::CANMask>(~static_cast<uint32_t>(x));
+}
+
+inline constexpr CANMessage::CANMask
+operator&(CANMessage::CANMask f1, CANMessage::CANMask f2)
+{
+	return static_cast<CANMessage::CANMask>(static_cast<uint32_t>(f1)&static_cast<uint32_t>(f2));
+}
+
+inline constexpr CANMessage::CANMask
+operator|(CANMessage::CANMask f1, CANMessage::CANMask f2)
+{
+	return static_cast<CANMessage::CANMask>(static_cast<uint32_t>(f1)|static_cast<uint32_t>(f2));
+}
 
 } /* namespace CanSocket */
 
