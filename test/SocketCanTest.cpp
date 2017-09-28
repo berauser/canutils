@@ -259,12 +259,6 @@ TEST_F( SocketCanTest, read_write_extended )
 	delete socketcan_tx;
 }
 
-TEST_F( SocketCanTest, add_remove_filter )
-{
-	/* TODO add and remove filter */
-	EXPECT_TRUE( false );
-}
-
 TEST_F( SocketCanTest, receive_filter_not_inverted )
 {
 	SocketCanFactory factory;
