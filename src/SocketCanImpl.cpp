@@ -98,7 +98,9 @@ int SocketCanImpl::removeFilter(const CANFilter& filter)
 
 int SocketCanImpl::clearFilter()
 {
+	FTRACE(FFDC_SOCKETCAN_DEBUG, "SocketCanImpl::clearFilter()");
 	filterList.clear();
+	filterList.push_back( CANFilter( 0x000, 0x000 ) ); // match all
 	return setFilter(filterList);
 }
 

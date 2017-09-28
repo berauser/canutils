@@ -253,17 +253,20 @@ int SocketCanLinux::setFilter(const std::list<CANFilter>& filterList)
 		throw std::logic_error("Device not open");
 	}
 
+	CANFilter rfilter[filterList.size()];
+
 	if (filterList.size() > 0)
 	{
-		CANFilter* rfilter = new CANFilter[filterList.size()];
 		std::copy(filterList.begin(), filterList.end(), rfilter);
-		return setsockopt(socketfd, SOL_CAN_RAW, CAN_RAW_FILTER, &rfilter,
-				sizeof(filterList.size()));
 	}
-	else
+
+	if( setsockopt(socketfd, SOL_CAN_RAW, CAN_RAW_FILTER, &rfilter, sizeof(rfilter) ) < 0 )
 	{
-		return setsockopt(socketfd, SOL_CAN_RAW, CAN_RAW_FILTER, NULL, 0);
+		FTRACE( FFDC_SOCKETCAN_ERROR, "setsockopt: %s", std::strerror( errno ) );
+		return -1;
 	}
+
+	return 0;
 }
 
 } /* namespace CanSocket */
