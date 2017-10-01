@@ -138,9 +138,9 @@ struct CANMessage final
 
 	uint32_t can_id;
 	uint8_t can_dlc;
-	uint8_t padding;
-	uint8_t reserved1;
-	uint8_t reserved2;
+	uint8_t padding   = 0;
+	uint8_t reserved1 = 0;
+	uint8_t reserved2 = 0;
 	uint8_t data[CAN_MAX_DATA_LENGTH];
 };
 
