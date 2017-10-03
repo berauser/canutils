@@ -14,7 +14,6 @@
 
 #include "CANMessage.h"
 #include "CANFilter.h"
-#include "SocketCanListener.h"
 
 namespace CanSocket
 {
@@ -41,9 +40,7 @@ public:
 	virtual bool isOpen() = 0;
 
 	virtual int write(const CANMessage& msg) = 0;
-
-	virtual int setListener(SocketCanListener* listener) = 0;
-	virtual SocketCanListener* getListener() = 0;
+	virtual int read(CANMessage* message) = 0;
 
 	virtual const std::string& getDevice() const = 0;
 

@@ -10,8 +10,6 @@
 
 #include "SocketCan.h"
 
-#include "Thread.h"
-
 namespace CanSocket
 {
 
@@ -24,12 +22,10 @@ public:
 
 	virtual int open() override final;
 	virtual int close() override final;
-	virtual bool isOpen() = 0;
+	virtual bool isOpen() override = 0;
 
-	virtual int write(const CANMessage& msg) = 0;
-
-	virtual int setListener(SocketCanListener* listener);
-	virtual SocketCanListener* getListener();
+	virtual int write(const CANMessage& msg) override = 0;
+	virtual int read(CANMessage* message) override = 0;
 
 	virtual const std::string& getDevice() const override final;
 
@@ -38,26 +34,17 @@ public:
 	virtual int clearFilter() override final;
 	virtual std::list<CANFilter> getFilterList() override final;
 
-
 protected:
 	virtual int openDevice() = 0;
 	virtual int closeDevice() = 0;
 
 	virtual int getFiledescriptor() const = 0;
 
-	virtual int read(CANMessage* message) = 0;
-
 	virtual int setFilter(const std::list<CANFilter>& filterList) = 0;
-
-private:
-	virtual void recvLoop() final;
 
 protected:
 	std::string device;
-	SocketCanListener* listener;
 	std::list<CANFilter> filterList;
-
-	Thread recvThread;
 };
 
 } /* namespace CanSocket */

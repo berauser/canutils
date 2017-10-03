@@ -26,7 +26,8 @@ public:
 
 	virtual bool isOpen();
 
-	int write(const CANMessage& msg) override;
+	virtual int write(const CANMessage& msg) override;
+	virtual int read(CANMessage* message) override;
 
 	virtual int enableLoopback( bool enable ) override;
 	virtual bool loopbackEnabled()  const override;
@@ -40,7 +41,7 @@ protected:
 
 	virtual int getFiledescriptor() const override;
 
-	virtual int read(CANMessage* message) override;
+
 
 	virtual int setFilter(const std::list<CANFilter>& filterList) override;
 
