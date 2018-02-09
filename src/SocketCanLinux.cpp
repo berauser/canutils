@@ -43,19 +43,24 @@ bool SocketCanLinux::isOpen()
 	return (socketfd != SOCKET_INVALID);
 }
 
-int SocketCanLinux::write(const CANMessage& message)
+int SocketCanLinux::writeDevice(const CANMessage& message)
 {
 	if (socketfd == SOCKET_INVALID)
 	{
 		throw std::logic_error("Device not open");
 	}
 
-	FTRACE( FFDC_SOCKETCAN_DEBUG, "SocketCanLinux::write() - %x [%d] %x %x %x %x %x %x %x %x",
-			message.can_id, message.can_dlc, message.data[0], message.data[1],
-			message.data[2], message.data[3], message.data[4], message.data[5],
-			message.data[6], message.data[7]);
-
 	return ::write(socketfd, &message, sizeof(CANMessage));
+}
+
+int SocketCanLinux::readDevice(CANMessage* message)
+{
+	if (socketfd == SOCKET_INVALID)
+	{
+		throw std::logic_error("Device not open");
+	}
+
+	return ::read(socketfd, message, sizeof(CANMessage));
 }
 
 int SocketCanLinux::enableLoopback(bool enable)
@@ -209,40 +214,6 @@ int SocketCanLinux::closeDevice()
 int SocketCanLinux::getFiledescriptor() const
 {
 	return socketfd;
-}
-
-int SocketCanLinux::read(CANMessage* message)
-{
-	// TODO use select or something that can closed by shutdown!!!
-	thread_local int recvbytes;
-	memset(message, 0x00, sizeof(CANMessage));
-
-	if (socketfd == SOCKET_INVALID)
-	{
-		throw std::logic_error("Device not open");
-	}
-
-	recvbytes = ::read(socketfd, message, sizeof(CANMessage));
-
-	FTRACE( FFDC_SOCKETCAN_DEBUG, "SocketCanLinux::read() - %x [%d] %x %x %x %x %x %x %x %x",
-			message->can_id, message->can_dlc, message->data[0],
-			message->data[1], message->data[2], message->data[3],
-			message->data[4], message->data[5], message->data[6],
-			message->data[7]);
-
-	if (recvbytes < 0)
-	{
-		/* error */
-		FTRACE( FFDC_SOCKETCAN_DEBUG, "SocketCanLinux::read() - close");
-		closeDevice();
-	}
-	else if (recvbytes == 0)
-	{
-		/* closed */
-		FTRACE( FFDC_SOCKETCAN_DEBUG, "SocketCanLinux::read() - shutdown");
-		closeDevice();
-	}
-	return recvbytes;
 }
 
 int SocketCanLinux::setFilter(const std::list<CANFilter>& filterList)

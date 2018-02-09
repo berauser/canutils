@@ -18,7 +18,7 @@ namespace CanSocket
 #ifdef __linux__
 	#define SocketCanCreate SocketCanLinux
 #else
-	#error "Not implemented - Only linux."
+	#error "No implementation found - Only Linux is implemented."
 #endif
 
 SocketCanFactory::SocketCanFactory()

@@ -9,6 +9,7 @@
 
 #include "SocketCanFactory.h"
 #include "MockListener.h"
+#include "TestHelper.h"
 
 #include <stdexcept>
 #include <future>
@@ -25,18 +26,6 @@ void SocketCanTest::SetUp()
 void SocketCanTest::TearDown()
 {
 }
-
-//#define SUCCESS_IF_NO_MESSAGE( scan, tout )                          \
-//do {                                                                 \
-//	std::promise<bool> promisedFinished;                             \
-//	auto futureResult = promisedFinished.get_future();               \
-//	std::thread([](std::promise<bool>& finished, SocketCan & obj) {  \
-//		CANMessage message;                                          \
-//		obj.read( &message );                                        \
-//		finished.set_value(true);                                    \
-//	}, std::ref(promisedFinished), std::ref(scan)).detach();         \
-//	EXPECT_TRUE(futureResult.wait_for(std::chrono::milliseconds(tout))== std::future_status::timeout); \
-//} while(0)
 
 TEST_F( SocketCanTest, init )
 {

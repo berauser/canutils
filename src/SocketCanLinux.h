@@ -26,9 +26,6 @@ public:
 
 	virtual bool isOpen();
 
-	virtual int write(const CANMessage& msg) override;
-	virtual int read(CANMessage* message) override;
-
 	virtual int enableLoopback( bool enable ) override;
 	virtual bool loopbackEnabled()  const override;
 
@@ -38,6 +35,8 @@ public:
 protected:
 	virtual int openDevice() override;
 	virtual int closeDevice() override;
+	virtual int readDevice(CANMessage* message) override;
+	virtual int writeDevice(const CANMessage& msg) override;
 
 	virtual int getFiledescriptor() const override;
 
