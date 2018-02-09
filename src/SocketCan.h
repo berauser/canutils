@@ -30,6 +30,7 @@ public:
 	SocketCan() = delete;
 	explicit SocketCan(const std::string& device_arg)
 	{
+		(void)device_arg;
 	}
 	virtual ~SocketCan()
 	{
