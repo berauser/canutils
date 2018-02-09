@@ -16,9 +16,11 @@ PROJECT( CANBuffer )
 #
 ################################################################################
 
-OPTION( BUILD_EXAMPLE "Build exmaples"    FALSE )
-OPTION( BUILD_TEST    "Build test"        FALSE )
-OPTION( USE_GCOV      "Enable gcov flags" FALSE )
+OPTION( BUILD_EXAMPLE  "Build exmaples"          FALSE )
+OPTION( BUILD_TEST     "Build test"              FALSE )
+OPTION( BUILD_DOC      "Create documentation"    FALSE )
+OPTION( BUILD_PARANOID "Use paranoid gcc checks" TRUE  )
+OPTION( USE_GCOV       "Enable gcov flags"       FALSE )
 
 ################################################################################
 #
@@ -51,8 +53,10 @@ ELSE ( COMPILER_SUPPORTS_CXX11 )
 ENDIF( COMPILER_SUPPORTS_CXX11 )
 
 #** set Werror *****************************************************************
-SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror" )
-SET( CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Werror" )
+IF   ( BUILD_PARANOID )
+	SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wall -Wextra -Wunreachable-code -Wreturn-type" )
+	SET( CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Werror -Wall -Wextra -Wunreachable-code -Wreturn-type" )
+ENDIF( BUILD_PARANOID )
 
 #** gcov ***********************************************************************
 IF   ( USE_GCOV )
@@ -78,4 +82,8 @@ ENDIF( BUILD_EXAMPLE )
 IF   ( BUILD_TEST )
 	ADD_SUBDIRECTORY( test )
 ENDIF( BUILD_TEST )
+
+IF   ( BUILD_DOC )
+	ADD_SUBDIRECTORY( doc )
+ENDIF( BUILD_DOC )
 
