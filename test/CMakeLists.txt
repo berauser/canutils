@@ -12,10 +12,16 @@ FIND_LIBRARY	( GMOCK
 		)
 
 TARGET_INCLUDE_DIRECTORIES	( canbuffer_test PUBLIC
-					${PROJECT_SOURCE_DIR}/src/
+					${PROJECT_SOURCE_DIR}/src/include/
+					${PROJECT_SOURCE_DIR}/src/basic/
 				)
 
 TARGET_LINK_LIBRARIES	( canbuffer_test
 				${GMOCK}
 				CANBuffer_shared
 			)
+
+INSTALL	( TARGETS canbuffer_test
+		EXPORT CANBuffer_test
+		DESTINATION ${CMAKE_INSTALL_BINDIR}
+	)

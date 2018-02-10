@@ -71,7 +71,17 @@ ENDIF( USE_GCOV )
 #
 ################################################################################
 SET( EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin"  CACHE INTERNAL "" )
-SET( LIBRARY_OUTPUT_PATH    "${PROJECT_SOURCE_DIR}/lib" CACHE INTERNAL "" )
+SET( LIBRARY_OUTPUT_PATH    "${PROJECT_SOURCE_DIR}/lib"  CACHE INTERNAL "" )
+
+# TODO
+# 1. determine lib32/lib64 on Linux
+# 2. determine compiling on windows
+SET( CMAKE_INSTALL_INCLUDEDIR "include" CACHE PATH "C header files (include)"                              )
+SET( CMAKE_INSTALL_BINDIR     "bin"     CACHE PATH "user executables (bin)"                                )
+SET( CMAKE_INSTALL_LIBDIR     "lib"     CACHE PATH "object code libraries"                                 )
+SET( CMAKE_INSTALL_DATADIR    ""        CACHE PATH "read-only architecture-independent data (DATAROOTDIR)" )
+SET( CMAKE_INSTALL_DOCDIR     "doc"     CACHE PATH "documentation root" )
+SET( CMAKE_INSTALL_MANDIR     "man"     CACHE PATH "man documentation"  )
 
 ADD_SUBDIRECTORY( src )
 

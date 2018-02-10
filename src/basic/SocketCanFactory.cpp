@@ -8,7 +8,8 @@
 #include "SocketCanFactory.h"
 
 #include "logger.h"
-#include "SocketCanLinux.h"
+
+#include "../linux/SocketCanLinux.h"
 
 #include <stdexcept>
 
@@ -36,7 +37,6 @@ SocketCan* SocketCanFactory::createSocketCan(const std::string& device)
 	{
 		throw std::invalid_argument( "Device is empty" );
 	}
-
 	return new SocketCanCreate(device);
 }
 

@@ -59,7 +59,9 @@ int SocketCanLinux::readDevice(CANMessage* message)
 	{
 		throw std::logic_error("Device not open");
 	}
-
+	
+	// TODO ioctl call for timestamp
+	
 	return ::read(socketfd, message, sizeof(CANMessage));
 }
 

@@ -1,12 +1,16 @@
 
-BUILD_DIR  := build
-SOURCE_DIR := src
+BUILD_DIR   := build
+SOURCE_DIR  := src
+INSTALL_DIR := install
 
 CMAKE_OPTIONS := -DUSE_GCOV=TRUE
 CMAKE_OPTIONS += -DBUILD_EXAMPLE=TRUE
 CMAKE_OPTIONS += -DBUILD_TEST=TRUE
 CMAKE_OPTIONS += -DBUILD_DOC=TRUE
 CMAKE_OPTIONS += -DBUILD_PARANOID=TRUE
+
+CMAKE_OPTIONS += -DCMAKE_INSTALL_PREFIX=$(INSTALL_DIR)
+
 .PHONY: all
 all:
 	@mkdir -p $(BUILD_DIR)
@@ -14,6 +18,10 @@ all:
 		cmake .. $(CMAKE_OPTIONS) \
 	)
 	@$(MAKE) -C $(BUILD_DIR) all
+
+.PHONY: install
+install:
+	@$(MAKE) -C $(BUILD_DIR) install
 
 .PHONY: clean
 clean:

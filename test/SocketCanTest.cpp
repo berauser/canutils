@@ -8,7 +8,6 @@
 #include "SocketCanTest.h"
 
 #include "SocketCanFactory.h"
-#include "MockListener.h"
 #include "TestHelper.h"
 
 #include <stdexcept>

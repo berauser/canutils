@@ -8,7 +8,6 @@
 #include "CANMessageTest.h"
 
 #include "SocketCanFactory.h"
-#include "MockListener.h"
 
 namespace CanSocket
 {
