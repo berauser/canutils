@@ -9,6 +9,7 @@
 #define SRC_SOCKETCANFACTORY_H_
 
 #include "SocketCan.h"
+#include "SocketCanStatistics.h"
 
 namespace CanSocket
 {
@@ -20,6 +21,7 @@ public:
 	virtual ~SocketCanFactory();
 
 	SocketCan* createSocketCan(const std::string& device);
+	SocketCanStatistics* createSocketCanStatistics(const std::string& device);
 };
 
 } /* namespace CanSocket */

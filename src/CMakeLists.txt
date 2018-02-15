@@ -52,7 +52,7 @@ MESSAGE( STATUS "CANBUFFER_SOURCE_DIR: ${CANBUFFER_SOURCE_DIR}" )
 #
 ################################################################################
 
-FILE	( GLOB CANBuffer_src
+FILE	( GLOB_RECURSE CANBuffer_src
 		${CANBUFFER_INCLUDE_DIR}/*.cpp
 		${CANBUFFER_BASIC_DIR}/*.cpp
 		${CANBUFFER_SOURCE_DIR}/*.cpp
