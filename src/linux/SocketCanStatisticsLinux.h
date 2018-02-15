@@ -25,7 +25,6 @@ protected:
 	
 protected:
 	std::string device;
-	std::ifstream infile;
 	
 	Netlink *netlink;
 };

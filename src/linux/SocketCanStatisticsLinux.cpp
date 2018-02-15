@@ -21,7 +21,7 @@ namespace CanSocket
 
 #define PROC_FILE_PATH "/proc/net/dev"  
   
-SocketCanStatisticsLinux::SocketCanStatisticsLinux(const std::string& device_arg): SocketCanStatisticsImpl(device_arg), device(device_arg)
+SocketCanStatisticsLinux::SocketCanStatisticsLinux(const std::string& device_arg): SocketCanStatisticsImpl(device_arg), device(device_arg), netlink(nullptr)
 {
 	static_assert( sizeof( CanSocket::CANStatistics ) == sizeof( NetlinkParser::DeviceStatistics ), "CANStatistics and DeviceStatistics has not the same size" ); 
 }
@@ -95,6 +95,11 @@ int SocketCanStatisticsLinux::readDevice(CANStatistics* stats)
 	
 	// currently we can use memcpy to copy the struct data
 	memcpy( stats, nstats, sizeof(CANStatistics) );
+	
+	// cleanup
+	delete nstats;
+	delete data;
+	
 	return 0;
 }
 

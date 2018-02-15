@@ -64,7 +64,7 @@ NetlinkParser::DeviceStatistics* NetlinkParser::parseStatistics(Netlink::Data* d
 		// no statistics return;
 		return stats;
 	}
-	 
+	
 	return stats;
 }
 
