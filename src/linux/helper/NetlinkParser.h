@@ -47,30 +47,30 @@ public:
 	
 	struct DeviceStatistics {
 		// Receive
-		uint64_t rx_bytes;
-		uint64_t rx_packets;
-		uint64_t rx_errors;
-		uint64_t rx_dropped;
-		uint64_t rx_overrun_errors;
-		uint64_t rx_multicast;
-		uint64_t rx_compressed;
-		uint64_t rx_length_errors;
-		uint64_t rx_crc_errors;
-		uint64_t rx_frame_errors;
-		uint64_t rx_fifo_errors;
-		uint64_t rx_missed_errors;
+		std::uint64_t rx_bytes;
+		std::uint64_t rx_packets;
+		std::uint64_t rx_errors;
+		std::uint64_t rx_dropped;
+		std::uint64_t rx_overrun_errors;
+		std::uint64_t rx_multicast;
+		std::uint64_t rx_compressed;
+		std::uint64_t rx_length_errors;
+		std::uint64_t rx_crc_errors;
+		std::uint64_t rx_frame_errors;
+		std::uint64_t rx_fifo_errors;
+		std::uint64_t rx_missed_errors;
 		// Transmit
-		uint64_t tx_bytes;
-		uint64_t tx_packets;
-		uint64_t tx_errors;
-		uint64_t tx_dropped;
-		uint64_t tx_carrier_errors;
-		uint64_t tx_collisions;
-		uint64_t tx_compressed;
-		uint64_t tx_aborted_errors;
-		uint64_t tx_fifo_errors;
-		uint64_t tx_window_errors;
-		uint64_t tx_heartbeat_errors;
+		std::uint64_t tx_bytes;
+		std::uint64_t tx_packets;
+		std::uint64_t tx_errors;
+		std::uint64_t tx_dropped;
+		std::uint64_t tx_carrier_errors;
+		std::uint64_t tx_collisions;
+		std::uint64_t tx_compressed;
+		std::uint64_t tx_aborted_errors;
+		std::uint64_t tx_fifo_errors;
+		std::uint64_t tx_window_errors;
+		std::uint64_t tx_heartbeat_errors;
 	};
 	
 	struct DeviceDetails {
@@ -80,6 +80,7 @@ public:
 		std::string iftype;
 		std::string ifalias;
 		std::vector<DeviceFlags> flags;
+		// Settings
 		int mtu;
 		int tx_qlen;
 		std::string qdisc;
@@ -97,10 +98,10 @@ public:
 	static std::string deviceFlagsToString( const DeviceFlags& flags );
 	
 protected:
-	static DeviceState operationState( uint8_t state );
+	static DeviceState operationState(unsigned int state );
 	
-	static int parseStatistics32( Netlink::Data* data, DeviceStatistics* );
-	static int parseStatistics64( Netlink::Data* data, DeviceStatistics* );
+	static int parseStatistics32( Netlink::Data* data, DeviceStatistics* stats);
+	static int parseStatistics64( Netlink::Data* data, DeviceStatistics* stats);
 };
 
 } /* namespace CanSocket */

@@ -1,8 +1,8 @@
 
 #include "NetlinkParser.h"
 
-#include <cstdio>
 #include <cstring>
+#include <stdexcept>
 
 namespace CanSocket
 {
@@ -17,7 +17,16 @@ NetlinkParser::~NetlinkParser()
 
 NetlinkParser::DeviceDetails* NetlinkParser::parseDetails(Netlink::Data* data)
 {
+	if( data == nullptr )
+	{
+		throw std::invalid_argument("Netlink::Data is nullptr");
+	}
+	
 	DeviceDetails* details = new DeviceDetails;
+	if( details == nullptr )
+	{
+		throw std::bad_alloc();
+	}
 	memset( details, 0, sizeof(DeviceDetails) );
 	
 	details->ifindex = data->index;
@@ -29,7 +38,7 @@ NetlinkParser::DeviceDetails* NetlinkParser::parseDetails(Netlink::Data* data)
 	if ( data->tb[IFLA_QDISC]     ) 
 		details->qdisc = (char*)RTA_DATA(data->tb[IFLA_QDISC]);
 	if ( data->tb[IFLA_OPERSTATE] ) 
-		details->state = operationState ( *(uint8_t*)(data->tb[IFLA_OPERSTATE]) );
+		details->state = operationState ( *(unsigned int*)(data->tb[IFLA_OPERSTATE]) );
 // 	if ( data->tb[IFLA_MASTER]    )
 // 		;
 	if ( data->tb[IFLA_TXQLEN]    )
@@ -47,6 +56,10 @@ NetlinkParser::DeviceDetails* NetlinkParser::parseDetails(Netlink::Data* data)
 NetlinkParser::DeviceStatistics* NetlinkParser::parseStatistics(Netlink::Data* data)
 {
 	DeviceStatistics *stats = new DeviceStatistics;
+	if( stats == nullptr )
+	{
+		throw std::bad_alloc();
+	}
 	memset( stats, 0, sizeof(DeviceStatistics) );
 	
 	if ( data->tb[IFLA_STATS64] )
@@ -80,7 +93,7 @@ std::string NetlinkParser::deviceFlagsToString(const NetlinkParser::DeviceFlags&
 	return "";
 }
 
-NetlinkParser::DeviceState NetlinkParser::operationState(uint8_t state)
+NetlinkParser::DeviceState NetlinkParser::operationState(unsigned int state)
 {
 	switch( state )
 	{
@@ -100,6 +113,9 @@ int NetlinkParser::parseStatistics32(Netlink::Data* data, NetlinkParser::DeviceS
 {
   	struct rtnl_link_stats *s;
 	s = static_cast<struct rtnl_link_stats*>(RTA_DATA( data->tb[IFLA_STATS]));
+	
+	// FIXME: Here we have many valgrind warnings. How to prevent?
+	//        Invalid read of size 8: XXXX bytes below stack pointer
 	
 	// Receive stats
 	stats->rx_bytes   = s->rx_bytes;
@@ -134,8 +150,11 @@ int NetlinkParser::parseStatistics32(Netlink::Data* data, NetlinkParser::DeviceS
 
 int NetlinkParser::parseStatistics64(Netlink::Data* data, NetlinkParser::DeviceStatistics* stats)
 {
-	struct rtnl_link_stats64 *s;
-	s = static_cast<struct rtnl_link_stats64*>(RTA_DATA( data->tb[IFLA_STATS64]));
+	struct rtnl_link_stats64* s;
+	s = static_cast<struct rtnl_link_stats64*>(RTA_DATA(data->tb[IFLA_STATS64]));
+	
+	// FIXME: Here we have many valgrind warnings. How to prevent?
+	//        Invalid read of size 8: XXXX bytes below stack pointer
 	
 	// Receive stats
 	stats->rx_bytes   = s->rx_bytes;
