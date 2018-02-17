@@ -10,7 +10,6 @@
 
 #include <list>
 #include <string>
-#include <cstdint>
 
 #include "CANMessage.h"
 #include "CANFilter.h"

@@ -1,11 +1,7 @@
 
 #include "SocketCanStatisticsLinux.h"
 
-#include <stdexcept>
-#include <sstream>
 #include <cstring>
-#include <string>
-#include <limits>
 
 #include "helper/Netlink.h"
 #include "helper/NetlinkCanParser.h"
@@ -14,12 +10,6 @@
 
 namespace CanSocket
 {
-
-#define STAT_BUF_LEN 512
-#define PROC_LINESIZE 256
-#define PROC_LINECOUNT 32  
-
-#define PROC_FILE_PATH "/proc/net/dev"  
   
 SocketCanStatisticsLinux::SocketCanStatisticsLinux(const std::string& device_arg): SocketCanStatisticsImpl(device_arg), device(device_arg), netlink(nullptr)
 {
@@ -98,7 +88,7 @@ int SocketCanStatisticsLinux::readDevice(CANStatistics* stats)
 	
 	// cleanup
 	delete nstats;
-	delete data;
+	netlink->destroy(data);
 	
 	return 0;
 }

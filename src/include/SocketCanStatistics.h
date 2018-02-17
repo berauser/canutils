@@ -8,9 +8,9 @@
 #ifndef SRC_SOCKETCANSTATISTICS_H_
 #define SRC_SOCKETCANSTATISTICS_H_
 
-#include <string>
-
 #include "CANStatistics.h"
+
+#include <string>
 
 namespace CanSocket
 {

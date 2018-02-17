@@ -1,18 +1,12 @@
+
 #include "Netlink.h"
 
-#include <linux/rtnetlink.h>
-#include <net/if.h>
-
+#include <cstring>
 #include <cstdint>
 #include <cstdio>
-#include <cstring>
-#include <cstdlib>
-#include <cerrno>
 #include <ctime>
-
+ 
 #include <unistd.h>
-
-
 
 namespace CanSocket
 {
@@ -81,6 +75,21 @@ int Netlink::close()
 	}
 	return 0;
 }
+
+void Netlink::destroy(Netlink::Data* data)
+{
+	if( data == nullptr ) return;
+	
+	// clear all rtattr
+	for( int i = 0; i < (IFLA_MAX+1); ++i )
+		if( data->tb[i] ) free(data->tb[i]);
+	
+	// delete object
+	delete data;
+	
+	data = nullptr;
+}
+
 
 int Netlink::request(int family, int type)
 {
@@ -167,11 +176,12 @@ Netlink::Data* Netlink::dump_filter(int idx)
 				if ( ifi->ifi_index == idx )
 				{
 					Data *t = new struct Data;
+					memset(t, 0, sizeof(Data));
+					
 					t->index = ifi->ifi_index;
 					t->type  = ifi->ifi_type;
 					t->flags = ifi->ifi_flags;
 					
-					memset(t->tb, 0, sizeof(t->tb));
 					parse_rtattr(t->tb, IFLA_MAX, IFLA_RTA(ifi), IFLA_PAYLOAD(h));
 					return t;
 				}
@@ -227,7 +237,11 @@ int Netlink::parse_rtattr(struct rtattr *tb[], int max, struct rtattr *rta, int 
 	memset(tb, 0, sizeof(struct rtattr *) * (max + 1));
 	while (RTA_OK(rta, len)) {
 		if ((rta->rta_type <= max) && (!tb[rta->rta_type]))
-			tb[rta->rta_type] = rta;
+		{
+			// deep copy of rta
+			tb[rta->rta_type] = (rtattr*)malloc(rta->rta_len);
+			memcpy(tb[rta->rta_type], rta, rta->rta_len);
+		}
 		rta = RTA_NEXT(rta,len);
 	}
 	if (len)

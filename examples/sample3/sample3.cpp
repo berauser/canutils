@@ -16,6 +16,11 @@
  */
 #define RELOAD_TIME 1
 
+/**
+ * Clear screen command (Depends on shell!)
+ */
+#define CLR_SCREEN "\33[H\33[2J"
+
 using namespace CanSocket;
 
 int main()
@@ -27,7 +32,7 @@ int main()
 	
 	while( !socketcan->read( &stats ) )
 	{
-		std::cout << std::endl;
+		std::cout << CLR_SCREEN << std::endl; /* clear screen */
 		std::cout << "RX bytes          " << std::setw(DIGITS) << stats.rx_bytes          << " | " << std::setw(DIGITS) << stats.tx_bytes            << "            bytes TX" << std::endl;
 		std::cout << "RX packets        " << std::setw(DIGITS) << stats.rx_packets        << " | " << std::setw(DIGITS) << stats.tx_packets          << "          packets TX" << std::endl;
 		std::cout << "RX errors         " << std::setw(DIGITS) << stats.rx_errors         << " | " << std::setw(DIGITS) << stats.tx_errors           << "           errors TX" << std::endl;
@@ -40,6 +45,7 @@ int main()
 		std::cout << "RX frame errors   " << std::setw(DIGITS) << stats.rx_frame_errors   << " | " << std::setw(DIGITS) << stats.tx_heartbeat_errors << " heartbeat errors TX" << std::endl;
 		std::cout << "RX fifo errors    " << std::setw(DIGITS) << stats.rx_fifo_errors    << " | " << std::setw(DIGITS) << stats.tx_fifo_errors      << "      fifo errors TX" << std::endl;
 		std::cout << "RX missed errors  " << std::setw(DIGITS) << stats.rx_missed_errors  << std::endl;
+		std::cout << std::flush;
 		sleep(RELOAD_TIME);
 	}
 	

@@ -1,6 +1,5 @@
 #include "NetlinkCanParser.h"
 
-#include <cstdio>
 #include <cstring>
 
 #include <linux/can/netlink.h>

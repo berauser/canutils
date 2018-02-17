@@ -30,7 +30,9 @@ public:
 	
 	static int index_from_name(const std::string& name);
 	Data* getDeviceInformation(const std::string& name);
-
+	
+	static void destroy(Data* data);
+	
 private:
 	int request(int family, int type);
 	Data* dump_filter(int idx);
@@ -38,8 +40,8 @@ private:
 
 private:
 	int fd;
-	uint32_t seq;
-	uint32_t dump;
+	std::uint32_t seq;
+	std::uint32_t dump;
 	struct sockaddr_nl local;
 };
 
