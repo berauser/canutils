@@ -1,5 +1,5 @@
-#ifndef CANSOCKET_NETLINK_H
-#define CANSOCKET_NETLINK_H
+#ifndef NETLINK_NETLINK_H
+#define NETLINK_NETLINK_H
 
 #include <linux/rtnetlink.h>
 #include <net/if.h>
@@ -7,7 +7,7 @@
 #include <string>
 #include <cstdint>
 
-namespace CanSocket 
+namespace Netlink 
 {
 
 class Netlink
@@ -45,6 +45,6 @@ private:
 	struct sockaddr_nl local;
 };
 
-} /* namespace CanSocket */
+} /* namespace Netlink */
 
-#endif // CANSOCKET_NETLINK_H
+#endif // NETLINK_NETLINK_H

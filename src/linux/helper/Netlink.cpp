@@ -8,7 +8,7 @@
  
 #include <unistd.h>
 
-namespace CanSocket
+namespace Netlink
 {
 
 Netlink::Netlink() : fd(-1)
@@ -249,4 +249,4 @@ int Netlink::parse_rtattr(struct rtattr *tb[], int max, struct rtattr *rta, int 
 	return 0;
 }
 
-} /* namespace CanSocket */
+} /* namespace Netlink */

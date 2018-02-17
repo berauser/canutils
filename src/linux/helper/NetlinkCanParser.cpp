@@ -4,7 +4,7 @@
 
 #include <linux/can/netlink.h>
 
-namespace CanSocket
+namespace Netlink
 {
   
 NetlinkCanParser::NetlinkCanParser()
@@ -147,4 +147,4 @@ int NetlinkCanParser::parseCanBittimingConst(Netlink::Data* data, NetlinkCanPars
 }
 
 
-} /* namespace CanSocket */
+} /* namespace Netlink */

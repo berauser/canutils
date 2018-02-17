@@ -1,10 +1,10 @@
-#ifndef CANSOCKET_NETLINKCANPARSER_H
-#define CANSOCKET_NETLINKCANPARSER_H
+#ifndef NETLINK_NETLINKCANPARSER_H
+#define NETLINK_NETLINKCANPARSER_H
 
 #include "Netlink.h"
 #include "NetlinkParser.h"
 
-namespace CanSocket 
+namespace Netlink 
 {
 
 class NetlinkCanParser : public NetlinkParser
@@ -92,6 +92,6 @@ protected:
 	static int parseCanBittimingConst(Netlink::Data* data, CanDeviceDetails* details);
 };
 
-} /* namespace CanSocket */
+} /* namespace Netlink */
 
-#endif // CANSOCKET_NETLINKCANPARSER_H
+#endif // NETLINK_NETLINKCANPARSER_H

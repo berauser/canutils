@@ -13,7 +13,7 @@ namespace CanSocket
   
 SocketCanStatisticsLinux::SocketCanStatisticsLinux(const std::string& device_arg): SocketCanStatisticsImpl(device_arg), device(device_arg), netlink(nullptr)
 {
-	static_assert( sizeof( CanSocket::CANStatistics ) == sizeof( NetlinkParser::DeviceStatistics ), "CANStatistics and DeviceStatistics has not the same size" ); 
+	static_assert( sizeof( CanSocket::CANStatistics ) == sizeof( Netlink::NetlinkParser::DeviceStatistics ), "CANStatistics and DeviceStatistics has not the same size" ); 
 }
 
 SocketCanStatisticsLinux::~SocketCanStatisticsLinux()
@@ -31,7 +31,7 @@ int SocketCanStatisticsLinux::openDevice()
 		throw std::logic_error("Device is already opened");
 	}
 	
-	netlink = new Netlink;
+	netlink = new Netlink::Netlink;
 	if( netlink == nullptr )
 	{
 		throw std::runtime_error("Could not allocate memory");
@@ -68,14 +68,14 @@ int SocketCanStatisticsLinux::readDevice(CANStatistics* stats)
 		throw std::invalid_argument("CANStatistics is nullptr");
 	}
 	
-	Netlink::Data* data = netlink->getDeviceInformation( device );
+	Netlink::Netlink::Data* data = netlink->getDeviceInformation( device );
 	if( data == nullptr )
 	{
 		// TODO error
 		return -1;
 	}
 	
-	NetlinkParser::DeviceStatistics* nstats = NetlinkCanParser::parseStatistics( data );
+	Netlink::NetlinkParser::DeviceStatistics* nstats = Netlink::NetlinkCanParser::parseStatistics( data );
 	if ( nstats == nullptr )
 	{
 		// TODO error

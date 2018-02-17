@@ -4,7 +4,7 @@
 #include <cstring>
 #include <stdexcept>
 
-namespace CanSocket
+namespace Netlink
 {
 
 NetlinkParser::NetlinkParser() 
@@ -188,4 +188,4 @@ int NetlinkParser::parseStatistics64(Netlink::Data* data, NetlinkParser::DeviceS
 
 
 
-} /* namespace CanSocket */
+} /* namespace Netlink */

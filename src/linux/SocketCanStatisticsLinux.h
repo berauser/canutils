@@ -26,7 +26,7 @@ protected:
 protected:
 	std::string device;
 	
-	Netlink *netlink;
+	Netlink::Netlink *netlink;
 };
 
 } /* namespace CanSocket */

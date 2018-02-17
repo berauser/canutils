@@ -1,5 +1,5 @@
-#ifndef CANSOCKET_NETLINKPARSER_H
-#define CANSOCKET_NETLINKPARSER_H
+#ifndef NETLINK_NETLINKPARSER_H
+#define NETLINK_NETLINKPARSER_H
 
 #include "Netlink.h"
 
@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-namespace CanSocket {
+namespace Netlink {
 
 class NetlinkParser
 {
@@ -104,6 +104,6 @@ protected:
 	static int parseStatistics64( Netlink::Data* data, DeviceStatistics* stats);
 };
 
-} /* namespace CanSocket */
+} /* namespace Netlink */
 
-#endif // CANSOCKET_NETLINKPARSER_H
+#endif // NETLINK_NETLINKPARSER_H
