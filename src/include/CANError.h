@@ -15,7 +15,8 @@ namespace CanSocket
 
 typedef uint32_t CANErrorMask;
 
-enum struct CANErrorFlag : uint32_t {
+enum struct CANErrorFlag : uint32_t 
+{
 	NoError                 =   0x00,
 	TransmissionTimoutError = (1<<0),
 	LostArbitrationError    = (1<<1),
@@ -29,17 +30,20 @@ enum struct CANErrorFlag : uint32_t {
 	UnknownError            = (1<<9)
 };
 
-enum struct CANErrorLength : uint8_t {
+enum struct CANErrorLength : uint8_t 
+{
 	CANErrorDataLengthCode = 8,
 };
 
 /* arbitration lost in bit ... / data[0] */
-enum struct LostArbitrationErrorBits : uint8_t {
+enum struct LostArbitrationErrorBits : uint8_t 
+{
 	LOSTARB_UNSPECIFIC      = 0x00,
 };
 
 /* error status of CAN-controller / data[1] */
-enum struct ControllerErrorBits : uint8_t {
+enum struct ControllerErrorBits : uint8_t 
+{
 	CONTROLLER_UNSPECIFIC   = 0x00,
 	CONTROLLER_RX_OVERFLOW  = 0x01,
 	CONTROLLER_TX_OVERFLOW  = 0x02,
@@ -50,7 +54,8 @@ enum struct ControllerErrorBits : uint8_t {
 };
 
 /* error in CAN protocol (type) / data[2] */
-enum struct ProtocolViolationErrorTypeBits : uint8_t {
+enum struct ProtocolViolationErrorTypeBits : uint8_t 
+{
 	PROTOCOL_UNSPECIFIC       = 0x00,
 	PROTOCOL_SINGLE_BIT       = 0x01,
 	PROTOCOL_FORMAT           = 0x02,
@@ -63,7 +68,8 @@ enum struct ProtocolViolationErrorTypeBits : uint8_t {
 };
 
 /* error in CAN protocol (location) / data[3] */
-enum struct ProtocolViolationErrorLocationBits : uint8_t {
+enum struct ProtocolViolationErrorLocationBits : uint8_t 
+{
 	PROTOCOL_UNSPECIFIC             = 0x00,
 	PROTOCOL_START_OF_FRAME         = 0x03,
 	PROTOCOL_ID_28_21               = 0x02,
@@ -87,7 +93,8 @@ enum struct ProtocolViolationErrorLocationBits : uint8_t {
 };
 
 /* error status of CAN-transceiver / data[4] */
-enum struct TransceiveErrorBits : uint8_t {
+enum struct TransceiveErrorBits : uint8_t 
+{
 	TRANSCEIVE_UNSPECIFIC         = 0x00,
 	TRANSCEIVE_CANH_NO_WIRE       = 0x04,
 	TRANSCEIVE_CANH_SHORT_TO_BAT  = 0x05,
