@@ -17,7 +17,7 @@ struct type_helper {
 		using namespace Netlink;
 		switch( static_cast<unsigned int>(f) )
 		{
-// 		case static_cast<unsigned int>(NetlinkParser::DeviceFlags::NOCARRIER):   return DeviceFlags::NOCARRIER; 
+		case static_cast<unsigned int>(NetlinkParser::DeviceFlags::RUNNING):     return DeviceFlags::RUNNING; 
 		case static_cast<unsigned int>(NetlinkParser::DeviceFlags::LOOPBACK):    return DeviceFlags::LOOPBACK; 
 		case static_cast<unsigned int>(NetlinkParser::DeviceFlags::BROADCAST):   return DeviceFlags::BROADCAST; 
 		case static_cast<unsigned int>(NetlinkParser::DeviceFlags::POINTOPOINT): return DeviceFlags::POINTOPOINT; 
@@ -45,7 +45,7 @@ struct type_helper {
 		using namespace Netlink;
 		switch( static_cast<unsigned int>(f) )
 		{
-// 		case static_cast<unsigned int>(DeviceFlags::NOCARRIER):   return NetlinkParser::DeviceFlags::NOCARRIER; 
+		case static_cast<unsigned int>(DeviceFlags::RUNNING):     return NetlinkParser::DeviceFlags::RUNNING; 
 		case static_cast<unsigned int>(DeviceFlags::LOOPBACK):    return NetlinkParser::DeviceFlags::LOOPBACK; 
 		case static_cast<unsigned int>(DeviceFlags::BROADCAST):   return NetlinkParser::DeviceFlags::BROADCAST; 
 		case static_cast<unsigned int>(DeviceFlags::POINTOPOINT): return NetlinkParser::DeviceFlags::POINTOPOINT; 

@@ -16,37 +16,37 @@ namespace CanSocket
 {
 
 enum struct DeviceState {
-	UNKNOWN        = 0,
-	NOTPRESENT     = 1,
-	DOWN           = 2,
-	LOWERLAYERDOWN = 3,
-	TESTING        = 4,
-	DORMANT        = 5,
-	UP             = 6,
-	STATE_SIZE     = 7,
+	UNKNOWN,
+	NOTPRESENT,
+	DOWN,
+	LOWERLAYERDOWN,
+	TESTING,
+	DORMANT,
+	UP,
+	STATE_SIZE,
 };
 
 enum struct DeviceFlags {
-	NOCARRIER,
-	LOOPBACK,
+	UP,
 	BROADCAST,
+	DEBUG,
+	LOOPBACK,
 	POINTOPOINT,
-	MULTICAST,
+	NOTRAILERS,
+	RUNNING,
 	NOARP,
-	ALLMULTI,
 	PROMISC,
+	ALLMULTI,
 	MASTER,
 	SLAVE,
-	DEBUG,
-	DYNAMIC,
-	AUTOMEDIA,
+	MULTICAST,
 	PORTSEL,
-	NOTRAILERS,
-	UP,
+	AUTOMEDIA,
+	DYNAMIC,
 	LOWERUP,
 	DORMANT,
 	ECHO,
-	UNKNOWN,
+	UNKNOWN
 };
 
 enum struct ControlMode {
@@ -62,12 +62,12 @@ enum struct ControlMode {
 };
 
 enum struct CanState {
-	ERROR_ACTIVE  = 0,
-	ERROR_WARNING = 1,
-	ERROR_PASSIV  = 2,
-	BUS_OFF       = 3,
-	STOPPED       = 4,
-	SLEEPING      = 5,
+	ERROR_ACTIVE,
+	ERROR_WARNING,
+	ERROR_PASSIV,
+	BUS_OFF,
+	STOPPED,
+	SLEEPING,
 	UNKNOWN,
 };
 

@@ -30,6 +30,11 @@ public:
 	virtual const std::string& getDevice() const = 0;
 	
 	virtual int read(CANDeviceInfo* info) = 0;
+	
+	static std::string toString(const CanState& state);
+	static std::string toString(const DeviceFlags& flag);
+	static std::string toString(const ControlMode& mode);
+	static std::string toString(const DeviceState& state);
 };
 
 } /* namespace CanSocket */
