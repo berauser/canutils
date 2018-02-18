@@ -9,6 +9,9 @@ cmake_install.cmake
 .cproject
 .settings
 
+# kdevelop
+*.kdev4
+
 # output
 *.xml
 
