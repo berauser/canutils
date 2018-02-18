@@ -33,6 +33,8 @@ public:
 	
 	static void destroy(Data* data);
 	
+	static std::string typeToString( unsigned int type );
+	
 private:
 	int request(int family, int type);
 	Data* dump_filter(int idx);

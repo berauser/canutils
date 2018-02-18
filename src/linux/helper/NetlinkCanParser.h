@@ -13,12 +13,13 @@ public:
 	enum struct ControlMode {
 		LOOPBACK,
 		LISTEN_ONLY,
-		TRIPEL_SAMPLING,
+		TRIPLE_SAMPLING,
 		ONE_SHOT,
 		BERR_REPORTING,
 		FD,
 		PRESUME_ACK,
 		FD_NON_ISO,
+		UNKNOWN,
 	};
 	
 	enum struct CanState {

@@ -13,36 +13,37 @@ class NetlinkParser
 {
 public:
 	enum struct DeviceState {
-		UNKNOWN        = 0,
-		NOTPRESENT     = 1,
-		DOWN           = 2,
-		LOWERLAYERDOWN = 3,
-		TESTING        = 4,
-		DORMANT        = 5,
-		UP             = 6,
-		STATE_SIZE
+		UNKNOWN,
+		NOTPRESENT,
+		DOWN,
+		LOWERLAYERDOWN,
+		TESTING,
+		DORMANT,
+		UP,
+		STATE_SIZE,
 	};
 	
 	enum struct DeviceFlags {
-		NOCARRIER,
-		LOOPBACK,
+		UP,
 		BROADCAST,
+		DEBUG,
+		LOOPBACK,
 		POINTOPOINT,
-		MULTICAST,
+		NOTRAILERS,
+		RUNNING,
 		NOARP,
-		ALLMULTI,
 		PROMISC,
+		ALLMULTI,
 		MASTER,
 		SLAVE,
-		DEBUG,
-		DYNAMIC,
-		AUTOMEDIA,
+		MULTICAST,
 		PORTSEL,
-		NOTRAILERS,
-		UP,
+		AUTOMEDIA,
+		DYNAMIC,
 		LOWERUP,
 		DORMANT,
-		ECHO
+		ECHO,
+		UNKNOWN
 	};
 	
 	struct DeviceStatistics {
@@ -98,10 +99,12 @@ public:
 	static std::string deviceFlagsToString( const DeviceFlags& flags );
 	
 protected:
-	static DeviceState operationState(unsigned int state );
+	static DeviceState operationState( unsigned int state );
 	
-	static int parseStatistics32( Netlink::Data* data, DeviceStatistics* stats);
-	static int parseStatistics64( Netlink::Data* data, DeviceStatistics* stats);
+	static int parseDeviceFlags ( Netlink::Data* data, DeviceDetails* details );
+	
+	static int parseStatistics32( Netlink::Data* data, DeviceStatistics* stats );
+	static int parseStatistics64( Netlink::Data* data, DeviceStatistics* stats );
 };
 
 } /* namespace Netlink */

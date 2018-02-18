@@ -7,6 +7,7 @@
 #include <ctime>
  
 #include <unistd.h>
+#include <linux/if_arp.h>
 
 namespace Netlink
 {
@@ -90,6 +91,15 @@ void Netlink::destroy(Netlink::Data* data)
 	data = nullptr;
 }
 
+std::string Netlink::typeToString(unsigned int type)
+{
+	switch( type )
+	{
+	/* currently only "can" is used. */ 
+	case ARPHRD_CAN: return "can";
+	default:         return "UNKNOWN";
+	}
+}
 
 int Netlink::request(int family, int type)
 {
@@ -183,6 +193,10 @@ Netlink::Data* Netlink::dump_filter(int idx)
 					t->flags = ifi->ifi_flags;
 					
 					parse_rtattr(t->tb, IFLA_MAX, IFLA_RTA(ifi), IFLA_PAYLOAD(h));
+					
+					if ( t->tb[IFLA_IFNAME] )
+						strcpy( t->name, (char*)RTA_DATA(t->tb[IFLA_IFNAME]) );
+					
 					return t;
 				}
 			}

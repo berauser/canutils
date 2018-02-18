@@ -1,5 +1,6 @@
 #include "NetlinkCanParser.h"
 
+#include <string>
 #include <cstring>
 
 #include <linux/can/netlink.h>
@@ -56,10 +57,19 @@ std::string NetlinkCanParser::canStateToString(NetlinkCanParser::CanState state)
 
 std::string NetlinkCanParser::controlModeToString(NetlinkCanParser::ControlMode mode)
 {
-	(void)mode;
-	return "";
+	switch( static_cast<unsigned int>(mode) )
+	{
+	case static_cast<unsigned int>(ControlMode::LOOPBACK):        return "LOOPBACK";
+	case static_cast<unsigned int>(ControlMode::LISTEN_ONLY):     return "LISTEN_ONLY";
+	case static_cast<unsigned int>(ControlMode::TRIPLE_SAMPLING): return "TRIPLE_SAMPLING";
+	case static_cast<unsigned int>(ControlMode::ONE_SHOT):        return "ONE_SHOT";
+	case static_cast<unsigned int>(ControlMode::BERR_REPORTING):  return "BERR_REPORTING";
+	case static_cast<unsigned int>(ControlMode::FD):              return "FD";
+	case static_cast<unsigned int>(ControlMode::PRESUME_ACK):     return "PRESUME_ACK";
+	case static_cast<unsigned int>(ControlMode::FD_NON_ISO):      return "FD_NON_ISO";
+	default:                                                      return "UNKNOWN";
+	}
 }
-
 
 NetlinkCanParser::CanState NetlinkCanParser::canState(unsigned int data)
 {
@@ -70,7 +80,7 @@ NetlinkCanParser::CanState NetlinkCanParser::canState(unsigned int data)
 	
 	switch( data )
 	{
-	case CAN_STATE_ERROR_ACTIVE: return CanState::ERROR_ACTIVE;
+	case CAN_STATE_ERROR_ACTIVE:  return CanState::ERROR_ACTIVE;
 	case CAN_STATE_ERROR_PASSIVE: return CanState::ERROR_PASSIV;
 	case CAN_STATE_ERROR_WARNING: return CanState::ERROR_WARNING;
 	case CAN_STATE_BUS_OFF:       return CanState::BUS_OFF;
@@ -97,7 +107,7 @@ int NetlinkCanParser::parseControlMode(Netlink::Data* data, NetlinkCanParser::Ca
 		{
 		case CAN_CTRLMODE_LOOPBACK:       details->mode.push_back( ControlMode::LOOPBACK );        break;
 		case CAN_CTRLMODE_LISTENONLY:     details->mode.push_back( ControlMode::LISTEN_ONLY );     break;
-		case CAN_CTRLMODE_3_SAMPLES:      details->mode.push_back( ControlMode::TRIPEL_SAMPLING ); break;
+		case CAN_CTRLMODE_3_SAMPLES:      details->mode.push_back( ControlMode::TRIPLE_SAMPLING ); break;
 		case CAN_CTRLMODE_ONE_SHOT:       details->mode.push_back( ControlMode::ONE_SHOT );        break;
 		case CAN_CTRLMODE_BERR_REPORTING: details->mode.push_back( ControlMode::BERR_REPORTING );  break;
 		case CAN_CTRLMODE_FD:             details->mode.push_back( ControlMode::FD );              break;
@@ -134,7 +144,7 @@ int NetlinkCanParser::parseCanBittiming(Netlink::Data* data, NetlinkCanParser::C
 int NetlinkCanParser::parseCanBittimingConst(Netlink::Data* data, NetlinkCanParser::CanDeviceDetails* details)
 {
 	struct can_bittiming_const *btc = static_cast<struct can_bittiming_const*>(RTA_DATA(data->tb[IFLA_CAN_BITTIMING_CONST]));
-	details->const_bittiming.name = btc->name;
+	details->const_bittiming.name      = btc->name;
 	details->const_bittiming.tseg1_min = btc->tseg1_min;
 	details->const_bittiming.tseg1_max = btc->tseg1_max;
 	details->const_bittiming.tseg2_min = btc->tseg2_min;

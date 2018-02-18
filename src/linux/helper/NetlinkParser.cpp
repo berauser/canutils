@@ -27,11 +27,10 @@ NetlinkParser::DeviceDetails* NetlinkParser::parseDetails(Netlink::Data* data)
 	{
 		throw std::bad_alloc();
 	}
-	memset( details, 0, sizeof(DeviceDetails) );
-	
+
 	details->ifindex = data->index;
 	details->ifname  = data->name;
-	details->iftype  = data->type;
+	details->iftype  = Netlink::typeToString(data->type);
 	
 	if ( data->tb[IFLA_MTU]       )
 		details->mtu   = *(int*)RTA_DATA(data->tb[IFLA_MTU]);
@@ -49,8 +48,10 @@ NetlinkParser::DeviceDetails* NetlinkParser::parseDetails(Netlink::Data* data)
 // 		;
 	if ( data->tb[IFLA_IFALIAS]   )
 		details->ifalias = (const char*)RTA_DATA(data->tb[IFLA_IFALIAS]);
-		
-	return nullptr;
+	
+	parseDeviceFlags( data, details );
+	
+	return details;
 }
   
 NetlinkParser::DeviceStatistics* NetlinkParser::parseStatistics(Netlink::Data* data)
@@ -83,14 +84,45 @@ NetlinkParser::DeviceStatistics* NetlinkParser::parseStatistics(Netlink::Data* d
 
 std::string NetlinkParser::deviceStateToString(const NetlinkParser::DeviceState& state)
 {
-	(void)state;
-	return "";
+	switch( static_cast<unsigned int>(state) )
+	{
+	case static_cast<unsigned int>(DeviceState::NOTPRESENT):     return "NOT_PRESENT";
+	case static_cast<unsigned int>(DeviceState::DOWN):           return "DOWN";
+	case static_cast<unsigned int>(DeviceState::LOWERLAYERDOWN): return "LOWER_LAYER_DOWN";
+	case static_cast<unsigned int>(DeviceState::TESTING):        return "TESTING";
+	case static_cast<unsigned int>(DeviceState::DORMANT):        return "DORMANT";
+	case static_cast<unsigned int>(DeviceState::UP):             return "UP";
+	case static_cast<unsigned int>(DeviceState::STATE_SIZE):     return "STATE_SIZE";
+	case static_cast<unsigned int>(DeviceState::UNKNOWN):
+	default: return "UNKNOWN";
+	}
 }
 
 std::string NetlinkParser::deviceFlagsToString(const NetlinkParser::DeviceFlags& flags)
 {
-	(void)flags;
-	return "";
+	switch( static_cast<unsigned int>(flags) )
+	{
+	  case static_cast<unsigned int>(DeviceFlags::UP):          return "UP";
+	  case static_cast<unsigned int>(DeviceFlags::BROADCAST):   return "BROADCAST";
+	  case static_cast<unsigned int>(DeviceFlags::DEBUG):       return "DEBUG";
+	  case static_cast<unsigned int>(DeviceFlags::LOOPBACK):    return "LOOPBACK";
+	  case static_cast<unsigned int>(DeviceFlags::POINTOPOINT): return "POINT_O_POINT";
+	  case static_cast<unsigned int>(DeviceFlags::NOTRAILERS):  return "NO_TRAILERS";
+	  case static_cast<unsigned int>(DeviceFlags::RUNNING):     return "RUNNING";
+	  case static_cast<unsigned int>(DeviceFlags::NOARP):       return "NO_ARP";
+	  case static_cast<unsigned int>(DeviceFlags::PROMISC):     return "PRMISC";
+	  case static_cast<unsigned int>(DeviceFlags::ALLMULTI):    return "ALL_MULTI";
+	  case static_cast<unsigned int>(DeviceFlags::MASTER):      return "MASTER";
+	  case static_cast<unsigned int>(DeviceFlags::SLAVE):       return "SLAVE";
+	  case static_cast<unsigned int>(DeviceFlags::MULTICAST):   return "MULTICAST";
+	  case static_cast<unsigned int>(DeviceFlags::PORTSEL):     return "PORTSEL";
+	  case static_cast<unsigned int>(DeviceFlags::AUTOMEDIA):   return "AUTOMEDIA";
+	  case static_cast<unsigned int>(DeviceFlags::DYNAMIC):     return "DYNAMIC";
+	  case static_cast<unsigned int>(DeviceFlags::LOWERUP):     return "LOWER_UP";
+	  case static_cast<unsigned int>(DeviceFlags::DORMANT):     return "DORMANT";
+	  case static_cast<unsigned int>(DeviceFlags::ECHO):        return "ECHO";
+	  default:                                                  return "UNKNOWN";
+	}
 }
 
 NetlinkParser::DeviceState NetlinkParser::operationState(unsigned int state)
@@ -109,13 +141,45 @@ NetlinkParser::DeviceState NetlinkParser::operationState(unsigned int state)
 	}
 }
 
+int NetlinkParser::parseDeviceFlags(Netlink::Data* data, NetlinkParser::DeviceDetails* details)
+{
+	if( ! data->flags ) return 0;
+	
+	for( unsigned int i = 0; i < (sizeof(data->flags)*8); ++i )
+	{
+		switch( (data->flags & (1<<i)) )
+		{
+		  case IFF_UP:          details->flags.push_back(DeviceFlags::UP);          break;
+		  case IFF_BROADCAST:   details->flags.push_back(DeviceFlags::BROADCAST);   break;
+		  case IFF_DEBUG:       details->flags.push_back(DeviceFlags::DEBUG);       break;
+		  case IFF_LOOPBACK:    details->flags.push_back(DeviceFlags::LOOPBACK);    break;
+		  case IFF_POINTOPOINT: details->flags.push_back(DeviceFlags::POINTOPOINT); break;
+		  case IFF_NOTRAILERS:  details->flags.push_back(DeviceFlags::NOTRAILERS);  break;
+		  case IFF_RUNNING:     details->flags.push_back(DeviceFlags::RUNNING);     break;
+		  case IFF_NOARP:       details->flags.push_back(DeviceFlags::NOARP);       break;
+		  case IFF_PROMISC:     details->flags.push_back(DeviceFlags::PROMISC);     break;
+		  case IFF_ALLMULTI:    details->flags.push_back(DeviceFlags::ALLMULTI);    break;
+		  case IFF_MASTER:      details->flags.push_back(DeviceFlags::MASTER);      break;
+		  case IFF_SLAVE:       details->flags.push_back(DeviceFlags::SLAVE);       break;
+		  case IFF_MULTICAST:   details->flags.push_back(DeviceFlags::MULTICAST);   break;
+		  case IFF_PORTSEL:     details->flags.push_back(DeviceFlags::PORTSEL);     break;
+		  case IFF_AUTOMEDIA:   details->flags.push_back(DeviceFlags::AUTOMEDIA);   break;
+		  case IFF_DYNAMIC:     details->flags.push_back(DeviceFlags::DYNAMIC);     break;
+		  /* newer kernel versions */
+// 		  case IFF_LOWER_UP:    details->flags.push_back(DeviceFlags::LOWERUP);     break;
+// 		  case IFF_DORMANT:     details->flags.push_back(DeviceFlags::DORMANT);     break;
+// 		  case IFF_ECHO:        details->flags.push_back(DeviceFlags::ECHO);        break;
+		  default:              continue;                                           break;
+		};
+	}
+	
+	return 0;
+}
+
 int NetlinkParser::parseStatistics32(Netlink::Data* data, NetlinkParser::DeviceStatistics* stats)
 {
   	struct rtnl_link_stats *s;
 	s = static_cast<struct rtnl_link_stats*>(RTA_DATA( data->tb[IFLA_STATS]));
-	
-	// FIXME: Here we have many valgrind warnings. How to prevent?
-	//        Invalid read of size 8: XXXX bytes below stack pointer
 	
 	// Receive stats
 	stats->rx_bytes   = s->rx_bytes;
@@ -152,9 +216,6 @@ int NetlinkParser::parseStatistics64(Netlink::Data* data, NetlinkParser::DeviceS
 {
 	struct rtnl_link_stats64* s;
 	s = static_cast<struct rtnl_link_stats64*>(RTA_DATA(data->tb[IFLA_STATS64]));
-	
-	// FIXME: Here we have many valgrind warnings. How to prevent?
-	//        Invalid read of size 8: XXXX bytes below stack pointer
 	
 	// Receive stats
 	stats->rx_bytes   = s->rx_bytes;
