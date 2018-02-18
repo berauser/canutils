@@ -10,6 +10,7 @@
 #include "logger.h"
 
 #include "../linux/SocketCanLinux.h"
+#include "../linux/SocketCanInfoLinux.h"
 #include "../linux/SocketCanStatisticsLinux.h"
 
 #include <stdexcept>
@@ -19,6 +20,7 @@ namespace CanSocket
 
 #ifdef __linux__
 	#define SocketCanCreate           SocketCanLinux
+	#define SocketCanInfoCreate       SocketCanInfoLinux
 	#define SocketCanStatisticsCreate SocketCanStatisticsLinux
 #else
 	#error "No implementation found - Only Linux is implemented."
@@ -40,6 +42,16 @@ SocketCan* SocketCanFactory::createSocketCan(const std::string& device)
 		throw std::invalid_argument( "Device is empty" );
 	}
 	return new SocketCanCreate(device);
+}
+
+SocketCanInfo* SocketCanFactory::createSocketCanInfo(const std::string& device)
+{
+	STRACE( FFDC_SOCKETCAN_INFO, "SocketCanFactory::createSocketCanInfo( %s )", device.c_str() );
+	if (device.empty())
+	{
+		throw std::invalid_argument( "Device is empty" );
+	}
+	return new SocketCanInfoCreate(device);
 }
 
 SocketCanStatistics* SocketCanFactory::createSocketCanStatistics(const std::string& device)

@@ -79,7 +79,7 @@ int SocketCanStatisticsLinux::readDevice(CANStatistics* stats)
 	if ( nstats == nullptr )
 	{
 		// TODO error
-		delete data;
+		netlink->destroy(data);
 		return -1;
 	}
 	

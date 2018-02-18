@@ -7,7 +7,8 @@
 namespace CanSocket
 {
 
-struct CANStatistics final {
+struct CANStatistics final 
+{
 	// Receive
 	std::uint64_t rx_bytes          = 0;
 	std::uint64_t rx_packets        = 0;
