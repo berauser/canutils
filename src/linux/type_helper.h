@@ -6,7 +6,7 @@
 #include "helper/NetlinkParser.h"
 #include "helper/NetlinkCanParser.h"
 
-#include <exception>
+#include <stdexcept>
 
 namespace CanSocket
 {

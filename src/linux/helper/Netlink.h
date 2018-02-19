@@ -2,7 +2,6 @@
 #define NETLINK_NETLINK_H
 
 #include <linux/rtnetlink.h>
-#include <net/if.h>
 
 #include <string>
 #include <cstdint>
@@ -17,7 +16,7 @@ public:
 		int		index;
 		unsigned int	flags;
 		unsigned short	type;
-		char		name[IFNAMSIZ];
+		std::string	name;
 		struct rtattr*  tb[IFLA_MAX+1];
 	};
   
@@ -44,7 +43,6 @@ private:
 	int fd;
 	std::uint32_t seq;
 	std::uint32_t dump;
-	struct sockaddr_nl local;
 };
 
 } /* namespace Netlink */

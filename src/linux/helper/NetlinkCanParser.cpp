@@ -3,6 +3,7 @@
 #include <string>
 #include <cstring>
 
+#include <net/if.h>
 #include <linux/can/netlink.h>
 
 namespace Netlink

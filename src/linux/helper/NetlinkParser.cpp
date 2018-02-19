@@ -4,6 +4,11 @@
 #include <cstring>
 #include <stdexcept>
 
+#include <sys/types.h>
+#include <sys/socket.h>
+
+#include <linux/if.h>
+
 namespace Netlink
 {
 
@@ -165,10 +170,9 @@ int NetlinkParser::parseDeviceFlags(Netlink::Data* data, NetlinkParser::DeviceDe
 		  case IFF_PORTSEL:     details->flags.push_back(DeviceFlags::PORTSEL);     break;
 		  case IFF_AUTOMEDIA:   details->flags.push_back(DeviceFlags::AUTOMEDIA);   break;
 		  case IFF_DYNAMIC:     details->flags.push_back(DeviceFlags::DYNAMIC);     break;
-		  /* some includes are broken, cant include linux/if.h and net/if.h at same time */
-		  case (0x10000):       details->flags.push_back(DeviceFlags::LOWERUP);     break;
-		  case (0x20000):       details->flags.push_back(DeviceFlags::DORMANT);     break;
-		  case (0x40000):       details->flags.push_back(DeviceFlags::ECHO);        break;
+		  case IFF_LOWER_UP:    details->flags.push_back(DeviceFlags::LOWERUP);     break;
+		  case IFF_DORMANT:     details->flags.push_back(DeviceFlags::DORMANT);     break;
+		  case IFF_ECHO:        details->flags.push_back(DeviceFlags::ECHO);        break;
 		  default:              continue;                                           break;
 		};
 	}

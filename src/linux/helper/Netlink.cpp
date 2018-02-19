@@ -7,6 +7,8 @@
 #include <ctime>
  
 #include <unistd.h>
+
+#include <net/if.h>
 #include <linux/if_arp.h>
 
 namespace Netlink
@@ -24,6 +26,7 @@ Netlink::~Netlink()
 int Netlink::open()
 {
 	socklen_t addr_len;
+	struct sockaddr_nl local;
 	int rcvbuf = 1024 * 1024;
 	int sndbuf = 32768;
 
@@ -161,10 +164,10 @@ Netlink::Data* Netlink::dump_filter(int idx)
 		
 		struct nlmsghdr *h = (struct nlmsghdr*)buf;
 		msglen = status;
-
+		
 		while (NLMSG_OK(h, msglen)) {
 			if( nladdr.nl_pid == 0 && 
-			  h->nlmsg_pid == local.nl_pid &&
+			  h->nlmsg_pid == static_cast<uint32_t>(getpid()) &&
 			  h->nlmsg_seq == dump )
 			{
 				if (h->nlmsg_type == NLMSG_DONE) {
@@ -195,7 +198,7 @@ Netlink::Data* Netlink::dump_filter(int idx)
 					parse_rtattr(t->tb, IFLA_MAX, IFLA_RTA(ifi), IFLA_PAYLOAD(h));
 					
 					if ( t->tb[IFLA_IFNAME] )
-						strcpy( t->name, (char*)RTA_DATA(t->tb[IFLA_IFNAME]) );
+						t->name = (char*)RTA_DATA(t->tb[IFLA_IFNAME]);
 					
 					return t;
 				}
