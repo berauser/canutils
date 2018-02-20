@@ -27,7 +27,6 @@ public:
 	int open();
 	int close();
 	
-	static int index_from_name(const std::string& name);
 	Data* getDeviceInformation(const std::string& name);
 	
 	static void destroy(Data* data);

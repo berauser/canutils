@@ -1,5 +1,6 @@
 
 #include "Netlink.h"
+#include "NetlinkHelper.h"
 
 #include <cstring>
 #include <cstdint>
@@ -7,8 +8,9 @@
 #include <ctime>
  
 #include <unistd.h>
+#include <sys/socket.h>
 
-#include <net/if.h>
+#include <linux/if.h>
 #include <linux/if_arp.h>
 
 namespace Netlink
@@ -229,24 +231,13 @@ Netlink::Data* Netlink::getDeviceInformation(const std::string&  name)
 		return nullptr;
 	}
 	
-	int ifindex = index_from_name(name);
+	int ifindex = Helper::index_from_name(name);
 	if( ifindex <= 0 )
 	{
 		fprintf( stdout, "Device vcan0 does not exists\n");
 		return nullptr;
 	}	
 	return dump_filter(ifindex);
-}
-
-int Netlink::index_from_name(const std::string&  name)
-{
-	int idx;
-	if (name.size() == 0)
-		return -1;
-	idx = if_nametoindex(name.c_str());
-	if (idx == 0)
-		sscanf(name.c_str(), "if%u", &idx);
-	return idx;
 }
 
 int Netlink::parse_rtattr(struct rtattr *tb[], int max, struct rtattr *rta, int len)

@@ -3,7 +3,9 @@
 #include <string>
 #include <cstring>
 
-#include <net/if.h>
+#include <sys/socket.h>
+
+#include <linux/if.h>
 #include <linux/can/netlink.h>
 
 namespace Netlink
