@@ -21,24 +21,34 @@ NetlinkCanParser::~NetlinkCanParser()
 
 }
 
-NetlinkCanParser::CanDeviceDetails* NetlinkCanParser::parseCanDetails(Netlink::Data* data)
+NetlinkCanParser::CanDeviceDetailsPtr NetlinkCanParser::parseCanDetails(Netlink::DataPtr data)
 {
-	// check
+	if( ! data->kind )
+	{
+		return CanDeviceDetailsPtr(nullptr);
+	}
 	
-	CanDeviceDetails *details = new CanDeviceDetails;
-	memset( details, 0, sizeof(CanDeviceDetails) );
+	// FIXME 
+// 	struct rtattr *linkinfo[IFLA_INFO_MAX+1];
+// 	struct link_util *lu;
+// 	char* kind;
 	
-	if( data->tb[IFLA_CAN_CTRLMODE] )
+// 	parse_rtatt
+	
+	CanDeviceDetailsPtr details(new CanDeviceDetails);
+// 	memset( details, 0, sizeof(CanDeviceDetails) );
+	
+	if( data->kind[IFLA_CAN_CTRLMODE] )
 		parseControlMode( data, details );
-	if( data->tb[IFLA_CAN_STATE] )
-		details->state = canState( *(unsigned int*)(data->tb[IFLA_CAN_STATE]) );
-	if( data->tb[IFLA_CAN_BERR_COUNTER] )
+	if( data->kind[IFLA_CAN_STATE] )
+		details->state = canState( *(unsigned int*)(data->kind[IFLA_CAN_STATE]) );
+	if( data->kind[IFLA_CAN_BERR_COUNTER] )
 		parseBerrCounter( data, details );
-	if( data->tb[IFLA_CAN_BITTIMING] )
+	if( data->kind[IFLA_CAN_BITTIMING] )
 		parseCanBittiming( data, details );
-	if( data->tb[IFLA_CAN_BITTIMING_CONST] )
+	if( data->kind[IFLA_CAN_BITTIMING_CONST] )
 		parseCanBittimingConst( data, details);
-	if( data->tb[IFLA_CAN_CLOCK] )
+	if( data->kind[IFLA_CAN_CLOCK] )
 		parseCanClock( data, details );
 	
 	return details;
@@ -93,17 +103,17 @@ NetlinkCanParser::CanState NetlinkCanParser::canState(unsigned int data)
 	}
 }
 
-int NetlinkCanParser::parseCanClock(Netlink::Data* data, NetlinkCanParser::CanDeviceDetails* details)
+int NetlinkCanParser::parseCanClock(Netlink::DataPtr data, NetlinkCanParser::CanDeviceDetailsPtr details)
 {
-	struct can_clock *clock = static_cast<can_clock*>(RTA_DATA(data->tb[IFLA_CAN_CLOCK]));
+	struct can_clock *clock = static_cast<can_clock*>(RTA_DATA(data->kind[IFLA_CAN_CLOCK]));
 	details->clock_freq = clock->freq;
 	return 0;
 }
 
 
-int NetlinkCanParser::parseControlMode(Netlink::Data* data, NetlinkCanParser::CanDeviceDetails* details)
+int NetlinkCanParser::parseControlMode(Netlink::DataPtr data, NetlinkCanParser::CanDeviceDetailsPtr details)
 {
-	struct can_ctrlmode *cm = static_cast<struct can_ctrlmode*>(RTA_DATA(data->tb[IFLA_CAN_CTRLMODE]));
+	struct can_ctrlmode *cm = static_cast<struct can_ctrlmode*>(RTA_DATA(data->kind[IFLA_CAN_CTRLMODE]));
 	for( unsigned int i = 0; i < sizeof(cm->flags)*8; i++ )
 	{
 		switch( cm->flags & (1 << i) )
@@ -122,17 +132,17 @@ int NetlinkCanParser::parseControlMode(Netlink::Data* data, NetlinkCanParser::Ca
 	return 0;
 }
 
-int NetlinkCanParser::parseBerrCounter(Netlink::Data* data, NetlinkCanParser::CanDeviceDetails* details)
+int NetlinkCanParser::parseBerrCounter(Netlink::DataPtr data, NetlinkCanParser::CanDeviceDetailsPtr details)
 {
-	struct can_berr_counter *bc = static_cast<struct can_berr_counter*>(RTA_DATA(data->tb[IFLA_CAN_BERR_COUNTER]));
+	struct can_berr_counter *bc = static_cast<struct can_berr_counter*>(RTA_DATA(data->kind[IFLA_CAN_BERR_COUNTER]));
 	details->berr.tx_error = bc->txerr;
 	details->berr.rx_error = bc->rxerr;
 	return 0;
 }
 
-int NetlinkCanParser::parseCanBittiming(Netlink::Data* data, NetlinkCanParser::CanDeviceDetails* details)
+int NetlinkCanParser::parseCanBittiming(Netlink::DataPtr data, NetlinkCanParser::CanDeviceDetailsPtr details)
 {
-	struct can_bittiming *bt = static_cast<struct can_bittiming*>(RTA_DATA(data->tb[IFLA_CAN_BITTIMING]));
+	struct can_bittiming *bt = static_cast<struct can_bittiming*>(RTA_DATA(data->kind[IFLA_CAN_BITTIMING]));
 	details->bittiming.bitrate      = bt->bitrate;
 	details->bittiming.sample_point = bt->sample_point;
 	details->bittiming.tq           = bt->tq;
@@ -144,9 +154,9 @@ int NetlinkCanParser::parseCanBittiming(Netlink::Data* data, NetlinkCanParser::C
 	return 0;
 }
 
-int NetlinkCanParser::parseCanBittimingConst(Netlink::Data* data, NetlinkCanParser::CanDeviceDetails* details)
+int NetlinkCanParser::parseCanBittimingConst(Netlink::DataPtr data, NetlinkCanParser::CanDeviceDetailsPtr details)
 {
-	struct can_bittiming_const *btc = static_cast<struct can_bittiming_const*>(RTA_DATA(data->tb[IFLA_CAN_BITTIMING_CONST]));
+	struct can_bittiming_const *btc = static_cast<struct can_bittiming_const*>(RTA_DATA(data->kind[IFLA_CAN_BITTIMING_CONST]));
 	details->const_bittiming.name      = btc->name;
 	details->const_bittiming.tseg1_min = btc->tseg1_min;
 	details->const_bittiming.tseg1_max = btc->tseg1_max;

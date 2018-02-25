@@ -21,11 +21,11 @@ protected:
 	virtual int  openDevice() override final;
 	virtual int  closeDevice() override final;
 	virtual bool deviceIsOpen() override final;
-	virtual int  readDevice(CANDeviceInfo* info) override final;
+	virtual CANDeviceInfoPtr  readDevice() override final;
 	
 private:
-	static int copyDetails   (CANDeviceInfo* info, Netlink::NetlinkParser::DeviceDetails* dev);
-	static int copyCanDetails(CANDeviceInfo* info, Netlink::NetlinkCanParser::CanDeviceDetails* cdev);
+	static int copyDetails   (CANDeviceInfoPtr info, Netlink::NetlinkParser::DeviceDetailsPtr dev);
+	static int copyCanDetails(CANDeviceInfoPtr info, Netlink::NetlinkCanParser::CanDeviceDetailsPtr cdev);
 	
 	static std::vector<DeviceFlags> copyDeviceFlags(std::vector<Netlink::NetlinkParser::DeviceFlags>&    vec);
 	static std::vector<ControlMode> copyControlMode(std::vector<Netlink::NetlinkCanParser::ControlMode>& vec);

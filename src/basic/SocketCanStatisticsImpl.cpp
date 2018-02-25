@@ -19,11 +19,13 @@ const std::string& SocketCanStatisticsImpl::getDevice() const
 	return device;
 }
 
-int SocketCanStatisticsImpl::read(CANStatistics* stats)
+CANStatisticsPtr SocketCanStatisticsImpl::read()
 {
 	openDevice();
-	readDevice(stats);
-	return closeDevice();
+	CANStatisticsPtr stats = readDevice();
+	closeDevice();
+	
+	return stats;
 }
 
 int SocketCanStatisticsImpl::reset()

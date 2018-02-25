@@ -8,7 +8,7 @@ namespace Netlink
 {
 namespace Helper
 {
-  
+
 int index_from_name(const std::string&  name)
 {
 	int idx;
@@ -18,8 +18,7 @@ int index_from_name(const std::string&  name)
 	if (idx == 0)
 		sscanf(name.c_str(), "if%u", &idx);
 	return idx;
-}  
-  
-  
+}
+
 } /* namespace Helper */
 } /* namespace Netlink */

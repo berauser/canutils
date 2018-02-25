@@ -29,7 +29,7 @@ public:
 	
 	virtual const std::string& getDevice() const = 0;
 	
-	virtual int read( CANStatistics* stats ) = 0;
+	virtual CANStatisticsPtr read() = 0;
 	virtual int reset() = 0;
 };
 

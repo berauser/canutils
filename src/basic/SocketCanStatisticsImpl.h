@@ -15,14 +15,14 @@ public:
 	
 	virtual const std::string& getDevice() const override final;
 	
-	virtual int read(CANStatistics* stats) override final;
+	virtual CANStatisticsPtr read() override final;
 	virtual int reset() override final;
 	
 protected:
 	virtual int  openDevice() = 0;
 	virtual int  closeDevice() = 0;
 	virtual bool deviceIsOpen() = 0;
-	virtual int  readDevice(CANStatistics* stats) = 0;
+	virtual CANStatisticsPtr  readDevice() = 0;
 	virtual int  resetStatistics() = 0;
 	
 private:

@@ -26,12 +26,17 @@ namespace CanSocket
 SocketCanLinux::SocketCanLinux(const std::string& device_arg)
 		: SocketCanImpl(device_arg), socketfd(SOCKET_INVALID)
 {
-	static_assert( sizeof( CANMessage ) == sizeof( can_frame  ), "CANMessage and can_frame has not the same size" );
-	static_assert( sizeof( CANFilter  ) == sizeof( can_filter ), "CANFilter and can_filter has not the same size" );
+	static_assert( sizeof( CANMessage   ) == sizeof( can_frame      ), "CANMessage and can_frame has not the same size"         );
+	static_assert( sizeof( CANFilter    ) == sizeof( can_filter     ), "CANFilter and can_filter has not the same size"         );
+	static_assert( sizeof( CANErrorMask ) == sizeof( can_err_mask_t ), "CANErrorMask and cann_err_mask_t has not the same size" );
 }
 
 SocketCanLinux::~SocketCanLinux()
 {
+	if(isOpen())
+	{
+		throw std::logic_error( "Close device before it is destroyed" );
+	}
 }
 
 bool SocketCanLinux::isOpen()
@@ -63,7 +68,7 @@ int SocketCanLinux::readDevice(CANMessage* message)
 
 int SocketCanLinux::enableLoopback(bool enable)
 {
-	STRACE( FFDC_SOCKETCAN_DEBUG, "SocketCanLinux::enableLoopback( %s )", ( enable ? "true" : "false" ) );
+	LOGGER( SOCKETCAN_DEBUG, "SocketCanLinux::enableLoopback( %s )", ( enable ? "true" : "false" ) );
 	if (socketfd == SOCKET_INVALID)
 	{
 		throw std::logic_error("Device not open");
@@ -81,7 +86,7 @@ int SocketCanLinux::enableLoopback(bool enable)
 
 	if( setsockopt(socketfd, SOL_CAN_RAW, CAN_RAW_LOOPBACK, &loopback, sizeof(loopback)) < 0 )
 	{
-		STRACE( FFDC_SOCKETCAN_ERROR, "SocketCanLinux::enableLoopback() - %s", strerror(errno) );
+		LOGGER( SOCKETCAN_ERROR, "SocketCanLinux::enableLoopback() - %s", strerror(errno) );
 		return -1;
 	}
 	return 0;
@@ -98,7 +103,7 @@ bool SocketCanLinux::loopbackEnabled() const
 	socklen_t size = sizeof(loopback);
 	if ( getsockopt(socketfd, SOL_CAN_RAW, CAN_RAW_LOOPBACK, &loopback, &size) < 0 )
 	{
-		STRACE( FFDC_SOCKETCAN_ERROR, "SocketCanLinux::loopbackEnabled() - %s", strerror(errno) );
+		LOGGER( SOCKETCAN_ERROR, "SocketCanLinux::loopbackEnabled() - %s", strerror(errno) );
 		return -1;
 	}
 	return ( loopback == 1 );
@@ -106,7 +111,7 @@ bool SocketCanLinux::loopbackEnabled() const
 
 int SocketCanLinux::receiveOwnMessage(bool enable)
 {
-	STRACE( FFDC_SOCKETCAN_DEBUG, "SocketCanLinux::receiveOwnMessage( %s )", ( enable ? "true" : "false" ) );
+	LOGGER( SOCKETCAN_DEBUG, "SocketCanLinux::receiveOwnMessage( %s )", ( enable ? "true" : "false" ) );
 	if (socketfd == SOCKET_INVALID)
 	{
 		throw std::logic_error("Device not open");
@@ -124,7 +129,7 @@ int SocketCanLinux::receiveOwnMessage(bool enable)
 
 	if( setsockopt(socketfd, SOL_CAN_RAW, CAN_RAW_RECV_OWN_MSGS, &own_msgs, sizeof(own_msgs)) < 0 )
 	{
-		STRACE( FFDC_SOCKETCAN_ERROR, "SocketCanLinux::receiveOwnMessage() - %s", strerror(errno) );
+		LOGGER( SOCKETCAN_ERROR, "SocketCanLinux::receiveOwnMessage() - %s", strerror(errno) );
 		return -1;
 	}
 	return 0;
@@ -141,7 +146,7 @@ bool SocketCanLinux::receiveOwnMessageEnabled() const
 	socklen_t size = sizeof(own_msgs);
 	if ( getsockopt(socketfd, SOL_CAN_RAW, CAN_RAW_RECV_OWN_MSGS, &own_msgs, &size) < 0 )
 	{
-		STRACE( FFDC_SOCKETCAN_ERROR, "SocketCanLinux::enableReceiveOwnMessage() - %s", strerror(errno) );
+		LOGGER( SOCKETCAN_ERROR, "SocketCanLinux::enableReceiveOwnMessage() - %s", strerror(errno) );
 		return -1;
 	}
 	return ( own_msgs == 1 );
@@ -151,7 +156,7 @@ int SocketCanLinux::openDevice()
 {
 	const std::string device = getDevice();
 
-	STRACE( FFDC_SOCKETCAN_DEBUG, "SocketCanLinux::openDevice( %s )", device.c_str());
+	LOGGER( SOCKETCAN_DEBUG, "SocketCanLinux::openDevice( %s )", device.c_str());
 	if (socketfd != SOCKET_INVALID)
 	{
 		throw std::logic_error("Device already opened");
@@ -194,13 +199,13 @@ int SocketCanLinux::openDevice()
 
 int SocketCanLinux::closeDevice()
 {
-	FTRACE( FFDC_SOCKETCAN_DEBUG, "SocketCanLinux::closeDevice()");
+	LOGGER( SOCKETCAN_DEBUG, "SocketCanLinux::closeDevice()");
 	if (socketfd == SOCKET_INVALID)
 	{
 		return 0;
 	}
 
-	FTRACE( FFDC_SOCKETCAN_DEBUG, "SocketCanLinux::closeDevice() - close");
+	LOGGER( SOCKETCAN_DEBUG, "SocketCanLinux::closeDevice() - close");
 	int ret = ::close(socketfd);
 	if (ret == 0)
 	{
@@ -214,9 +219,9 @@ int SocketCanLinux::getFiledescriptor() const
 	return socketfd;
 }
 
-int SocketCanLinux::setFilter(const std::list<CANFilter>& filterList)
+int SocketCanLinux::setCanFilter(const std::list<CANFilter>& filterList)
 {
-	FTRACE( FFDC_SOCKETCAN_DEBUG, "SocketCanLinux::setFilter( <list> )");
+	LOGGER( SOCKETCAN_DEBUG, "SocketCanLinux::setFilter( <list> )");
 	if (socketfd == SOCKET_INVALID)
 	{
 		throw std::logic_error("Device not open");
@@ -231,12 +236,31 @@ int SocketCanLinux::setFilter(const std::list<CANFilter>& filterList)
 
 	if( setsockopt(socketfd, SOL_CAN_RAW, CAN_RAW_FILTER, &rfilter, sizeof(rfilter) ) < 0 )
 	{
-		FTRACE( FFDC_SOCKETCAN_ERROR, "setsockopt: %s", std::strerror( errno ) );
+		LOGGER( SOCKETCAN_ERROR, "setsockopt: %s", std::strerror( errno ) );
 		return -1;
 	}
 
 	return 0;
 }
+
+int SocketCanLinux::setCanErrorMask(CANErrorMask mask)
+{
+  
+	LOGGER( SOCKETCAN_DEBUG, "SocketCanLinux::setCanErrorMask( <%x> )", mask );
+  	if (socketfd == SOCKET_INVALID)
+	{
+		throw std::logic_error("Device not open");
+	}
+	
+	if( setsockopt(socketfd, SOL_CAN_RAW, CAN_RAW_ERR_FILTER, &mask, sizeof(mask)) < 0 )
+	{
+		LOGGER( SOCKETCAN_ERROR, "setsockopt: %s", std::strerror( errno ) );
+		return -1;
+	}
+	
+	return 0;
+}
+
 
 } /* namespace CanSocket */
 

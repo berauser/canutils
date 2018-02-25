@@ -36,6 +36,10 @@ public:
 	virtual int clearFilter() override final;
 	virtual std::list<CANFilter> getFilterList() override final;
 
+	virtual int setErrorFilterMask( CANErrorMask mask ) override final;
+	virtual CANErrorMask getErrorFilterMask() const override final;
+	virtual int clearErrorFilterMask() override final;
+	
 protected:
 	virtual int openDevice() = 0;
 	virtual int closeDevice() = 0;
@@ -44,10 +48,12 @@ protected:
 
 	virtual int getFiledescriptor() const = 0;
 
-	virtual int setFilter(const std::list<CANFilter>& filterList) = 0;
+	virtual int setCanFilter(const std::list<CANFilter>& filterList) = 0;
+	virtual int setCanErrorMask( CANErrorMask mask ) = 0;
 
 private:
 	std::string device;
+	CANErrorMask errorMask;
 	std::list<CANFilter> filterList;
 
 	std::mutex mutex_write;

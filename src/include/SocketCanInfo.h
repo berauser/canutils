@@ -29,7 +29,7 @@ public:
 	
 	virtual const std::string& getDevice() const = 0;
 	
-	virtual int read(CANDeviceInfo* info) = 0;
+	virtual CANDeviceInfoPtr read() = 0;
 	
 	static std::string toString(const CanState& state);
 	static std::string toString(const DeviceFlags& flag);

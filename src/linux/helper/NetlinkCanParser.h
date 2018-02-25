@@ -73,12 +73,13 @@ public:
 		CanBittiming bittiming;
 		CanBittimingConst const_bittiming;
 	};
-  
+	typedef std::shared_ptr<CanDeviceDetails> CanDeviceDetailsPtr;
+	
 public:
 	NetlinkCanParser();
 	~NetlinkCanParser();
 	
-	static CanDeviceDetails*    parseCanDetails   (Netlink::Data* data);
+	static CanDeviceDetailsPtr    parseCanDetails   (Netlink::DataPtr data);
 	
 	static std::string canStateToString   (CanState state  );
 	static std::string controlModeToString(ControlMode mode);
@@ -86,11 +87,11 @@ public:
 protected:
 	static CanState canState(unsigned int data);
 	
-	static int parseCanClock         (Netlink::Data* data, CanDeviceDetails* details);
-	static int parseControlMode      (Netlink::Data* data, CanDeviceDetails* details);
-	static int parseBerrCounter      (Netlink::Data* data, CanDeviceDetails* details);
-	static int parseCanBittiming     (Netlink::Data* data, CanDeviceDetails* details);
-	static int parseCanBittimingConst(Netlink::Data* data, CanDeviceDetails* details);
+	static int parseCanClock         (Netlink::DataPtr data, CanDeviceDetailsPtr details);
+	static int parseControlMode      (Netlink::DataPtr data, CanDeviceDetailsPtr details);
+	static int parseBerrCounter      (Netlink::DataPtr data, CanDeviceDetailsPtr details);
+	static int parseCanBittiming     (Netlink::DataPtr data, CanDeviceDetailsPtr details);
+	static int parseCanBittimingConst(Netlink::DataPtr data, CanDeviceDetailsPtr details);
 };
 
 } /* namespace Netlink */

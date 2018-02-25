@@ -12,18 +12,12 @@
 
 #ifdef DEBUG_CONSOLE
 	#include <stdio.h>
-	#define FTRACE( buf, format, ... ) fprintf ( stdout, buf " " format "\x1B[0m\n", ##__VA_ARGS__ )
-	#define STRACE( buf, format, ... ) fprintf ( stdout, buf " " format "\x1B[0m\n", ##__VA_ARGS__ )
-	#define ITRACE( buf, format, ... ) fprintf ( stdout, buf " " format "\x1B[0m\n", ##__VA_ARGS__ )
-	#define FFDC_SOCKETCAN_ERROR "\x1B[31mSOCKETCAN_ERROR"
-	#define FFDC_SOCKETCAN_INFO  "\x1B[33mSOCKETCAN_INFO "
-	#define FFDC_SOCKETCAN_DEBUG "\x1B[37mSOCKETCAN_DEBUG"
+	#define LOGGER( buf, format, ... ) fprintf ( stdout, buf " " format "\x1B[0m\n", ##__VA_ARGS__ )
+	#define SOCKETCAN_ERROR "\x1B[31m[ERROR]"
+	#define SOCKETCAN_INFO  "\x1B[33m[INFO ]"
+	#define SOCKETCAN_DEBUG "\x1B[37m[DEBUG]"
 #else
-	#define FTRACE( buf, format, ... )
-	#define STRACE( buf, format, ... )
-	#define ITRACE( buf, format, ... )
+	#define LOGGER( buf, format, ... )
 #endif // DEBUG_CONSOLE
-
-
 
 #endif /* SRC_LOGGER_H_ */

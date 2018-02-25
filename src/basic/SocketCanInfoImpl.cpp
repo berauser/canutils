@@ -19,11 +19,13 @@ const std::string& SocketCanInfoImpl::getDevice() const
 	return device;
 }
 
-int SocketCanInfoImpl::read(CANDeviceInfo* info)
+CANDeviceInfoPtr SocketCanInfoImpl::read()
 {
 	openDevice();
-	readDevice(info);
-	return closeDevice();
+	CANDeviceInfoPtr info = readDevice();
+	closeDevice();
+	
+	return info;
 }
 
 std::string SocketCanInfo::toString(const CanState& state)

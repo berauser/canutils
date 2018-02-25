@@ -73,6 +73,7 @@ public:
 		std::uint64_t tx_window_errors;
 		std::uint64_t tx_heartbeat_errors;
 	};
+	typedef std::shared_ptr<DeviceStatistics> DeviceStatisticsPtr;
 	
 	struct DeviceDetails {
 		// General
@@ -86,14 +87,15 @@ public:
 		int tx_qlen;
 		std::string qdisc;
 		DeviceState state;
-	};  
+	};
+	typedef std::shared_ptr<DeviceDetails> DeviceDetailsPtr;
   
 public:
 	NetlinkParser();
 	~NetlinkParser();
 	
-	static DeviceStatistics* parseStatistics( Netlink::Data* data );
-	static DeviceDetails*    parseDetails   ( Netlink::Data* data );
+	static DeviceStatisticsPtr parseStatistics( Netlink::DataPtr data );
+	static DeviceDetailsPtr    parseDetails   ( Netlink::DataPtr data );
 	
 	static std::string deviceStateToString( const DeviceState& state );
 	static std::string deviceFlagsToString( const DeviceFlags& flags );
@@ -101,10 +103,10 @@ public:
 protected:
 	static DeviceState operationState( unsigned int state );
 	
-	static int parseDeviceFlags ( Netlink::Data* data, DeviceDetails* details );
+	static int parseDeviceFlags ( Netlink::DataPtr data, DeviceDetailsPtr details );
 	
-	static int parseStatistics32( Netlink::Data* data, DeviceStatistics* stats );
-	static int parseStatistics64( Netlink::Data* data, DeviceStatistics* stats );
+	static int parseStatistics32( Netlink::DataPtr data, DeviceStatisticsPtr stats );
+	static int parseStatistics64( Netlink::DataPtr data, DeviceStatisticsPtr stats );
 };
 
 } /* namespace Netlink */

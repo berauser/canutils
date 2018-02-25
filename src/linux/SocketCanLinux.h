@@ -31,7 +31,7 @@ public:
 
 	virtual int receiveOwnMessage( bool enable ) override;
 	virtual bool receiveOwnMessageEnabled() const override;
-
+	
 protected:
 	virtual int openDevice() override;
 	virtual int closeDevice() override;
@@ -40,9 +40,8 @@ protected:
 
 	virtual int getFiledescriptor() const override;
 
-
-
-	virtual int setFilter(const std::list<CANFilter>& filterList) override;
+	virtual int setCanFilter(const std::list<CANFilter>& filterList) override;
+	virtual int setCanErrorMask( CANErrorMask mask ) override;
 
 private:
 	int socketfd;

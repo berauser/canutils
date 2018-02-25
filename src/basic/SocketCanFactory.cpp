@@ -36,7 +36,7 @@ SocketCanFactory::~SocketCanFactory()
 
 SocketCan* SocketCanFactory::createSocketCan(const std::string& device)
 {
-	STRACE( FFDC_SOCKETCAN_INFO, "SocketCanFactory::createSocketCan( %s )", device.c_str() );
+	LOGGER( SOCKETCAN_INFO, "SocketCanFactory::createSocketCan( %s )", device.c_str() );
 	if (device.empty())
 	{
 		throw std::invalid_argument( "Device is empty" );
@@ -46,7 +46,7 @@ SocketCan* SocketCanFactory::createSocketCan(const std::string& device)
 
 SocketCanInfo* SocketCanFactory::createSocketCanInfo(const std::string& device)
 {
-	STRACE( FFDC_SOCKETCAN_INFO, "SocketCanFactory::createSocketCanInfo( %s )", device.c_str() );
+	LOGGER( SOCKETCAN_INFO, "SocketCanFactory::createSocketCanInfo( %s )", device.c_str() );
 	if (device.empty())
 	{
 		throw std::invalid_argument( "Device is empty" );
@@ -56,7 +56,7 @@ SocketCanInfo* SocketCanFactory::createSocketCanInfo(const std::string& device)
 
 SocketCanStatistics* SocketCanFactory::createSocketCanStatistics(const std::string& device)
 {
-	STRACE( FFDC_SOCKETCAN_INFO, "SocketCanFactory::createSocketCanStatistics( %s )", device.c_str() );
+	LOGGER( SOCKETCAN_INFO, "SocketCanFactory::createSocketCanStatistics( %s )", device.c_str() );
 	if (device.empty())
 	{
 		throw std::invalid_argument( "Device is empty" );

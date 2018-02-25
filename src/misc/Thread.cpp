@@ -20,7 +20,7 @@ namespace CanSocket
 
 int Thread::cancel()
 {
-	FTRACE( FFDC_SOCKETCAN_DEBUG, "Thread::cancel()" );
+	LOGGER( SOCKETCAN_DEBUG, "Thread::cancel()" );
 #ifdef __linux__
 	if( ! joinable() ) return 0;
 	return pthread_cancel( this->native_handle() );

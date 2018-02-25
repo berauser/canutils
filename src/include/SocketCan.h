@@ -11,19 +11,17 @@
 #include <list>
 #include <string>
 
+#include "Base.h"
+
 #include "CANMessage.h"
 #include "CANFilter.h"
+#include "CANError.h"
 
 namespace CanSocket
 {
 
-class SocketCan
+class SocketCan : public Base<CANMessage>
 {
-public:
-	enum struct CANErrorMask
-	{
-		none = 0x00L
-	};
 
 public:
 	SocketCan() = delete;
@@ -55,8 +53,9 @@ public:
 	virtual int receiveOwnMessage(bool enable) = 0;
 	virtual bool receiveOwnMessageEnabled() const = 0;
 
-//	virtual int setErrFilterMask( /**/ )
-//	virtual /* */ getErrFilterMask() const = 0;
+	virtual int setErrorFilterMask( CANErrorMask mask ) = 0;
+	virtual CANErrorMask getErrorFilterMask() const = 0;
+	virtual int clearErrorFilterMask() = 0;
 };
 
 } /* namespace CanSocket */

@@ -17,7 +17,7 @@ typedef uint32_t CANErrorMask;
 
 enum struct CANErrorFlag : uint32_t 
 {
-	NoError                 =   0x00,
+	NoError                 =  0x00,
 	TransmissionTimoutError = (1<<0),
 	LostArbitrationError    = (1<<1),
 	ControllerError         = (1<<2),
@@ -108,19 +108,19 @@ enum struct TransceiveErrorBits : uint8_t
 };
 
 inline constexpr CANErrorFlag
-operator~(CANErrorFlag f)
+operator ~(CANErrorFlag &f)
 {
 	return static_cast<CANErrorFlag>(~static_cast<uint32_t>(f));
 }
 
 inline constexpr CANErrorFlag
-operator&(CANErrorFlag &f1, CANErrorFlag &f2)
+operator &(CANErrorFlag &f1, CANErrorFlag &f2)
 {
 	return static_cast<CANErrorFlag>(static_cast<uint32_t>(f1)&static_cast<uint32_t>(f2));
 }
 
 inline constexpr CANErrorFlag
-operator|(CANErrorFlag &f1, CANErrorFlag &f2)
+operator |(CANErrorFlag &f1, CANErrorFlag &f2)
 {
 	return static_cast<CANErrorFlag>(static_cast<uint32_t>(f1)|static_cast<uint32_t>(f2));
 }
@@ -138,13 +138,13 @@ operator |=(CANErrorMask &data, const CANErrorFlag &f)
 }
 
 inline constexpr CANErrorMask
-operator|(CANErrorMask &data, CANErrorFlag &f)
+operator |(CANErrorMask &data, CANErrorFlag &f)
 {
 	return ( data | static_cast<CANErrorMask>(f) );
 }
 
 inline constexpr CANErrorMask
-operator&(CANErrorMask data, CANErrorFlag &f)
+operator &(CANErrorMask &data, CANErrorFlag &f)
 {
 	return ( data & static_cast<CANErrorMask>(f) );
 }

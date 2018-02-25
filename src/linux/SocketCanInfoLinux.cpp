@@ -62,48 +62,38 @@ bool SocketCanInfoLinux::deviceIsOpen()
 	return ( netlink != nullptr );
 }
 
-int SocketCanInfoLinux::readDevice(CANDeviceInfo* info)
+CANDeviceInfoPtr SocketCanInfoLinux::readDevice()
 {
+	CANDeviceInfoPtr info(new struct CANDeviceInfo);
 	if( info == nullptr )
 	{
-		throw std::invalid_argument("CANStatistics is nullptr");
+		throw std::bad_alloc();
 	}
 	
-	Netlink::Netlink::Data* data = netlink->getDeviceInformation( device );
+	Netlink::Netlink::DataPtr data = netlink->getDeviceInformation( device );
 	if( data == nullptr )
 	{
-		// TODO error
-		return -1;
+		throw std::bad_alloc();
 	}
 	
-	Netlink::NetlinkParser::DeviceDetails* device_details = Netlink::NetlinkParser::parseDetails( data );
+	Netlink::NetlinkParser::DeviceDetailsPtr device_details = Netlink::NetlinkParser::parseDetails( data );
 	if ( device_details == nullptr )
 	{
-		// TODO error
-		netlink->destroy(data);
-		return -1;
+		throw std::bad_alloc();
 	}
 	copyDetails( info, device_details );
-	delete device_details;
 	
-	Netlink::NetlinkCanParser::CanDeviceDetails* can_device_details = Netlink::NetlinkCanParser::parseCanDetails( data );
+	Netlink::NetlinkCanParser::CanDeviceDetailsPtr can_device_details = Netlink::NetlinkCanParser::parseCanDetails( data );
 	if ( device_details == nullptr )
 	{
-		// TODO error
-		netlink->destroy(data);
-		return -1;
+		throw std::bad_alloc();
 	}
 	copyCanDetails( info, can_device_details );
-	delete can_device_details;
 	
-	// cleanup
-// 	delete device_details;
-	netlink->destroy(data);
-	
-	return 0;
+	return info;
 }
 
-int SocketCanInfoLinux::copyDetails(CANDeviceInfo* info, Netlink::NetlinkParser::DeviceDetails* dev)
+int SocketCanInfoLinux::copyDetails(CANDeviceInfoPtr info, Netlink::NetlinkParser::DeviceDetailsPtr dev)
 {
 	if( info == nullptr || dev == nullptr )
 	{
@@ -122,7 +112,7 @@ int SocketCanInfoLinux::copyDetails(CANDeviceInfo* info, Netlink::NetlinkParser:
 	return 0;
 }
 
-int SocketCanInfoLinux::copyCanDetails(CANDeviceInfo* info, Netlink::NetlinkCanParser::CanDeviceDetails* cdev)
+int SocketCanInfoLinux::copyCanDetails(CANDeviceInfoPtr info, Netlink::NetlinkCanParser::CanDeviceDetailsPtr cdev)
 {
 	if( info == nullptr || cdev == nullptr )
 	{

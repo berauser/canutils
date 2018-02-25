@@ -2,6 +2,7 @@
 #ifndef _SRC_CANSTATISTICS_H
 #define _SRC_CANSTATISTICS_H
 
+#include <memory>
 #include <cstdint>
 
 namespace CanSocket
@@ -35,6 +36,7 @@ struct CANStatistics final
 	std::uint64_t tx_window_errors  = 0;
 	std::uint64_t tx_heartbeat_errors = 0;
 };
+typedef std::shared_ptr<CANStatistics> CANStatisticsPtr;
 
 } /* namespace CanSocket */
 

@@ -3,13 +3,13 @@
 
 #include <string>
 
-namespace Netlink 
+namespace Netlink
 {
 namespace Helper
 {
 
-int index_from_name(const std::string& name);  
-  
+int index_from_name(const std::string& name);
+
 } /* namespace Helper */
 } /* namespace Netlink */
 

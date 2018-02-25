@@ -61,41 +61,66 @@ bool SocketCanStatisticsLinux::deviceIsOpen()
 	return ( netlink != nullptr );
 }
 
-int SocketCanStatisticsLinux::readDevice(CANStatistics* stats)
+CANStatisticsPtr SocketCanStatisticsLinux::readDevice()
 {
+	CANStatisticsPtr stats(new struct CANStatistics);
+	
 	if( stats == nullptr )
 	{
-		throw std::invalid_argument("CANStatistics is nullptr");
+		throw std::bad_alloc();
 	}
 	
-	Netlink::Netlink::Data* data = netlink->getDeviceInformation( device );
+	Netlink::Netlink::DataPtr data = netlink->getDeviceInformation( device );
 	if( data == nullptr )
 	{
-		// TODO error
-		return -1;
+		throw std::bad_alloc();
 	}
 	
-	Netlink::NetlinkParser::DeviceStatistics* nstats = Netlink::NetlinkCanParser::parseStatistics( data );
+	Netlink::NetlinkParser::DeviceStatisticsPtr nstats = Netlink::NetlinkCanParser::parseStatistics( data );
 	if ( nstats == nullptr )
 	{
-		// TODO error
-		netlink->destroy(data);
-		return -1;
+		throw std::runtime_error("Netlink returns a nullptr");
 	}
-	
-	// currently we can use memcpy to copy the struct data
-	memcpy( stats, nstats, sizeof(CANStatistics) );
-	
-	// cleanup
-	delete nstats;
-	netlink->destroy(data);
-	
-	return 0;
+	copyStatistics( stats, nstats );
+	return stats;
 }
 
 int SocketCanStatisticsLinux::resetStatistics()
 {
 	return -1;
 }
+
+int SocketCanStatisticsLinux::copyStatistics(CANStatisticsPtr stats, Netlink::NetlinkParser::DeviceStatisticsPtr nstats)
+{
+	// Receive stats
+	stats->rx_bytes   = nstats->rx_bytes;
+	stats->rx_packets = nstats->rx_packets;
+	stats->rx_errors  = nstats->rx_errors;
+	stats->rx_dropped = nstats->rx_dropped;
+	stats->rx_overrun_errors = nstats->rx_overrun_errors;
+	stats->rx_multicast      = nstats->rx_multicast;
+	stats->rx_compressed     = nstats->rx_compressed;
+	stats->rx_length_errors  = nstats->rx_length_errors;
+	stats->rx_crc_errors     = nstats->rx_crc_errors;
+	stats->rx_frame_errors   = nstats->rx_frame_errors;
+	stats->rx_fifo_errors    = nstats->rx_fifo_errors;
+	stats->rx_missed_errors = nstats->rx_missed_errors;
+	
+	// Transmit
+	stats->tx_bytes   = nstats->tx_bytes;
+	stats->tx_packets = nstats->tx_packets;
+	stats->tx_errors  = nstats->tx_errors;
+	stats->tx_dropped = nstats->tx_dropped;
+	stats->tx_carrier_errors   = nstats->tx_carrier_errors;
+	stats->tx_collisions       = nstats->tx_collisions;
+	stats->tx_compressed       = nstats->tx_compressed;
+	stats->tx_aborted_errors   = nstats->tx_aborted_errors;
+	stats->tx_fifo_errors      = nstats->tx_fifo_errors;
+	stats->tx_window_errors    = nstats->tx_window_errors;
+	stats->tx_heartbeat_errors = nstats->tx_heartbeat_errors;
+	
+	return 0;
+}
+
 
 } /* namespace CanSocket */

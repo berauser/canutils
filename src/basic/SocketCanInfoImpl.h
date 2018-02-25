@@ -15,13 +15,13 @@ public:
 	
 	virtual const std::string& getDevice() const override final;
 	
-	virtual int read(CANDeviceInfo* info) override final;
+	virtual CANDeviceInfoPtr read() override final;
 	
 protected:
 	virtual int  openDevice() = 0;
 	virtual int  closeDevice() = 0;
 	virtual bool deviceIsOpen() = 0;
-	virtual int  readDevice(CANDeviceInfo* info) = 0;
+	virtual CANDeviceInfoPtr  readDevice() = 0;
 	
 private:
 	std::string device;

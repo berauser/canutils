@@ -20,14 +20,14 @@ NetlinkParser::~NetlinkParser()
 {
 }
 
-NetlinkParser::DeviceDetails* NetlinkParser::parseDetails(Netlink::Data* data)
+NetlinkParser::DeviceDetailsPtr NetlinkParser::parseDetails(Netlink::DataPtr data)
 {
 	if( data == nullptr )
 	{
 		throw std::invalid_argument("Netlink::Data is nullptr");
 	}
 	
-	DeviceDetails* details = new DeviceDetails;
+	DeviceDetailsPtr details(new DeviceDetails);
 	if( details == nullptr )
 	{
 		throw std::bad_alloc();
@@ -59,14 +59,14 @@ NetlinkParser::DeviceDetails* NetlinkParser::parseDetails(Netlink::Data* data)
 	return details;
 }
   
-NetlinkParser::DeviceStatistics* NetlinkParser::parseStatistics(Netlink::Data* data)
+NetlinkParser::DeviceStatisticsPtr NetlinkParser::parseStatistics(Netlink::DataPtr data)
 {
-	DeviceStatistics *stats = new DeviceStatistics;
+	DeviceStatisticsPtr stats(new DeviceStatistics);
 	if( stats == nullptr )
 	{
 		throw std::bad_alloc();
 	}
-	memset( stats, 0, sizeof(DeviceStatistics) );
+// 	memset( stats, 0, sizeof(DeviceStatistics) );
 	
 	if ( data->tb[IFLA_STATS64] )
 	{
@@ -146,7 +146,7 @@ NetlinkParser::DeviceState NetlinkParser::operationState(unsigned int state)
 	}
 }
 
-int NetlinkParser::parseDeviceFlags(Netlink::Data* data, NetlinkParser::DeviceDetails* details)
+int NetlinkParser::parseDeviceFlags(Netlink::DataPtr data, NetlinkParser::DeviceDetailsPtr details)
 {
 	if( ! data->flags ) return 0;
 	
@@ -180,9 +180,9 @@ int NetlinkParser::parseDeviceFlags(Netlink::Data* data, NetlinkParser::DeviceDe
 	return 0;
 }
 
-int NetlinkParser::parseStatistics32(Netlink::Data* data, NetlinkParser::DeviceStatistics* stats)
+int NetlinkParser::parseStatistics32(Netlink::DataPtr data, NetlinkParser::DeviceStatisticsPtr stats)
 {
-  	struct rtnl_link_stats *s;
+	struct rtnl_link_stats *s;
 	s = static_cast<struct rtnl_link_stats*>(RTA_DATA( data->tb[IFLA_STATS]));
 	
 	// Receive stats
@@ -216,7 +216,7 @@ int NetlinkParser::parseStatistics32(Netlink::Data* data, NetlinkParser::DeviceS
 }
 
 
-int NetlinkParser::parseStatistics64(Netlink::Data* data, NetlinkParser::DeviceStatistics* stats)
+int NetlinkParser::parseStatistics64(Netlink::DataPtr data, NetlinkParser::DeviceStatisticsPtr stats)
 {
 	struct rtnl_link_stats64* s;
 	s = static_cast<struct rtnl_link_stats64*>(RTA_DATA(data->tb[IFLA_STATS64]));
