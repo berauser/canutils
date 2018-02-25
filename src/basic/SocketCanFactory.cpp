@@ -7,17 +7,33 @@
 
 #include "SocketCanFactory.h"
 
-#include "logger.h"
-
-#include "../linux/SocketCanLinux.h"
-#include "../linux/SocketCanInfoLinux.h"
-#include "../linux/SocketCanStatisticsLinux.h"
-
+/*************************************************************************//***
+ *
+ * Includes
+ * 
+ * ***************************************************************************/
 #include <stdexcept>
+
+#ifdef __linux__
+	#include "../linux/SocketCanLinux.h"
+	#include "../linux/SocketCanInfoLinux.h"
+	#include "../linux/SocketCanStatisticsLinux.h"
+#else
+	#error "No implementation found - Only Linux is implemented" 
+#endif
+
+#include "../buffer/CanBufferRegistry.h"
+
+#include "logger.h"
 
 namespace CanSocket
 {
 
+/*************************************************************************//***
+ *
+ * Main
+ * 
+ * ***************************************************************************/
 #ifdef __linux__
 	#define SocketCanCreate           SocketCanLinux
 	#define SocketCanInfoCreate       SocketCanInfoLinux
@@ -32,6 +48,27 @@ SocketCanFactory::SocketCanFactory()
 
 SocketCanFactory::~SocketCanFactory()
 {
+}
+
+CanBufferPtr SocketCanFactory::createCanBuffer( const std::string& type, const unsigned int size  )
+{
+	if( CAN_BUFFER_REGISTRATION == nullptr )
+	{
+		throw std::runtime_error("Internal error: CanBuffer registration is not initialized");
+	}
+	
+	std::string buffer_type = type;
+	if( type == "default" )
+	{
+		buffer_type = "Queue";
+	}
+	
+	if( !CAN_BUFFER_REGISTRATION->isRegisteredClass( buffer_type ) )
+	{
+		throw std::invalid_argument("CanBuffer type is unknown");
+	}
+	
+	return CanBufferPtr( CAN_BUFFER_REGISTRATION->get( buffer_type, size ) );
 }
 
 SocketCanPtr SocketCanFactory::createSocketCan(const std::string& device)
