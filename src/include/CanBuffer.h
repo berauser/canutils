@@ -11,7 +11,7 @@
 namespace CanSocket
 {
 
-typedef Buffer<CANMessage> CanBuffer;
+typedef Buffer::Buffer<CANMessage> CanBuffer;
 typedef std::shared_ptr<CanBuffer> CanBufferPtr;
 
 } /* namespace CanSocket */

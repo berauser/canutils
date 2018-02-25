@@ -7,7 +7,7 @@
 
 #include <string>
 
-namespace CanSocket
+namespace Buffer
 {
 
 template<typename T>
@@ -32,6 +32,6 @@ protected:
     Buffer() {};
 };
 
-} /* namespace CanSocket */
+} /* namespace Buffer */
 
 #endif /* SRC_BUFFER_H */

@@ -7,6 +7,11 @@
 #include <map>
 #include <functional>
 
+/*************************************************************************//***
+ *
+ * Generic excpetion for registry
+ * 
+ * ***************************************************************************/
 template<typename Key>
 class UndefinedKeyException : public std::exception
 {
@@ -20,6 +25,11 @@ private:
     const Key _key;   
 };
 
+/*************************************************************************//***
+ *
+ * Generic registry base class
+ * 
+ * ***************************************************************************/
 template<typename Base, typename Key, typename ...Args>
 class Registry
 {
@@ -30,52 +40,41 @@ public:
     ~Registry() = default;
 
     template<typename Derived>
-    void registerClass(const Key &key);
-    void unregisterClass(const Key &key);
-    bool isRegisteredClass( const Key &key);
+    void registerClass(const Key &key)
+    {
+        m_map[key] = [](Args... args)->Base*{ return new Derived(args...); };
+    }
+    
+    void unregisterClass(const Key &key)
+    {
+        m_map.erase(key);
+    }
+
+    bool isRegisteredClass( const Key &key)
+    {
+        return ( m_map.find( key ) != m_map.end() );
+    }
     // TODO method to get all registered types in a list?
     
-    Base* get(const Key &key, Args... args);
+    Base* get(const Key &key, Args... args)
+    {
+        try
+        {
+            return m_map.at(key)(std::forward<Args>(args)...);
+        }
+        catch(const std::out_of_range &e)
+        {
+            throw UndefinedKeyException<Key>(key);
+        }
+    }
 
 private:
     std::map<Key, Constructor > m_map;
 };
 
-template<typename Base, typename Key, typename... Args>
-template<typename Derived>
-void Registry<Base, Key, Args...>::registerClass(const Key &key)
-{
-	m_map[key] = [](Args... args)->Base*{ return new Derived(args...); };
-}
-
-template<typename Base, typename Key, typename... Args> 
-void Registry<Base, Key, Args...>::unregisterClass(const Key &key)
-{
-	m_map.erase(key);
-}
-
-template<typename Base, typename Key, typename... Args> 
-bool Registry<Base, Key, Args...>::isRegisteredClass(const Key &key)
-{
-	return ( m_map.find( key ) != m_map.end() );
-}
-
-template<typename Base, typename Key, typename... Args>
-Base* Registry<Base, Key, Args...>::get(const Key &key, Args... args)
-{
-    try
-    {
-        return m_map.at(key)(std::forward<Args>(args)...);
-    }
-    catch(const std::out_of_range &e)
-    {
-        throw UndefinedKeyException<Key>(key);
-    }
-}
-
 /*************************************************************************//***
  *
- * 
+ * Priorities for construcotr/destructor functions
  * 
  * ***************************************************************************/
 #define FACTORY_PRIORITY  1000
@@ -83,7 +82,7 @@ Base* Registry<Base, Key, Args...>::get(const Key &key, Args... args)
 
 /*************************************************************************//***
  *
- * 
+ * Macros to register/unregister types on loading/unloading
  * 
  * ***************************************************************************/
 #define REGISTER_TYPE( type, key, database )    \

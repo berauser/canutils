@@ -6,31 +6,61 @@
 
 #include <queue>
 
-namespace CanSocket
+namespace Buffer
 {
 
 template<typename T>
 class PriorityQueue : public BufferImpl<T>
 {
 public:
-    PriorityQueue( unsigned int size );
-    ~PriorityQueue();
+    PriorityQueue( unsigned int size )  : BufferImpl<T>(size)
+    {
+        
+    }
+    ~PriorityQueue()
+    {
+        
+    }
     
-    virtual int read(T& msg) override;
-    virtual int write(const T& msg) override;
+    virtual int read(T& msg) override
+    {
+        (void)msg;
+        return -1;
+    }
+    virtual int write(const T& msg) override
+    {
+        (void)msg;
+        return -1;
+    }
     
-    virtual int resize( unsigned int size ) override;
+    virtual int resize( unsigned int size ) override
+    {
+        (void)size;
+        return -1;
+    }
     
-    virtual bool hasNext() const override;
-    virtual bool isFull()  const override;
-    virtual bool isEmpty() const override;
+    virtual bool hasNext() const override
+    {
+        return false;
+    }
+    virtual bool isFull()  const override
+    {
+        return false;
+    }
+    virtual bool isEmpty() const override
+    {
+        return false;
+    }
     
-    virtual std::string implementation() const override;
+    virtual std::string implementation() const override
+    {
+        return "PriorityQueue";
+    }
     
 protected:
     std::priority_queue<T> _priority_queue;
 };
 
-} /* namespace CanSocket */
+} /* namespace Buffer */
 
 #endif /* SRC_BUFFER_PRIORITYQUEUE_H */
