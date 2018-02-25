@@ -39,7 +39,7 @@ public:
 	virtual bool isOpen() = 0;
 
 	virtual int write(const CANMessage& msg) = 0;
-	virtual int read(CANMessage* message) = 0;
+	virtual int read(CANMessage& message) = 0;
 
 	virtual const std::string& getDevice() const = 0;
 

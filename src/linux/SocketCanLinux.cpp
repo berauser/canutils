@@ -54,7 +54,7 @@ int SocketCanLinux::writeDevice(const CANMessage& message)
 	return ::write(socketfd, &message, sizeof(CANMessage));
 }
 
-int SocketCanLinux::readDevice(CANMessage* message)
+int SocketCanLinux::readDevice(CANMessage& message)
 {
 	if (socketfd == SOCKET_INVALID)
 	{
@@ -65,7 +65,7 @@ int SocketCanLinux::readDevice(CANMessage* message)
 	// struct timeval tv;
 	// ioctl(socketfd, SIOCGSTAMP, &tv);
 	
-	return ::read(socketfd, message, sizeof(CANMessage));
+	return ::read(socketfd, &message, sizeof(CANMessage));
 }
 
 int SocketCanLinux::enableLoopback(bool enable)

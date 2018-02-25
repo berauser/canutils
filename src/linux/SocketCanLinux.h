@@ -35,7 +35,7 @@ public:
 protected:
 	virtual int openDevice() override;
 	virtual int closeDevice() override;
-	virtual int readDevice(CANMessage* message) override;
+	virtual int readDevice(CANMessage& message) override;
 	virtual int writeDevice(const CANMessage& msg) override;
 
 	virtual int getFiledescriptor() const override;

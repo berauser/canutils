@@ -69,10 +69,10 @@ const std::string& SocketCanImpl::getDevice() const
 	return device;
 }
 
-int SocketCanImpl::read(CANMessage* message)
+int SocketCanImpl::read(CANMessage& message)
 {
 	thread_local int recvbytes;
-	memset(message, 0x00, sizeof(CANMessage));
+	memset(&message, 0x00, sizeof(CANMessage));
 
 	if (isOpen() == false)
 	{
@@ -85,10 +85,10 @@ int SocketCanImpl::read(CANMessage* message)
 	}
 
 	LOGGER( SOCKETCAN_DEBUG, "SocketCanLinux::read() - %x [%d] %x %x %x %x %x %x %x %x",
-			message->can_id, message->can_dlc, message->data[0],
-			message->data[1], message->data[2], message->data[3],
-			message->data[4], message->data[5], message->data[6],
-			message->data[7]);
+			message.can_id,  message.can_dlc, message.data[0],
+			message.data[1], message.data[2], message.data[3],
+			message.data[4], message.data[5], message.data[6],
+			message.data[7]);
 
 	if (recvbytes < 0)
 	{

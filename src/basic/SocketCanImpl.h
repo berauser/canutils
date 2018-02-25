@@ -26,7 +26,7 @@ public:
 	virtual int close() override final;
 	virtual bool isOpen() override = 0;
 
-	virtual int read(CANMessage* message) override final;
+	virtual int read(CANMessage& message) override final;
 	virtual int write(const CANMessage& msg) override final;
 
 	virtual const std::string& getDevice() const override final;
@@ -43,7 +43,7 @@ public:
 protected:
 	virtual int openDevice() = 0;
 	virtual int closeDevice() = 0;
-	virtual int readDevice(CANMessage* message) = 0;
+	virtual int readDevice(CANMessage& message) = 0;
 	virtual int writeDevice(const CANMessage& msg) = 0;
 
 	virtual int getFiledescriptor() const = 0;

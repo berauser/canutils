@@ -177,7 +177,7 @@ TEST_F( SocketCanTest, error_mask_full )
 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message_tx_2 ));
 	
 	/* receive -> error 1 should be ignored */
-	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( message_rx ));
 	EXPECT_EQ( message_tx_2, message_rx );
 	
 	/* now test to receive all error */
@@ -186,9 +186,9 @@ TEST_F( SocketCanTest, error_mask_full )
 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message_tx_1 ));
 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message_tx_2 ));
 	
-	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( message_rx ));
 	EXPECT_EQ( message_tx_1, message_rx );
-	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( message_rx ));
 	EXPECT_EQ( message_tx_2, message_rx );
 	
 	/* now reset error mask and receive all errors */
@@ -198,8 +198,8 @@ TEST_F( SocketCanTest, error_mask_full )
 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message_tx_2 ));
 	
 	/* FIXME currently we have no timeout on receive, so we cant test 'no receive' */
-// 	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
-// 	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
+// 	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( message_rx ));
+// 	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( message_rx ));
 
 	EXPECT_EQ(0, socketcan_rx->close());
 	EXPECT_EQ(0, socketcan_tx->close());
@@ -244,7 +244,7 @@ TEST_F( SocketCanTest, loopback_full )
 	EXPECT_TRUE ( socketcan_tx->loopbackEnabled() );
 		
 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message_tx   ));
-	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx_1 ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( message_rx_1 ));
 	EXPECT_EQ( message_tx, message_rx_1 );
 	
 	/* now disabled it and test it we receive a message */
@@ -253,7 +253,7 @@ TEST_F( SocketCanTest, loopback_full )
 	
 	// FIXME currently we have no timeout on receive, so we would wait here forever
 // 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message_tx   ));
-// 	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx_2 ));
+// 	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( message_rx_2 ));
 // 	EXPECT_EQ( message_tx, message_rx_2 );
 	
 	EXPECT_EQ(0, socketcan_tx->close());
@@ -296,7 +296,7 @@ TEST_F( SocketCanTest, receive_own_full )
 	CANMessage message_rx;
 	
 	EXPECT_EQ( sizeof( CANMessage ), socketcan->write( message_tx ));
-	EXPECT_EQ( sizeof( CANMessage ), socketcan->read( &message_rx ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan->read( message_rx ));
 	EXPECT_EQ( message_tx, message_rx );
 	
 	EXPECT_EQ(0, socketcan->close());
@@ -324,7 +324,7 @@ TEST_F( SocketCanTest, read_write_basic )
 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message_tx ));
 
 	/* receive */
-	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( message_rx ));
 	EXPECT_EQ( message_tx, message_rx );
 	
 	/* cleanup */
@@ -354,7 +354,7 @@ TEST_F( SocketCanTest, read_write_extended )
 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message_tx ));
 
 	/* receive */
-	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( message_rx ));
 	EXPECT_EQ( message_tx, message_rx );
 
 	/* cleanup */
@@ -396,13 +396,13 @@ TEST_F( SocketCanTest, receive_filter_not_inverted )
 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message5 ));
 
 	/* receive 0x111 */
-	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( message_rx ));
 	EXPECT_EQ( message1, message_rx );
 	/* receive 0x440 */
-	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( message_rx ));
 	EXPECT_EQ( message4, message_rx );
 	/* receive 0x441 */
-	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( message_rx ));
 	EXPECT_EQ( message5, message_rx );
 
 	/* cleanup */
@@ -442,13 +442,13 @@ TEST_F( SocketCanTest, receive_filter_inverted )
 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message5 ));
 
 	/* receive 0x111 */
-	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( message_rx ));
 	EXPECT_EQ( message1, message_rx );
 	/* receive 0x222 */
-	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( message_rx ));
 	EXPECT_EQ( message2, message_rx );
 	/* receive 0x555 */
-	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( message_rx ));
 	EXPECT_EQ( message5, message_rx );
 
 	/* cleanup */
@@ -492,10 +492,10 @@ TEST_F( SocketCanTest, reset_filter )
 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message2 ));
 
 	/* receive 0x111 */
-	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( message_rx ));
 	EXPECT_EQ( message1, message_rx );
 	/* receive 0x222 */
-	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( message_rx ));
 	EXPECT_EQ( message2, message_rx );
 
 	/* cleanup */
