@@ -21,9 +21,9 @@ public:
 	SocketCanFactory();
 	virtual ~SocketCanFactory();
 
-	SocketCan* createSocketCan(const std::string& device);
-	SocketCanInfo* createSocketCanInfo( const std::string& device);
-	SocketCanStatistics* createSocketCanStatistics(const std::string& device);
+	SocketCanPtr createSocketCan(const std::string& device);
+	SocketCanInfoPtr createSocketCanInfo( const std::string& device);
+	SocketCanStatisticsPtr createSocketCanStatistics(const std::string& device);
 };
 
 } /* namespace CanSocket */

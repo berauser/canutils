@@ -62,6 +62,8 @@ int SocketCanLinux::readDevice(CANMessage* message)
 	}
 	
 	// TODO ioctl call for timestamp
+	// struct timeval tv;
+	// ioctl(socketfd, SIOCGSTAMP, &tv);
 	
 	return ::read(socketfd, message, sizeof(CANMessage));
 }

@@ -10,6 +10,7 @@
 
 #include <list>
 #include <string>
+#include <memory>
 
 #include "Base.h"
 
@@ -57,6 +58,7 @@ public:
 	virtual CANErrorMask getErrorFilterMask() const = 0;
 	virtual int clearErrorFilterMask() = 0;
 };
+typedef std::shared_ptr<SocketCan> SocketCanPtr;
 
 } /* namespace CanSocket */
 

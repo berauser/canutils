@@ -11,6 +11,7 @@
 #include "CANStatistics.h"
 
 #include <string>
+#include <memory>
 
 namespace CanSocket
 {
@@ -32,6 +33,7 @@ public:
 	virtual CANStatisticsPtr read() = 0;
 	virtual int reset() = 0;
 };
+typedef std::shared_ptr<SocketCanStatistics> SocketCanStatisticsPtr;
 
 } /* namespace CanSocket */
 

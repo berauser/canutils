@@ -11,6 +11,7 @@
 #include "CANDeviceInfo.h"
 
 #include <string>
+#include <memory>
 
 namespace CanSocket
 {
@@ -36,6 +37,7 @@ public:
 	static std::string toString(const ControlMode& mode);
 	static std::string toString(const DeviceState& state);
 };
+typedef std::shared_ptr<SocketCanInfo> SocketCanInfoPtr;
 
 } /* namespace CanSocket */
 

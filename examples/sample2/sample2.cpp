@@ -10,7 +10,7 @@ using namespace CanSocket;
 int main()
 {
 	SocketCanFactory factory;
-	SocketCan* socketcan = factory.createSocketCan( "vcan0" );
+	SocketCanPtr socketcan = factory.createSocketCan( "vcan0" );
 
 	socketcan->open();
 
@@ -25,5 +25,4 @@ int main()
 	socketcan->write( msg );
 
 	socketcan->close();
-	delete socketcan;
 }

@@ -10,8 +10,13 @@
 #include "SocketCanFactory.h"
 #include "TestHelper.h"
 
+#include "CANError.h"
+
 #include <stdexcept>
-#include <future>
+
+#define GTEST_TIMEOUT_BEGIN auto asyncFuture = std::async(std::launch::async, [&]()->void {
+#define GTEST_TIMEOUT_END(X) return; }); \
+	EXPECT_TRUE(asyncFuture.wait_for(std::chrono::milliseconds(X)) != std::future_status::timeout);
 
 namespace CanSocket
 {
@@ -34,7 +39,7 @@ TEST_F( SocketCanTest, init )
 	ASSERT_THROW(factory.createSocketCan(""), std::invalid_argument);
 
 	/* open device */
-	CanSocket::SocketCan* socketcan = factory.createSocketCan("vcan0");
+	CanSocket::SocketCanPtr socketcan = factory.createSocketCan("vcan0");
 
 	EXPECT_EQ("vcan0", socketcan->getDevice());
 	EXPECT_EQ(false, socketcan->isOpen());
@@ -50,14 +55,12 @@ TEST_F( SocketCanTest, init )
 	EXPECT_EQ(false, socketcan->isOpen());
 
 	EXPECT_EQ(0, socketcan->close());
-
-	delete socketcan;
 }
 
-TEST_F( SocketCanTest, filter )
+TEST_F( SocketCanTest, filter_basic )
 {
 	SocketCanFactory factory;
-	SocketCan* socketcan = factory.createSocketCan("vcan0");
+	SocketCanPtr socketcan = factory.createSocketCan("vcan0");
 
 	EXPECT_EQ(0, socketcan->getFilterList().size());
 
@@ -116,14 +119,96 @@ TEST_F( SocketCanTest, filter )
 
 	EXPECT_EQ(0, socketcan->close());
 	EXPECT_EQ(false, socketcan->isOpen());
+}
 
-	delete socketcan;
+TEST_F( SocketCanTest, error_mask_basic )
+{
+	SocketCanFactory factory;
+	SocketCanPtr socketcan = factory.createSocketCan("vcan0");
+	
+	CANErrorMask mask = 0;
+	
+	/* initial mask */
+	EXPECT_EQ( 0x00000000, socketcan->getErrorFilterMask() );
+	
+	/* test on closed device */
+	mask |= CANErrorFlag::TransmissionTimoutError;
+	ASSERT_THROW( socketcan->setErrorFilterMask( mask ), std::logic_error );
+	ASSERT_THROW( socketcan->clearErrorFilterMask(),     std::logic_error );
+	
+	/* should not be set */
+	EXPECT_EQ(0x00000000, socketcan->getErrorFilterMask() );
+	
+	/* test to set with an open device */
+	EXPECT_EQ(0,          socketcan->open()                     );
+	EXPECT_EQ(0,          socketcan->setErrorFilterMask( mask ) );
+	EXPECT_EQ(mask,       socketcan->getErrorFilterMask()       );
+	
+	/* reset */
+	EXPECT_EQ(0,          socketcan->clearErrorFilterMask()     );
+	EXPECT_EQ(0x00000000, socketcan->getErrorFilterMask()       );
+	
+	/* close and finish test */
+	EXPECT_EQ(0, socketcan->close());
+}
+
+TEST_F( SocketCanTest, error_mask_full )
+{
+	SocketCanFactory factory;
+	SocketCanPtr socketcan_tx = factory.createSocketCan("vcan0");
+	SocketCanPtr socketcan_rx = factory.createSocketCan("vcan0");
+	
+	EXPECT_EQ(0, socketcan_rx->open());
+	EXPECT_EQ(0, socketcan_tx->open());
+	
+	CANErrorMask error1 = (uint32_t)CANErrorFlag::BusError;
+	CANErrorMask error2 = (uint32_t)CANErrorFlag::TransceiveError;
+	
+	/* set error mask -> we want to receive onyl error2 (TransceiveError) */
+	EXPECT_EQ(0, socketcan_rx->setErrorFilterMask( error2 ));
+	
+	/* message to send */
+	CANMessage message_tx_1( error1, CANMessage::CANFrameType::Error, (uint8_t)CANErrorLength::CANErrorDataLengthCode, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 );
+	CANMessage message_tx_2( error2, CANMessage::CANFrameType::Error, (uint8_t)CANErrorLength::CANErrorDataLengthCode, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 );
+	CANMessage message_rx;
+	
+	/* send both errors */
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message_tx_1 ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message_tx_2 ));
+	
+	/* receive -> error 1 should be ignored */
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
+	EXPECT_EQ( message_tx_2, message_rx );
+	
+	/* now test to receive all error */
+	EXPECT_EQ(0, socketcan_rx->setErrorFilterMask( (CANErrorMask)CANMask::Error ));
+	
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message_tx_1 ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message_tx_2 ));
+	
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
+	EXPECT_EQ( message_tx_1, message_rx );
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
+	EXPECT_EQ( message_tx_2, message_rx );
+	
+	/* now reset error mask and receive all errors */
+	EXPECT_EQ(0, socketcan_rx->clearErrorFilterMask());
+	
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message_tx_1 ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message_tx_2 ));
+	
+	/* FIXME currently we have no timeout on receive, so we cant test 'no receive' */
+// 	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
+// 	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
+
+	EXPECT_EQ(0, socketcan_rx->close());
+	EXPECT_EQ(0, socketcan_tx->close());
 }
 
 TEST_F( SocketCanTest, loopback_basic )
 {
 	SocketCanFactory factory;
-	SocketCan* socketcan = factory.createSocketCan("vcan0");
+	SocketCanPtr socketcan = factory.createSocketCan("vcan0");
 
 	/* closed socket shoulkd throw an error */
 	ASSERT_THROW( socketcan->enableLoopback( true ),  std::logic_error );
@@ -131,22 +216,54 @@ TEST_F( SocketCanTest, loopback_basic )
 	ASSERT_THROW( socketcan->loopbackEnabled(),       std::logic_error );
 
 	EXPECT_EQ(0, socketcan->open());
-
+	
+	EXPECT_EQ   ( 0, socketcan->enableLoopback( false ) );
+	EXPECT_FALSE( socketcan->loopbackEnabled() );
+	
 	EXPECT_EQ   ( 0, socketcan->enableLoopback( true ) );
 	EXPECT_TRUE ( socketcan->loopbackEnabled() );
 
-	EXPECT_EQ   ( 0, socketcan->enableLoopback( false ) );
-	EXPECT_FALSE( socketcan->loopbackEnabled() );
-
 	EXPECT_EQ(0, socketcan->close());
+}
 
-	delete socketcan;
+TEST_F( SocketCanTest, loopback_full )
+{
+	SocketCanFactory factory;
+	SocketCanPtr socketcan_tx = factory.createSocketCan("vcan0");
+	SocketCanPtr socketcan_rx = factory.createSocketCan("vcan0");
+	
+	CANMessage message_tx( 0x123, CANMessage::CANFrameType::Standard, 8, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 );
+	CANMessage message_rx_1;
+	CANMessage message_rx_2;
+	
+	EXPECT_EQ(0, socketcan_tx->open());
+	EXPECT_EQ(0, socketcan_rx->open());
+	
+	/* enable loopback, so we receive the sent messages */
+	EXPECT_EQ   ( 0, socketcan_tx->enableLoopback( true ) );
+	EXPECT_TRUE ( socketcan_tx->loopbackEnabled() );
+		
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message_tx   ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx_1 ));
+	EXPECT_EQ( message_tx, message_rx_1 );
+	
+	/* now disabled it and test it we receive a message */
+	EXPECT_EQ   ( 0, socketcan_tx->enableLoopback( false ) );
+	EXPECT_FALSE( socketcan_tx->loopbackEnabled() );
+	
+	// FIXME currently we have no timeout on receive, so we would wait here forever
+// 	EXPECT_EQ( sizeof( CANMessage ), socketcan_tx->write( message_tx   ));
+// 	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx_2 ));
+// 	EXPECT_EQ( message_tx, message_rx_2 );
+	
+	EXPECT_EQ(0, socketcan_tx->close());
+	EXPECT_EQ(0, socketcan_rx->close());
 }
 
 TEST_F( SocketCanTest, receive_own_basic )
 {
 	SocketCanFactory factory;
-	SocketCan* socketcan = factory.createSocketCan("vcan0");
+	SocketCanPtr socketcan = factory.createSocketCan("vcan0");
 
 	/* closed socket shoulkd throw an error */
 	ASSERT_THROW( socketcan->receiveOwnMessage( true ),  std::logic_error );
@@ -162,15 +279,34 @@ TEST_F( SocketCanTest, receive_own_basic )
 	EXPECT_FALSE( socketcan->receiveOwnMessageEnabled() );
 
 	EXPECT_EQ(0, socketcan->close());
+}
 
-	delete socketcan;
+TEST_F( SocketCanTest, receive_own_full )
+{
+	SocketCanFactory factory;
+	SocketCanPtr socketcan = factory.createSocketCan("vcan0");
+	
+	EXPECT_EQ(0, socketcan->open());
+	
+	/* enable receiving of own messages, so we receive the sent messages */
+	EXPECT_EQ   ( 0, socketcan->receiveOwnMessage( true ) );
+	EXPECT_TRUE ( socketcan->receiveOwnMessageEnabled()   );
+	
+	CANMessage message_tx( 0x123, CANMessage::CANFrameType::Standard, 8, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 );
+	CANMessage message_rx;
+	
+	EXPECT_EQ( sizeof( CANMessage ), socketcan->write( message_tx ));
+	EXPECT_EQ( sizeof( CANMessage ), socketcan->read( &message_rx ));
+	EXPECT_EQ( message_tx, message_rx );
+	
+	EXPECT_EQ(0, socketcan->close());
 }
 
 TEST_F( SocketCanTest, read_write_basic )
 {
 	SocketCanFactory factory;
-	SocketCan* socketcan_tx = factory.createSocketCan("vcan0");
-	SocketCan* socketcan_rx = factory.createSocketCan("vcan0");
+	SocketCanPtr socketcan_tx = factory.createSocketCan("vcan0");
+	SocketCanPtr socketcan_rx = factory.createSocketCan("vcan0");
 	EXPECT_EQ( 0, socketcan_rx->open());
 
 	/* message to send */
@@ -190,23 +326,17 @@ TEST_F( SocketCanTest, read_write_basic )
 	/* receive */
 	EXPECT_EQ( sizeof( CANMessage ), socketcan_rx->read( &message_rx ));
 	EXPECT_EQ( message_tx, message_rx );
-
-	/* wait for receiving */
-	sleep(1);
-
+	
 	/* cleanup */
 	EXPECT_EQ(0, socketcan_rx->close());
 	EXPECT_EQ(0, socketcan_tx->close());
-
-	delete socketcan_rx;
-	delete socketcan_tx;
 }
 
 TEST_F( SocketCanTest, read_write_extended )
 {
 	SocketCanFactory factory;
-	SocketCan* socketcan_tx = factory.createSocketCan("vcan0");
-	SocketCan* socketcan_rx = factory.createSocketCan("vcan0");
+	SocketCanPtr socketcan_tx = factory.createSocketCan("vcan0");
+	SocketCanPtr socketcan_rx = factory.createSocketCan("vcan0");
 	EXPECT_EQ( 0, socketcan_rx->open());
 
 	/* message to send */
@@ -230,16 +360,13 @@ TEST_F( SocketCanTest, read_write_extended )
 	/* cleanup */
 	EXPECT_EQ(0, socketcan_rx->close());
 	EXPECT_EQ(0, socketcan_tx->close());
-
-	delete socketcan_rx;
-	delete socketcan_tx;
 }
 
 TEST_F( SocketCanTest, receive_filter_not_inverted )
 {
 	SocketCanFactory factory;
-	SocketCan* socketcan_tx = factory.createSocketCan("vcan0");
-	SocketCan* socketcan_rx = factory.createSocketCan("vcan0");
+	SocketCanPtr socketcan_tx = factory.createSocketCan("vcan0");
+	SocketCanPtr socketcan_rx = factory.createSocketCan("vcan0");
 
 	/* message to send */
 	CANMessage message_rx;
@@ -281,16 +408,13 @@ TEST_F( SocketCanTest, receive_filter_not_inverted )
 	/* cleanup */
 	EXPECT_EQ(0, socketcan_rx->close());
 	EXPECT_EQ(0, socketcan_tx->close());
-
-	delete socketcan_rx;
-	delete socketcan_tx;
 }
 
 TEST_F( SocketCanTest, receive_filter_inverted )
 {
 	SocketCanFactory factory;
-	SocketCan* socketcan_tx = factory.createSocketCan("vcan0");
-	SocketCan* socketcan_rx = factory.createSocketCan("vcan0");
+	SocketCanPtr socketcan_tx = factory.createSocketCan("vcan0");
+	SocketCanPtr socketcan_rx = factory.createSocketCan("vcan0");
 
 	/* message to send */
 	CANMessage message_rx;
@@ -330,16 +454,13 @@ TEST_F( SocketCanTest, receive_filter_inverted )
 	/* cleanup */
 	EXPECT_EQ(0, socketcan_rx->close());
 	EXPECT_EQ(0, socketcan_tx->close());
-
-	delete socketcan_rx;
-	delete socketcan_tx;
 }
 
 TEST_F( SocketCanTest, reset_filter )
 {
 	SocketCanFactory factory;
-	SocketCan* socketcan_tx = factory.createSocketCan("vcan0");
-	SocketCan* socketcan_rx = factory.createSocketCan("vcan0");
+	SocketCanPtr socketcan_tx = factory.createSocketCan("vcan0");
+	SocketCanPtr socketcan_rx = factory.createSocketCan("vcan0");
 
 	/* message to send */
 	CANMessage message_rx;
@@ -380,9 +501,6 @@ TEST_F( SocketCanTest, reset_filter )
 	/* cleanup */
 	EXPECT_EQ(0, socketcan_rx->close());
 	EXPECT_EQ(0, socketcan_tx->close());
-
-	delete socketcan_rx;
-	delete socketcan_tx;
 }
 
 } /* namespace Test */

@@ -34,34 +34,34 @@ SocketCanFactory::~SocketCanFactory()
 {
 }
 
-SocketCan* SocketCanFactory::createSocketCan(const std::string& device)
+SocketCanPtr SocketCanFactory::createSocketCan(const std::string& device)
 {
 	LOGGER( SOCKETCAN_INFO, "SocketCanFactory::createSocketCan( %s )", device.c_str() );
 	if (device.empty())
 	{
 		throw std::invalid_argument( "Device is empty" );
 	}
-	return new SocketCanCreate(device);
+	return std::shared_ptr<SocketCan>(new SocketCanCreate(device));
 }
 
-SocketCanInfo* SocketCanFactory::createSocketCanInfo(const std::string& device)
+SocketCanInfoPtr SocketCanFactory::createSocketCanInfo(const std::string& device)
 {
 	LOGGER( SOCKETCAN_INFO, "SocketCanFactory::createSocketCanInfo( %s )", device.c_str() );
 	if (device.empty())
 	{
 		throw std::invalid_argument( "Device is empty" );
 	}
-	return new SocketCanInfoCreate(device);
+	return std::shared_ptr<SocketCanInfo>(new SocketCanInfoCreate(device));
 }
 
-SocketCanStatistics* SocketCanFactory::createSocketCanStatistics(const std::string& device)
+SocketCanStatisticsPtr SocketCanFactory::createSocketCanStatistics(const std::string& device)
 {
 	LOGGER( SOCKETCAN_INFO, "SocketCanFactory::createSocketCanStatistics( %s )", device.c_str() );
 	if (device.empty())
 	{
 		throw std::invalid_argument( "Device is empty" );
 	}
-	return new SocketCanStatisticsCreate(device);
+	return std::shared_ptr<SocketCanStatistics>(new SocketCanStatisticsCreate(device));
 }
 
 

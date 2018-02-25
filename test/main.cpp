@@ -28,8 +28,8 @@ int main(int argc, char** argv) {
 		std::cout << "VCAN0 is not up!" << std::endl;
 		std::cout << "Please enable VCAN0 for testing" << std::endl;
 		std::cout << std::endl;
-		std::cout << "./scripts/vcan.sh start vcan0" << std::endl;
-		std::cout << "./Scripts/vcan.sh ip vcan0" << std::endl;
+		std::cout << "  sudo ./scripts/vcan.sh start vcan0" << std::endl;
+		std::cout << "  sudo ./scripts/vcan.sh up vcan0" << std::endl;
 		std::cout << std::endl;
 		return 1;
 	}
