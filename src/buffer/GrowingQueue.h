@@ -2,21 +2,22 @@
 #ifndef SRC_CANBUFFER_QUEUE_H
 #define SRC_CANBUFFER_QUEUE_H
 
-#include "CanBufferImpl.h"
+#include "BufferImpl.h"
 
-#include <vector>
+#include <queue>
 
 namespace CanSocket
 {
 
-class CanBufferRingBuffer : public CanBufferImpl
+template<typename T>
+class GrowingQueue : public BufferImpl<T>
 {
 public:
-    CanBufferRingBuffer( unsigned int size );
-    ~CanBufferRingBuffer();
+    GrowingQueue( unsigned int size );
+    ~GrowingQueue();
     
-    virtual int read(CANMessage& msg) override;
-    virtual int write(const CANMessage& msg) override;
+    virtual int read(T& msg) override;
+    virtual int write(const T& msg) override;
     
     virtual int resize( unsigned int size ) override;
     
@@ -27,9 +28,8 @@ public:
     virtual std::string implementation() const override;
     
 protected:
-    std::vector<CANMessage> _ring_buffer;
-    std::size_t _read;
-    std::size_t _write;
+    std::queue<T> _queue;
+    
 };
 
 } /* namespace CanSocket */

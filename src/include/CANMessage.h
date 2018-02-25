@@ -252,6 +252,18 @@ struct CANMessage final
 		return m;
 	}
 
+	bool operator<(const CANMessage& m1) const
+	{
+		/* FIXME check for error and RTR flag */
+		return (this->can_id < m1.can_id);
+	}
+
+	bool operator>(const CANMessage& m1) const
+	{
+		/* FIXME check for error and RTR flag */
+		return (this->can_id > m1.can_id);
+	}
+
 	bool operator==(const CANMessage& m1) const
 	{
 		return (can_id == m1.can_id && can_dlc == m1.can_dlc

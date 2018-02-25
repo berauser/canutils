@@ -1,21 +1,22 @@
 
-#ifndef SRC_CANBUFFER_IMPL_H
-#define SRC_CANBUFFER_IMPL_H
+#ifndef SRC_BUFFER_IMPL_H
+#define SRC_BUFFER_IMPL_H
 
-#include "CanBuffer.h"
+#include "Buffer.h"
 
 namespace CanSocket
 {
 
-class CanBufferImpl : public CanBuffer
+template<typename T>
+class BufferImpl : public Buffer<T>
 {
 public:
-    CanBufferImpl() = delete;
-    CanBufferImpl( unsigned int size );
-    virtual ~CanBufferImpl();
+    BufferImpl() = delete;
+    BufferImpl( unsigned int size );
+    virtual ~BufferImpl();
         
-    virtual int read(CANMessage& msg) override = 0;
-    virtual int write(const CANMessage& msg) override = 0;
+    virtual int read(T& msg) override = 0;
+    virtual int write(const T& msg) override = 0;
     
     virtual unsigned int size() const override;
     virtual int resize( unsigned int size ) override = 0;
@@ -32,4 +33,4 @@ protected:
 
 } /* namespace CanSocket */
 
-#endif /* SRC_CANBUFFER_IMPL_h */
+#endif /* SRC_BUFFER_IMPL_h */

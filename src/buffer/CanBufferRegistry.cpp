@@ -1,6 +1,8 @@
 
 #include "CanBufferRegistry.h"
 
+#include "PriorityQueue.h"
+
 namespace CanSocket
 {
 
@@ -17,5 +19,8 @@ static void destroy_registry(void)
 {
         delete CAN_BUFFER_REGISTRATION;
 }
+
+
+
 
 } /* namespace CanSocket */
