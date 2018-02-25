@@ -20,7 +20,7 @@ template class Buffer::PriorityQueue<CanSocket::CANMessage>;
 
 /*************************************************************************//***
  *
- * Explicit declaration of template classes
+ * CanBuffer registration
  * 
  * ***************************************************************************/
 namespace CanSocket
