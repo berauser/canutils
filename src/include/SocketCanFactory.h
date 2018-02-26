@@ -15,14 +15,15 @@
 
 namespace CanSocket
 {
+const unsigned int DEFAULT_BUFFER_SIZE = 16;
 
 class SocketCanFactory
-{
+{    
 public:
 	SocketCanFactory();
 	virtual ~SocketCanFactory();
 
-    CanBufferPtr createCanBuffer(const std::string& type = "default", const unsigned int size = 16 );
+    CanBufferPtr createCanBuffer(const std::string& type = "default", const unsigned int size = DEFAULT_BUFFER_SIZE );
 	SocketCanPtr createSocketCan(const std::string& device);
 	SocketCanInfoPtr createSocketCanInfo( const std::string& device);
 	SocketCanStatisticsPtr createSocketCanStatistics(const std::string& device);
