@@ -34,6 +34,8 @@ public:
     virtual bool isFull()  const override = 0;
     virtual bool isEmpty() const override = 0;
     
+    /* TODO virtual void clean() const override = 0 */
+    
     virtual std::string implementation() const override = 0;
         
 protected:

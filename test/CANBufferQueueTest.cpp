@@ -51,10 +51,10 @@ TEST_F( CANBufferQueueTest, isFull )
 	EXPECT_FALSE( buffer->isFull() );
 	
 	/* fill buffer */
-	for( int i = 0; i < 16; ++i )
+	for( unsigned int i = 0; i < buffer->size() ; ++i )
 	{
 		CANMessage message( i, CANMessage::CANFrameType::Standard, 1, i );
-		buffer->write( message );
+		EXPECT_EQ( 0, buffer->write( message ) );
 	}
 	
 	/* buffer is now full */
@@ -62,7 +62,7 @@ TEST_F( CANBufferQueueTest, isFull )
 	
 	/* read a single message -> buffer is not full */
 	CANMessage msg;
-	buffer->read( msg );
+	EXPECT_EQ( 0, buffer->read( msg ) );
 	
 	EXPECT_FALSE( buffer->isFull() );
 }
@@ -78,14 +78,14 @@ TEST_F( CANBufferQueueTest, isEmpty )
 	
 	/* add a single message */
 	CANMessage message( 0x123, CANMessage::CANFrameType::Standard, 1, 0x01 );
-	buffer->write( message );
+	EXPECT_EQ( 0, buffer->write( message ) );
 
 	/* buffer is not empty */
 	EXPECT_FALSE( buffer->isEmpty() );
 	
 	/* read the last message -> buffer is empty */
 	CANMessage msg;
-	buffer->read( msg );
+	EXPECT_EQ( 0, buffer->read( msg ) );
 	
 	EXPECT_TRUE( buffer->isEmpty() );
 }
@@ -97,8 +97,8 @@ TEST_F( CANBufferQueueTest, resize )
 	
 	/* add a single message */
 	CANMessage message( 0x123, CANMessage::CANFrameType::Standard, 1, 0x01 );
-	buffer->write( message );
-	buffer->write( message );
+	EXPECT_EQ( 0, buffer->write( message ) );
+	EXPECT_EQ( 0, buffer->write( message ) );
 	
 	/* buffer should be full */
 	EXPECT_TRUE( buffer->isFull() );
@@ -110,8 +110,8 @@ TEST_F( CANBufferQueueTest, resize )
 	EXPECT_FALSE( buffer->isFull() );
 	
 	/* add another two messages */
-	buffer->write( message );
-	buffer->write( message );
+	EXPECT_EQ( 0, buffer->write( message ) );
+	EXPECT_EQ( 0, buffer->write( message ) );
 	
 	/* buffer should be full */
 	EXPECT_TRUE( buffer->isFull() );
@@ -119,7 +119,28 @@ TEST_F( CANBufferQueueTest, resize )
 
 TEST_F( CANBufferQueueTest, read_write_single )
 {
-	EXPECT_TRUE(false);
+    SocketCanFactory factory;
+    CanBufferPtr buffer = factory.createCanBuffer("Queue");
+    
+    CANMessage message1( 0x001, CANMessage::CANFrameType::Standard, 1, 0x01 );
+    CANMessage message2( 0x002, CANMessage::CANFrameType::Standard, 1, 0x02 );
+    CANMessage message3( 0x003, CANMessage::CANFrameType::Standard, 1, 0x03 );
+    
+    /* write some test messages */
+    EXPECT_EQ( 0, buffer->write( message1 ) );
+    EXPECT_EQ( 0, buffer->write( message2 ) );
+    EXPECT_EQ( 0, buffer->write( message3 ) );
+    
+    /* read the messages */
+    CANMessage msg1, msg2, msg3;
+    EXPECT_EQ( 0, buffer->read( msg1 ) );
+    EXPECT_EQ( 0, buffer->read( msg2 ) );
+    EXPECT_EQ( 0, buffer->read( msg3 ) );
+    
+    /* compare, no reorder */
+    EXPECT_EQ( message1, msg1 );
+    EXPECT_EQ( message2, msg2 );
+    EXPECT_EQ( message3, msg3 );
 }
 
 TEST_F( CANBufferQueueTest, read_write_multiple )

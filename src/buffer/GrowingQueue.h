@@ -5,6 +5,8 @@
 #include "BufferImpl.h"
 
 #include <queue>
+#include <mutex>
+#include <condition_variable>
 
 namespace Buffer
 {
@@ -24,35 +26,52 @@ public:
     
     virtual int read(T& msg) override
     {
-        (void)msg;
-        return -1;
+        std::unique_lock<std::mutex> lock(_mutex);
+        while( _queue.empty() )
+        {
+                _condition.wait( lock );
+        }
+        msg = _queue.front();
+        _queue.pop();
+        return 0;
     }
     
     virtual int write(const T& msg) override
     {
-        (void)msg;
-        return -1;
+        std::unique_lock<std::mutex> lock(_mutex);
+        _queue.push( msg );
+        lock.unlock();
+        _condition.notify_one();
+        return 0;
     }
     
     virtual int resize( unsigned int size ) override
     {
         (void)size;
-        return -1;
+        return -1; /* not possible */
     }
     
     virtual bool hasNext() const override
     {
-        return false;
+        std::unique_lock<std::mutex> lock(_mutex);
+        return ( !_queue.empty() );
     }
     
     virtual bool isFull()  const override
     {
-        return false;
+        return false; /* not possible */
     }
     
     virtual bool isEmpty() const override
     {
-        return false;
+        std::unique_lock<std::mutex> lock(_mutex);
+        return ( _queue.empty() );
+    }
+    
+    virtual unsigned int size() const override
+    {
+        std::unique_lock<std::mutex> lock(_mutex);
+        return _queue.size();
     }
     
     virtual std::string implementation() const override
@@ -62,6 +81,8 @@ public:
     
 protected:
     std::queue<T> _queue;
+    mutable std::mutex _mutex;
+    std::condition_variable _condition;
     
 };
 

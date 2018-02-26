@@ -43,6 +43,11 @@ TEST_F( CANBufferPriortiyQueueTest, resize )
 	EXPECT_TRUE(false);
 }
 
+TEST_F( CANBufferPriortiyQueueTest, reorder )
+{
+	EXPECT_TRUE(false);
+}
+
 TEST_F( CANBufferPriortiyQueueTest, read_write_single )
 {
 	EXPECT_TRUE(false);
