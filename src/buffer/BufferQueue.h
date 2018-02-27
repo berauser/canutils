@@ -29,24 +29,25 @@ public:
         std::unique_lock<std::mutex> lock(_mutex);
         while( _queue.empty() )
         {
-                _condition.wait( lock );
+            _condition_rx.wait( lock );
         }
         msg = _queue.front();
         _queue.pop();
+        lock.unlock();
+        _condition_tx.notify_one();
         return 0;
     }
     
     virtual int write(const T& msg) override
     {
         std::unique_lock<std::mutex> lock(_mutex);
-        if( _queue.size() == this->size() )
+        while( _queue.size() == this->size() )
         {
-            /* full */
-            return -1;
+            _condition_tx.wait( lock );
         }
         _queue.push( msg );
         lock.unlock();
-        _condition.notify_one();
+        _condition_rx.notify_one();
         return 0;
     }
     
@@ -87,8 +88,8 @@ public:
 protected:
     std::queue<T> _queue;
     mutable std::mutex _mutex;
-    std::condition_variable _condition;
-    
+    std::condition_variable _condition_rx;
+    std::condition_variable _condition_tx;
 };
 
 } /* namespace Buffer */

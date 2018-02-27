@@ -8,6 +8,7 @@
 #include "CANBufferQueueTest.h"
 
 #include "SocketCanFactory.h"
+#include <thread>
 
 namespace CanSocket
 {
@@ -143,14 +144,38 @@ TEST_F( CANBufferQueueTest, read_write_single )
     EXPECT_EQ( message3, msg3 );
 }
 
-TEST_F( CANBufferQueueTest, read_write_multiple )
-{
-	EXPECT_TRUE(false);
-}
-
 TEST_F( CANBufferQueueTest, read_write_async )
 {
-	EXPECT_TRUE(false);
+    SocketCanFactory factory;
+    CanBufferPtr buffer = factory.createCanBuffer("Queue");
+    const unsigned int retries = 100;
+    
+    std::thread worker = std::thread
+    (
+        [&](){
+            for( unsigned int i = 0; i < retries; ++i )
+            {
+                CANMessage message_tx( 0x001, CANMessage::CANFrameType::Standard, 1, i );
+                EXPECT_EQ( 0, buffer->write( message_tx ) );
+            }
+        }
+    );
+        
+    /* read the messages */
+    for( unsigned int i = 0; i< retries; ++i )
+    {
+        CANMessage message( 0x001, CANMessage::CANFrameType::Standard, 1, i );
+        CANMessage message_rx;
+        /* order should be the same, if we inserted it */
+        EXPECT_EQ( 0, buffer->read( message_rx ) );
+        EXPECT_EQ( message, message_rx );
+    }
+    
+    /* wait for thread */
+    if( worker.joinable() )
+    {
+        worker.join();
+    }
 }
 
 } /* namespace Test */

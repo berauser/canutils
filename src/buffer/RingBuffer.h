@@ -57,11 +57,14 @@ public:
     
     virtual int resize( unsigned int size ) override
     {
-        std::unique_lock<std::mutex> lock(_mutex);
-        _ring_buffer.resize( size );
-        // FIXME copy to another vector, replace _head and _tail
-        this->_size = size;
-        return 0;
+        (void)size;
+        return -1; /* TODO currently not implemented */
+        
+//         std::unique_lock<std::mutex> lock(_mutex);
+//         _ring_buffer.resize( size );
+//         // FIXME copy to another vector, replace _head and _tail
+//         this->_size = size;
+//         return 0;
     }
     
     virtual bool hasNext() const override

@@ -26,6 +26,8 @@ public:
     virtual bool isFull()  const = 0;
     virtual bool isEmpty() const = 0;
     
+    /* TODO virtual void clean() const = 0 */
+    
     virtual std::string implementation() const = 0;
     
 protected:

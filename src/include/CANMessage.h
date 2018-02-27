@@ -223,7 +223,6 @@ struct CANMessage final
 		return m;
 	}
 
-
 	CANMessage& operator&=(const CANMask& mask)
 	{
 		can_id = can_id & static_cast<uint32_t>(mask);
@@ -252,16 +251,28 @@ struct CANMessage final
 		return m;
 	}
 
+	/**
+	 * Compares the priority of the CAN message
+	 * 0x001 is the highest CAN message priority
+	 * 0x7FF (SFF) is the lowest priority
+	 * (0x002 < 0x001 should returns true) 
+	 */
 	bool operator<(const CANMessage& m1) const
 	{
 		/* FIXME check for error and RTR flag */
-		return (this->can_id < m1.can_id);
+		return (this->can_id > m1.can_id);
 	}
 
+	/**
+	 * Compares the priority of the CAN message
+	 * 0x001 is the highest CAN message priority
+	 * 0x7FF (SFF) is the lowest priority
+	 * (0x001 > 0x002 should returns true) 
+	 */
 	bool operator>(const CANMessage& m1) const
 	{
 		/* FIXME check for error and RTR flag */
-		return (this->can_id > m1.can_id);
+		return (this->can_id < m1.can_id);
 	}
 
 	bool operator==(const CANMessage& m1) const
@@ -280,10 +291,6 @@ struct CANMessage final
 	uint8_t reserved2 = 0;
 	uint8_t data[CAN_MAX_DATA_LENGTH];
 };
-
-
-
-
 
 } /* namespace CanSocket */
 
