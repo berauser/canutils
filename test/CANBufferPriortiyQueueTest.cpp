@@ -118,6 +118,27 @@ TEST_F( CANBufferPriortiyQueueTest, resize )
 	EXPECT_TRUE( buffer->isFull() );
 }
 
+TEST_F( CANBufferPriortiyQueueTest, clear )
+{
+	SocketCanFactory factory;
+	CanBufferPtr buffer = factory.createCanBuffer("PriorityQueue", 16);
+	
+	/* buffer should be empty */
+	EXPECT_TRUE( buffer->isEmpty() );
+	
+	/* add a single message */
+	CANMessage message( 0x123, CANMessage::CANFrameType::Standard, 1, 0x01 );
+	EXPECT_EQ( 0, buffer->write( message ) );
+	
+	/* buffer is not empty */
+	EXPECT_FALSE( buffer->isEmpty() );
+	
+	/* clear the buffer */
+	buffer->clear();
+	
+	EXPECT_TRUE( buffer->isEmpty() );
+}
+
 TEST_F( CANBufferPriortiyQueueTest, read_write_single )
 {
     SocketCanFactory factory;

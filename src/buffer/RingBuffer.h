@@ -84,6 +84,14 @@ public:
         return ( _head == _tail );
     }
     
+    virtual void clear() override 
+    {
+        std::unique_lock<std::mutex> lock(_mutex);
+        _ring_buffer.clear();
+        _head = 0;
+        _tail = 0;
+    }
+    
     virtual std::string implementation() const override
     {
         return "RingBuffer";

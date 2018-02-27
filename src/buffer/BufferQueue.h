@@ -80,6 +80,13 @@ public:
         return _queue.empty();
     }
     
+    virtual void clear() override
+    {
+        std::unique_lock<std::mutex> lock(_mutex);   
+        std::queue<T> empty;
+        std::swap( _queue, empty );
+    }
+    
     virtual std::string implementation() const override
     {
         return "Queue";

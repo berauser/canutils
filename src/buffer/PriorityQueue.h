@@ -79,6 +79,13 @@ public:
         return _priority_queue.empty();
     }
     
+    virtual void clear() override
+    {
+        std::unique_lock<std::mutex> lock(_mutex);   
+        std::priority_queue<T> empty;
+        std::swap( _priority_queue, empty );
+    }
+    
     virtual std::string implementation() const override
     {
         return "PriorityQueue";
