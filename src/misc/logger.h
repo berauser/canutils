@@ -5,8 +5,8 @@
  *      Author: rauser
  */
 
-#ifndef SRC_LOGGER_H_
-#define SRC_LOGGER_H_
+#ifndef SRC_MISC_LOGGER_H_
+#define SRC_MISC_LOGGER_H_
 
 #define DEBUG_CONSOLE
 
@@ -20,4 +20,4 @@
 	#define LOGGER( buf, format, ... )
 #endif // DEBUG_CONSOLE
 
-#endif /* SRC_LOGGER_H_ */
+#endif /* SRC_MISC_LOGGER_H_ */

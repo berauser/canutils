@@ -1,5 +1,5 @@
-#ifndef NETLINK_NETLINKCANPARSER_H
-#define NETLINK_NETLINKCANPARSER_H
+#ifndef NETLINK_NETLINKCANPARSER_H_
+#define NETLINK_NETLINKCANPARSER_H_
 
 #include "Netlink.h"
 #include "NetlinkParser.h"
@@ -96,4 +96,4 @@ protected:
 
 } /* namespace Netlink */
 
-#endif // NETLINK_NETLINKCANPARSER_H
+#endif /* NETLINK_NETLINKCANPARSER_H_ */

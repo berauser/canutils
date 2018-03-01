@@ -1,6 +1,6 @@
 
-#ifndef SRC_BUFFER_QUEUE_H
-#define SRC_BUFFER_QUEUE_H
+#ifndef SRC_BUFFER_QUEUE_H_
+#define SRC_BUFFER_QUEUE_H_
 
 #include "BufferImpl.h"
 
@@ -101,4 +101,4 @@ protected:
 
 } /* namespace Buffer */
 
-#endif /* SRC_BUFFER_QUEUE_H */
+#endif /* SRC_BUFFER_QUEUE_H_ */

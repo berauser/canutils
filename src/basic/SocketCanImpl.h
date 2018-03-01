@@ -5,8 +5,8 @@
  *      Author: rauser
  */
 
-#ifndef SRC_SOCKETCANIMPL_H_
-#define SRC_SOCKETCANIMPL_H_
+#ifndef SRC_BASIC_SOCKETCANIMPL_H_
+#define SRC_BASIC_SOCKETCANIMPL_H_
 
 #include "SocketCan.h"
 
@@ -62,4 +62,4 @@ private:
 
 } /* namespace CanSocket */
 
-#endif /* SRC_SOCKETCANIMPL_H_ */
+#endif /* SRC_BASIC_SOCKETCANIMPL_H_ */

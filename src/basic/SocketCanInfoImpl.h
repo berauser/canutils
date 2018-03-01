@@ -1,5 +1,5 @@
-#ifndef SOCKETCANINFOIMPL_H
-#define SOCKETCANINFOIMPL_H
+#ifndef SRC_BASIC_SOCKETCANINFOIMPL_H_
+#define SRC_BASIC_SOCKETCANINFOIMPL_H_
 
 #include "SocketCanInfo.h"
 
@@ -29,4 +29,4 @@ private:
 
 } /* namespace CanSocket */
 
-#endif // SOCKETCANINFOIMPL_H
+#endif /* SRC_BASIC_SOCKETCANINFOIMPL_H_ */

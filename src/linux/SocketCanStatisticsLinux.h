@@ -1,5 +1,5 @@
-#ifndef SRC_SOCKETCANSTATISTICSLINUX_H
-#define SRC_SOCKETCANSTATISTICSLINUX_H
+#ifndef SRC_LINUX_SOCKETCANSTATISTICSLINUX_H_
+#define SRC_LINUX_SOCKETCANSTATISTICSLINUX_H_
 
 #include "SocketCanStatisticsImpl.h"
 #include "helper/Netlink.h"
@@ -35,4 +35,4 @@ protected:
 
 } /* namespace CanSocket */
 
-#endif // SRC_SOCKETCANSTATISTICSLINUX_H
+#endif // SRC_LINUX_SOCKETCANSTATISTICSLINUX_H_

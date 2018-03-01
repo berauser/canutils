@@ -5,8 +5,8 @@
  *      Author: rauser
  */
 
-#ifndef SRC_SOCKETCANINFO_H_
-#define SRC_SOCKETCANINFO_H_
+#ifndef SRC_INCLUDE_SOCKETCANINFO_H_
+#define SRC_INCLUDE_SOCKETCANINFO_H_
 
 #include "CANDeviceInfo.h"
 
@@ -41,4 +41,4 @@ typedef std::shared_ptr<SocketCanInfo> SocketCanInfoPtr;
 
 } /* namespace CanSocket */
 
-#endif /* SRC_SOCKETCANSTATISTICS_H_ */
+#endif /* SRC_INCLUDE_SOCKETCANSTATISTICS_H_ */

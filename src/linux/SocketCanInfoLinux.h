@@ -1,5 +1,5 @@
-#ifndef SRC_SOCKETCANINFOLINUX_H
-#define SRC_SOCKETCANINFOLINUX_H
+#ifndef SRC_LINUX_SOCKETCANINFOLINUX_H_
+#define SRC_LINUX_SOCKETCANINFOLINUX_H_
 
 #include "SocketCanInfoImpl.h"
 #include "helper/Netlink.h"
@@ -38,4 +38,4 @@ protected:
 
 } /* namespace CanSocket */
 
-#endif // SRC_SOCKETCANINFOLINUX_H
+#endif // SRC_LINUX_SOCKETCANINFOLINUX_H_

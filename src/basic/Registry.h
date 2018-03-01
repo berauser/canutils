@@ -1,6 +1,6 @@
 
-#ifndef SRC_REGISTRY_H
-#define SRC_REGISTRY_H
+#ifndef SRC_BASIC_REGISTRY_H_
+#define SRC_BASIC_REGISTRY_H_
 
 #include "platform.h"
 
@@ -99,4 +99,4 @@ private:
         (database)->unregisterClass( key );     \
     }    
 
-#endif /* SRC_REGISTRY_H */
+#endif /* SRC_BASIC_REGISTRY_H_ */

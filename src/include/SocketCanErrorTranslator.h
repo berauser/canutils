@@ -1,5 +1,5 @@
-#ifndef SRC_SOCKETCANERRORTRANSLATOR_H
-#define SRC_SOCKETCANERRORTRANSLATOR_H
+#ifndef SRC_INCLUDE_SOCKETCANERRORTRANSLATOR_H_
+#define SRC_INCLUDE_SOCKETCANERRORTRANSLATOR_H_
 
 #include "CANMessage.h"
 #include "CANError.h"
@@ -15,4 +15,4 @@ std::string getErrorString( const CANMessage& msg );
 
 } /* namespace CanSocket */
 
-#endif // SRC_SOCKETCANERRORTRANSLATOR_H
+#endif /* SRC_INCLUDE_SOCKETCANERRORTRANSLATOR_H_ */

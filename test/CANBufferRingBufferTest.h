@@ -5,8 +5,8 @@
  *      Author: rauser
  */
 
-#ifndef TEST_CANBUFFER_RINGBUFFERTEST_H_
-#define TEST_CANBUFFER_RINGBUFFERTEST_H_
+#ifndef TEST_RINGBUFFERTEST_H_
+#define TEST_RINGBUFFERTEST_H_
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -26,4 +26,4 @@ protected:
 } /* namespace Test */
 } /* namespace CanSocket */
 
-#endif /* TEST_CANBUFFER_RINGBUFFERTEST_H_ */
+#endif /* TEST_RINGBUFFERTEST_H_ */

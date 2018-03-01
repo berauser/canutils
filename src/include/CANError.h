@@ -5,8 +5,8 @@
  *      Author: rauser
  */
 
-#ifndef SRC_CANERROR_H_
-#define SRC_CANERROR_H_
+#ifndef SRC_INCLUDE_CANERROR_H_
+#define SRC_INCLUDE_CANERROR_H_
 
 #include <cstdint>
 
@@ -164,4 +164,4 @@ operator !=(const CANErrorMask &data, const CANErrorFlag &f)
 
 } /* namespace CanSocket */
 
-#endif /* SRC_CANERROR_H_ */
+#endif /* SRC_INCLUDE_CANERROR_H_ */

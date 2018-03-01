@@ -1,6 +1,6 @@
 
-#ifndef SRC_BUFFER_PRIORITYQUEUE_H
-#define SRC_BUFFER_PRIORITYQUEUE_H
+#ifndef SRC_BUFFER_PRIORITYQUEUE_H_
+#define SRC_BUFFER_PRIORITYQUEUE_H_
 
 #include "BufferImpl.h"
 
@@ -100,4 +100,4 @@ protected:
 
 } /* namespace Buffer */
 
-#endif /* SRC_BUFFER_PRIORITYQUEUE_H */
+#endif /* SRC_BUFFER_PRIORITYQUEUE_H_ */

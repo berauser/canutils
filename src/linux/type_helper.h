@@ -1,6 +1,6 @@
 
-#ifndef SRC_TYPEHELPER_H_
-#define SRC_TYPEHELPER_H_
+#ifndef SRC_LINUX_TYPEHELPER_H_
+#define SRC_LINUX_TYPEHELPER_H_
 
 #include "CANDeviceInfo.h"
 #include "helper/NetlinkParser.h"
@@ -170,4 +170,4 @@ struct type_helper {
 };
 } /* namespace CanSocket */
 
-#endif /* SRC_TYPEHELPER_H_ */
+#endif /* SRC_LINUX_TYPEHELPER_H_ */

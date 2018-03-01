@@ -1,6 +1,6 @@
 
-#ifndef SRC_PLATFORM_H
-#define SRC_PLATFORM_H
+#ifndef SRC_BASIC_PLATFORM_H_
+#define SRC_BASIC_PLATFORM_H_
 
 
 /*************************************************************************//***
@@ -18,4 +18,4 @@
     #define DESTRUCTOR(p)  (void)
 #endif
 
-#endif /* SRC_PLATFORM_H */
+#endif /* SRC_BASIC_PLATFORM_H_ */

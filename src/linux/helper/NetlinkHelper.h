@@ -1,5 +1,5 @@
-#ifndef NETLINK_NETLINKHELPER_H
-#define NETLINK_NETLINKHELPER_H
+#ifndef NETLINK_NETLINKHELPER_H_
+#define NETLINK_NETLINKHELPER_H_
 
 #include <string>
 
@@ -13,4 +13,4 @@ int index_from_name(const std::string& name);
 } /* namespace Helper */
 } /* namespace Netlink */
 
-#endif /* NETLINK_NETLINKHELPER_H */
+#endif /* NETLINK_NETLINKHELPER_H_ */

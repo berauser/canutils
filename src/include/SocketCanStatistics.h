@@ -5,8 +5,8 @@
  *      Author: rauser
  */
 
-#ifndef SRC_SOCKETCANSTATISTICS_H_
-#define SRC_SOCKETCANSTATISTICS_H_
+#ifndef SRC_INCLUDE_SOCKETCANSTATISTICS_H_
+#define SRC_INCLUDE_SOCKETCANSTATISTICS_H_
 
 #include "CANStatistics.h"
 
@@ -37,4 +37,4 @@ typedef std::shared_ptr<SocketCanStatistics> SocketCanStatisticsPtr;
 
 } /* namespace CanSocket */
 
-#endif /* SRC_SOCKETCANSTATISTICS_H_ */
+#endif /* SRC_INCLUDE_SOCKETCANSTATISTICS_H_ */

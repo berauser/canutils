@@ -5,8 +5,8 @@
  *      Author: rauser
  */
 
-#ifndef SRC_SOCKETCANLINUX_H_
-#define SRC_SOCKETCANLINUX_H_
+#ifndef SRC_LINUX_SOCKETCANLINUX_H_
+#define SRC_LINUX_SOCKETCANLINUX_H_
 
 #include "SocketCanImpl.h"
 
@@ -49,4 +49,4 @@ private:
 
 } /* namespace CanSocket */
 
-#endif /* SRC_SOCKETCANLINUX_H_ */
+#endif /* SRC_LINUX_SOCKETCANLINUX_H_ */

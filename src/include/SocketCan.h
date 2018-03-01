@@ -5,8 +5,8 @@
  *      Author: rauser
  */
 
-#ifndef SRC_SOCKETCAN_H_
-#define SRC_SOCKETCAN_H_
+#ifndef SRC_INCLUDE_SOCKETCAN_H_
+#define SRC_INCLUDE_SOCKETCAN_H_
 
 #include <list>
 #include <string>
@@ -62,4 +62,4 @@ typedef std::shared_ptr<SocketCan> SocketCanPtr;
 
 } /* namespace CanSocket */
 
-#endif /* SRC_SOCKETCAN_H_ */
+#endif /* SRC_INCLUDE_SOCKETCAN_H_ */

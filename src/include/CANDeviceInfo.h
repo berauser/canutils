@@ -5,8 +5,8 @@
  *      Author: rauser
  */
 
-#ifndef SRC_CANDEVICEINFO_H_
-#define SRC_CANDEVICEINFO_H_
+#ifndef SRC_INCLUDE_CANDEVICEINFO_H_
+#define SRC_INCLUDE_CANDEVICEINFO_H_
 
 #include <string>
 #include <memory>
@@ -139,4 +139,4 @@ typedef std::shared_ptr<CANDeviceInfo> CANDeviceInfoPtr;
 
 } /* namespace CanSocket */
 
-#endif /* SRC_CANDEVICEINFO_H_ */
+#endif /* SRC_INCLUDE_CANDEVICEINFO_H_ */

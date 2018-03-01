@@ -1,6 +1,6 @@
 
-#ifndef SRC_BUFFER_IMPL_H
-#define SRC_BUFFER_IMPL_H
+#ifndef SRC_BUFFER_BUFFERIMPL_H_
+#define SRC_BUFFER_BUFFERIMPL_H_
 
 #include "Buffer.h"
 
@@ -44,4 +44,4 @@ protected:
 
 } /* namespace Buffer */
 
-#endif /* SRC_BUFFER_IMPL_h */
+#endif /* SRC_BUFFER_BUFFERIMPL_H_ */

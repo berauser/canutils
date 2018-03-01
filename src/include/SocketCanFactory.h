@@ -5,8 +5,8 @@
  *      Author: rauser
  */
 
-#ifndef SRC_SOCKETCANFACTORY_H_
-#define SRC_SOCKETCANFACTORY_H_
+#ifndef SRC_INCLUDE_SOCKETCANFACTORY_H_
+#define SRC_INCLUDE_SOCKETCANFACTORY_H_
 
 #include "CanBuffer.h"
 #include "SocketCan.h"
@@ -32,4 +32,4 @@ public:
 
 } /* namespace CanSocket */
 
-#endif /* SRC_SOCKETCANFACTORY_H_ */
+#endif /* SRC_INCLUDE_SOCKETCANFACTORY_H_ */

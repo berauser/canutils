@@ -1,6 +1,6 @@
 
-#ifndef SRC_BUFFER_RINGBUFFER_H
-#define SRC_BUFFER_RINGBUFFER_H
+#ifndef SRC_BUFFER_RINGBUFFER_H_
+#define SRC_BUFFER_RINGBUFFER_H_
 
 #include "BufferImpl.h"
 
@@ -107,4 +107,4 @@ protected:
 
 } /* namespace Buffer */
 
-#endif /* SRC_BUFFER_RINGBUFFER_H */
+#endif /* SRC_BUFFER_RINGBUFFER_H_ */

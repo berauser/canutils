@@ -1,6 +1,6 @@
 
-#ifndef SRC_BASE_H
-#define SRC_BASE_H
+#ifndef SRC_INCLUDE_BASE_H_
+#define SRC_INCLUDE_BASE_H_
 
 template < typename T >
 class Base
@@ -10,4 +10,4 @@ public:
 	virtual int  read ( T& msg ) = 0;
 };
 
-#endif /* SRC_BASE_H */
+#endif /* SRC_INCLUDE_BASE_H_ */

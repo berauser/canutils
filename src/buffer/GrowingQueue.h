@@ -1,6 +1,6 @@
 
-#ifndef SRC_BUFFER_GROWINGQUEUE_H
-#define SRC_BUFFER_GROWINGQUEUE_H
+#ifndef SRC_BUFFER_GROWINGQUEUE_H_
+#define SRC_BUFFER_GROWINGQUEUE_H_
 
 #include "BufferImpl.h"
 
@@ -95,4 +95,4 @@ protected:
 
 } /* namespace Buffer */
 
-#endif /* SRC_CANBUFFER_GROWINGQUEUE_H */
+#endif /* SRC_CANBUFFER_GROWINGQUEUE_H_ */

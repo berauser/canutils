@@ -1,7 +1,7 @@
 
 
-#ifndef SRC_CANBUFFERREGISTRY_H
-#define SRC_CANBUFFERREGISTRY_H
+#ifndef SRC_BUFFER_CANBUFFERREGISTRY_H_
+#define SRC_BUFFER_CANBUFFERREGISTRY_H_
 
 #include "Registry.h"
 #include "CanBuffer.h"
@@ -17,4 +17,4 @@ extern Registry<CanBuffer, std::string, unsigned int>* CAN_BUFFER_REGISTRATION;
 
 } /* namespace CanSocket */
 
-#endif /* SRC_CANBUFFERREGISTRY_H */
+#endif /* SRC_BUFFER_CANBUFFERREGISTRY_H_ */

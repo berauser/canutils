@@ -1,6 +1,6 @@
 
-#ifndef _SRC_CANSTATISTICS_H
-#define _SRC_CANSTATISTICS_H
+#ifndef SRC_INCLUDE_CANSTATISTICS_H_
+#define SRC_INCLUDE_CANSTATISTICS_H_
 
 #include <memory>
 #include <cstdint>
@@ -40,4 +40,4 @@ typedef std::shared_ptr<CANStatistics> CANStatisticsPtr;
 
 } /* namespace CanSocket */
 
-#endif /* _SRC_CANSTATISTICS_H */
+#endif /* SRC_INCLUDE_CANSTATISTICS_H_ */

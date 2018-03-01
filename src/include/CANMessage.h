@@ -5,8 +5,8 @@
  *      Author: rauser
  */
 
-#ifndef SRC_CANMESSAGE_H_
-#define SRC_CANMESSAGE_H_
+#ifndef SRC_INCLUDE_CANMESSAGE_H_
+#define SRC_INCLUDE_CANMESSAGE_H_
 
 #include <cstdint>
 
@@ -294,4 +294,4 @@ struct CANMessage final
 
 } /* namespace CanSocket */
 
-#endif /* SRC_CANMESSAGE_H_ */
+#endif /* SRC_INCLUDE_CANMESSAGE_H_ */

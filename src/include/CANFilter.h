@@ -5,8 +5,8 @@
  *      Author: rauser
  */
 
-#ifndef SRC_CANFILTER_H_
-#define SRC_CANFILTER_H_
+#ifndef SRC_INCLUDE_CANFILTER_H_
+#define SRC_INCLUDE_CANFILTER_H_
 
 namespace CanSocket
 {
@@ -80,4 +80,4 @@ struct CANFilter
 
 } /* namespace CanSocket */
 
-#endif /* SRC_CANFILTER_H_ */
+#endif /* SRC_INCLUDE_CANFILTER_H_ */

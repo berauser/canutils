@@ -1,7 +1,7 @@
 
 
-#ifndef SRC_BUFFER_H
-#define SRC_BUFFER_H
+#ifndef SRC_INCLUDE_BUFFER_H_
+#define SRC_INCLUDE_BUFFER_H_
 
 #include "Base.h"
 
@@ -36,4 +36,4 @@ protected:
 
 } /* namespace Buffer */
 
-#endif /* SRC_BUFFER_H */
+#endif /* SRC_INCLUDE_BUFFER_H_ */

@@ -1,5 +1,5 @@
-#ifndef NETLINK_NETLINK_H
-#define NETLINK_NETLINK_H
+#ifndef NETLINK_NETLINK_H_
+#define NETLINK_NETLINK_H_
 
 #include <linux/rtnetlink.h>
 
@@ -53,4 +53,4 @@ private:
 
 } /* namespace Netlink */
 
-#endif // NETLINK_NETLINK_H
+#endif /* NETLINK_NETLINK_H_ */

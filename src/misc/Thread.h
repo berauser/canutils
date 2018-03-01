@@ -5,8 +5,8 @@
  *      Author: rauser
  */
 
-#ifndef SRC_THREAD_H_
-#define SRC_THREAD_H_
+#ifndef SRC_MISC_THREAD_H_
+#define SRC_MISC_THREAD_H_
 
 #include <thread>
 
@@ -47,4 +47,4 @@ public:
 
 } /* namespace CanSocket */
 
-#endif /* SRC_THREAD_H_ */
+#endif /* SRC_MISC_THREAD_H_ */

@@ -5,8 +5,8 @@
  *      Author: rauser
  */
 
-#ifndef TEST_CANERRORTRANSLATORTEST_H
-#define TEST_CANERRORTRANSLATORTEST_H
+#ifndef TEST_CANERRORTRANSLATORTEST_H_
+#define TEST_CANERRORTRANSLATORTEST_H_
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -26,4 +26,4 @@ protected:
 } /* namespace Test */
 } /* namespace CanSocket */
 
-#endif // TEST_CANERRORTRANSLATORTEST_H
+#endif /* TEST_CANERRORTRANSLATORTEST_H_ */
