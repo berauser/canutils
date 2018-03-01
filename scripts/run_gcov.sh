@@ -14,7 +14,7 @@ XML_RESULT="$OUTPUT_DIR_XML/coverage.xml"
 
 ( cd $BASE_DIR && \
     make -C $BASE_DIR && \
-    $BASE_DIR/bin/canbuffer_test \
+    $BASE_DIR/bin/canutils_test \
 ) || ( echo "Failed to run tests..."; exit 1 )
 
 ( cd $BUILD_DIR/ && \
