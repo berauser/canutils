@@ -14,6 +14,9 @@ SET( CANUTILS_BUFFER_DIR  "${CMAKE_CURRENT_SOURCE_DIR}/buffer/"  )
 SET( CANUTILS_LINUX_DIR   "${CMAKE_CURRENT_SOURCE_DIR}/linux/"   )
 SET( CANUTILS_WINDOWS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/windows/" )
 
+SET( CANUTILS_VERSION_FILE_IN "${CMAKE_CURRENT_SOURCE_DIR}/misc/version.h.in" )
+SET( CANUTILS_VERSION_FILE    "${CMAKE_CURRENT_SOURCE_DIR}/misc/version.h"    )
+
 SET( CANUTILS_SOURCE_DIR  "" )
 
 SET( CANUTILS_ADDITIONAL_LIBS "" )
@@ -59,6 +62,16 @@ IF   ( "${CANUTILS_SOURCE_DIR}" EQUAL "" )
 ENDIF( "${CANUTILS_SOURCE_DIR}" EQUAL "" )
 
 MESSAGE( STATUS "CANUTILS_SOURCE_DIR: ${CANUTILS_SOURCE_DIR}" )
+
+################################################################################
+#
+# configure files
+#
+################################################################################
+CONFIGURE_FILE	(
+			${CANUTILS_VERSION_FILE_IN}
+			${CANUTILS_VERSION_FILE} @ONLY
+		)
 ################################################################################
 #
 # build steps

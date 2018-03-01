@@ -16,6 +16,9 @@ cmake_install.cmake
 *.xml
 *.memtest
 
+# generated header
+version.h
+
 # build directory
 bin/
 lib/

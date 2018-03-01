@@ -25,6 +25,7 @@
 #include "../buffer/CanBufferRegistry.h"
 
 #include "logger.h"
+#include "version.h"
 
 namespace CanUtils
 {
@@ -50,6 +51,11 @@ SocketCanFactory::SocketCanFactory()
 
 SocketCanFactory::~SocketCanFactory()
 {
+}
+
+std::string SocketCanFactory::version()
+{
+    return CANUTILS_VERSION_STRING;
 }
 
 CanBufferPtr SocketCanFactory::createCanBuffer( const std::string& type, const unsigned int size  )
