@@ -1,5 +1,5 @@
 /*
- * CanSocketFactory.h
+ * CanUtilsFactory.h
  *
  *  Created on: 24.09.2017
  *      Author: rauser
@@ -13,7 +13,7 @@
 #include "SocketCanInfo.h"
 #include "SocketCanStatistics.h"
 
-namespace CanSocket
+namespace CanUtils
 {
 const unsigned int DEFAULT_BUFFER_SIZE = 16;
 const std::string  DEFAULT_BUFFER_TYPE = "default";
@@ -30,6 +30,6 @@ public:
 	SocketCanStatisticsPtr createSocketCanStatistics(const std::string& device);
 };
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif /* SRC_INCLUDE_SOCKETCANFACTORY_H_ */

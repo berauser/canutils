@@ -9,7 +9,7 @@
 
 #include "SocketCanFactory.h"
 
-namespace CanSocket
+namespace CanUtils
 {
 namespace Test
 {
@@ -118,4 +118,4 @@ TEST_F( CANFilterTest, invert )
 }
 
 } /* namespace Test */
-} /* namespace CanSocket */
+} /* namespace CanUtils */

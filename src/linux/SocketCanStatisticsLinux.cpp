@@ -8,12 +8,12 @@
 
 #include "logger.h"
 
-namespace CanSocket
+namespace CanUtils
 {
   
 SocketCanStatisticsLinux::SocketCanStatisticsLinux(const std::string& device_arg): SocketCanStatisticsImpl(device_arg), device(device_arg), netlink(nullptr)
 {
-	static_assert( sizeof( CanSocket::CANStatistics ) == sizeof( Netlink::NetlinkParser::DeviceStatistics ), "CANStatistics and DeviceStatistics has not the same size" ); 
+	static_assert( sizeof( CanUtils::CANStatistics ) == sizeof( Netlink::NetlinkParser::DeviceStatistics ), "CANStatistics and DeviceStatistics has not the same size" ); 
 }
 
 SocketCanStatisticsLinux::~SocketCanStatisticsLinux()
@@ -123,4 +123,4 @@ int SocketCanStatisticsLinux::copyStatistics(CANStatisticsPtr stats, Netlink::Ne
 }
 
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */

@@ -12,7 +12,7 @@
 #include <cstring>
 #include <stdexcept>
 
-namespace CanSocket
+namespace CanUtils
 {
 
 static bool is_filter_equal( const CANFilter& f1, const CANFilter& f2 )
@@ -172,4 +172,4 @@ int SocketCanImpl::clearErrorFilterMask()
 	return setErrorFilterMask( errorMask );
 }
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */

@@ -7,7 +7,7 @@
 
 #include <stdexcept>
 
-namespace CanSocket 
+namespace CanUtils 
 {
 
 class SocketCanStatisticsLinux final :  public SocketCanStatisticsImpl
@@ -33,6 +33,6 @@ protected:
 	Netlink::Netlink *netlink;
 };
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif // SRC_LINUX_SOCKETCANSTATISTICSLINUX_H_

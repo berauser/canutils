@@ -2,7 +2,7 @@
 
 #include "SocketCanErrorTranslator.h"
 
-namespace CanSocket
+namespace CanUtils
 {
 namespace Test
 {
@@ -357,4 +357,4 @@ TEST_F( CANErrorTranslatorTest, restart_error )
 }
 
 } /* namespace Test */
-} /* namespace CanSocket */
+} /* namespace CanUtils */

@@ -1,5 +1,5 @@
 /*
- * CANBufferRingBufferTest.h
+ * CANUtilsRingBufferTest.h
  *
  *  Created on: 26.02.2018
  *      Author: rauser
@@ -11,12 +11,12 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-namespace CanSocket
+namespace CanUtils
 {
 namespace Test
 {
 
-class CANBufferRingBufferTest : public ::testing::Test
+class CANUtilsRingBufferTest : public ::testing::Test
 {
 protected:
 	virtual void SetUp();
@@ -24,6 +24,6 @@ protected:
 };
 
 } /* namespace Test */
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif /* TEST_RINGBUFFERTEST_H_ */

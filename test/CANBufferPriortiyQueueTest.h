@@ -11,12 +11,12 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-namespace CanSocket
+namespace CanUtils
 {
 namespace Test
 {
 
-class CANBufferPriortiyQueueTest : public ::testing::Test
+class CANUtilsPriortiyQueueTest : public ::testing::Test
 {
 protected:
 	virtual void SetUp();
@@ -24,6 +24,6 @@ protected:
 };
 
 } /* namespace Test */
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif /* TEST_PRIORITYQUEUETEST_H_ */

@@ -1,5 +1,5 @@
 /*
- * CANBufferRingBufferTest.cpp
+ * CANUtilsRingBufferTest.cpp
  *
  *  Created on: 26.02.2018
  *      Author: rauser
@@ -9,20 +9,20 @@
 
 #include "SocketCanFactory.h"
 
-namespace CanSocket
+namespace CanUtils
 {
 namespace Test
 {
 
-void CANBufferRingBufferTest::SetUp()
+void CANUtilsRingBufferTest::SetUp()
 {  
 }
 
-void CANBufferRingBufferTest::TearDown()
+void CANUtilsRingBufferTest::TearDown()
 {
 }
 
-TEST_F( CANBufferRingBufferTest, initialization )
+TEST_F( CANUtilsRingBufferTest, initialization )
 {
 	SocketCanFactory factory;
 	CanBufferPtr buffer1 = factory.createCanBuffer("RingBuffer");
@@ -42,7 +42,7 @@ TEST_F( CANBufferRingBufferTest, initialization )
 	EXPECT_FALSE( buffer2->hasNext() );
 }
 
-TEST_F( CANBufferRingBufferTest, isFull )
+TEST_F( CANUtilsRingBufferTest, isFull )
 {
 	SocketCanFactory factory;
 	CanBufferPtr buffer = factory.createCanBuffer("RingBuffer", 16);
@@ -68,7 +68,7 @@ TEST_F( CANBufferRingBufferTest, isFull )
 }
 
 
-TEST_F( CANBufferRingBufferTest, isEmpty )
+TEST_F( CANUtilsRingBufferTest, isEmpty )
 {
 	SocketCanFactory factory;
 	CanBufferPtr buffer = factory.createCanBuffer("RingBuffer", 16);
@@ -90,7 +90,7 @@ TEST_F( CANBufferRingBufferTest, isEmpty )
 	EXPECT_TRUE( buffer->isEmpty() );
 }
 
-TEST_F( CANBufferRingBufferTest, resize )
+TEST_F( CANUtilsRingBufferTest, resize )
 {
 	SocketCanFactory factory;
 	CanBufferPtr buffer = factory.createCanBuffer("RingBuffer", 2);
@@ -101,7 +101,7 @@ TEST_F( CANBufferRingBufferTest, resize )
 	
 }
 
-TEST_F( CANBufferRingBufferTest, clear )
+TEST_F( CANUtilsRingBufferTest, clear )
 {
 	SocketCanFactory factory;
 	CanBufferPtr buffer = factory.createCanBuffer("RingBuffer", 16);
@@ -122,7 +122,7 @@ TEST_F( CANBufferRingBufferTest, clear )
 	EXPECT_TRUE( buffer->isEmpty() );
 }
 
-TEST_F( CANBufferRingBufferTest, override_write_single )
+TEST_F( CANUtilsRingBufferTest, override_write_single )
 {
     SocketCanFactory factory;
     CanBufferPtr buffer = factory.createCanBuffer("RingBuffer");
@@ -148,11 +148,11 @@ TEST_F( CANBufferRingBufferTest, override_write_single )
     EXPECT_EQ( message3, msg3 );
 }
 
-TEST_F( CANBufferRingBufferTest, override_write_async )
+TEST_F( CANUtilsRingBufferTest, override_write_async )
 {
     /* NOTE messages can be lost */
 	EXPECT_TRUE(false);
 }
 
 } /* namespace Test */
-} /* namespace CanSocket */
+} /* namespace CanUtils */

@@ -12,18 +12,18 @@
  * Explicit declaration of template classes
  * 
  * ***************************************************************************/
-template class Buffer::BufferImpl<CanSocket::CANMessage>;
-template class Buffer::RingBuffer<CanSocket::CANMessage>;
-template class Buffer::BufferQueue<CanSocket::CANMessage>;
-template class Buffer::GrowingQueue<CanSocket::CANMessage>;
-template class Buffer::PriorityQueue<CanSocket::CANMessage>;
+template class Buffer::BufferImpl<CanUtils::CANMessage>;
+template class Buffer::RingBuffer<CanUtils::CANMessage>;
+template class Buffer::BufferQueue<CanUtils::CANMessage>;
+template class Buffer::GrowingQueue<CanUtils::CANMessage>;
+template class Buffer::PriorityQueue<CanUtils::CANMessage>;
 
 /*************************************************************************//***
  *
  * CanBuffer registration
  * 
  * ***************************************************************************/
-namespace CanSocket
+namespace CanUtils
 {
 
 /*************************************************************************//***
@@ -66,4 +66,4 @@ typedef Buffer::PriorityQueue<CANMessage> CanPriorityQueue;
 REGISTER_CANBUFFER  ( CanPriorityQueue, "PriorityQueue" );
 UNREGISTER_CANBUFFER( CanPriorityQueue, "PriorityQueue" );
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */

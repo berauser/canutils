@@ -9,12 +9,12 @@
 #include "type_helper.h"
 #include "logger.h"
 
-namespace CanSocket
+namespace CanUtils
 {
   
 SocketCanInfoLinux::SocketCanInfoLinux(const std::string& device_arg): SocketCanInfoImpl(device_arg), device(device_arg), netlink(nullptr)
 {
-// 	static_assert( sizeof( CanSocket::CANStatistics ) == sizeof( Netlink::NetlinkParser::DeviceStatistics ), "CANStatistics and DeviceStatistics has not the same size" ); 
+// 	static_assert( sizeof( CanUtils::CANStatistics ) == sizeof( Netlink::NetlinkParser::DeviceStatistics ), "CANStatistics and DeviceStatistics has not the same size" ); 
 }
 
 SocketCanInfoLinux::~SocketCanInfoLinux()
@@ -168,4 +168,4 @@ std::vector< ControlMode > SocketCanInfoLinux::copyControlMode(std::vector< Netl
 	return modes;
 }
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */

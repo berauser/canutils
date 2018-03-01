@@ -10,7 +10,7 @@
 
 #include <cstdint>
 
-namespace CanSocket
+namespace CanUtils
 {
 
 #define CAN_MAX_DATA_LENGTH 8
@@ -292,6 +292,6 @@ struct CANMessage final
 	uint8_t data[CAN_MAX_DATA_LENGTH];
 };
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif /* SRC_INCLUDE_CANMESSAGE_H_ */

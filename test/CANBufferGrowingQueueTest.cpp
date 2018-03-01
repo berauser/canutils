@@ -1,5 +1,5 @@
 /*
- * CANBufferGrowingQueueTest.cpp
+ * CANUtilsGrowingQueueTest.cpp
  *
  *  Created on: 26.02.2018
  *      Author: rauser
@@ -10,20 +10,20 @@
 #include "SocketCanFactory.h"
 #include <thread>
 
-namespace CanSocket
+namespace CanUtils
 {
 namespace Test
 {
 
-void CANBufferGrowingQueueTest::SetUp()
-{  
-}
-
-void CANBufferGrowingQueueTest::TearDown()
+void CANUtilsGrowingQueueTest::SetUp()
 {
 }
 
-TEST_F( CANBufferGrowingQueueTest, initialization )
+void CANUtilsGrowingQueueTest::TearDown()
+{
+}
+
+TEST_F( CANUtilsGrowingQueueTest, initialization )
 {
     /* the GrowingQueue returns the current size, so we test for size 0 */
 	SocketCanFactory factory;
@@ -44,7 +44,7 @@ TEST_F( CANBufferGrowingQueueTest, initialization )
 	EXPECT_FALSE( buffer2->hasNext() );
 }
 
-TEST_F( CANBufferGrowingQueueTest, isFull )
+TEST_F( CANUtilsGrowingQueueTest, isFull )
 {
     /* GrowingQueue is never full */ 
     
@@ -72,7 +72,7 @@ TEST_F( CANBufferGrowingQueueTest, isFull )
 }
 
 
-TEST_F( CANBufferGrowingQueueTest, isEmpty )
+TEST_F( CANUtilsGrowingQueueTest, isEmpty )
 {
 	SocketCanFactory factory;
 	CanBufferPtr buffer = factory.createCanBuffer("GrowingQueue", 16);
@@ -94,7 +94,7 @@ TEST_F( CANBufferGrowingQueueTest, isEmpty )
 	EXPECT_TRUE( buffer->isEmpty() );
 }
 
-TEST_F( CANBufferGrowingQueueTest, size )
+TEST_F( CANUtilsGrowingQueueTest, size )
 {
     /* GrowingQueue: Size = canmessage in buffer */
 	SocketCanFactory factory;
@@ -119,7 +119,7 @@ TEST_F( CANBufferGrowingQueueTest, size )
 	EXPECT_EQ( 0, buffer->size() );
 }
 
-TEST_F( CANBufferGrowingQueueTest, resize )
+TEST_F( CANUtilsGrowingQueueTest, resize )
 {
 	/* We cannot resize the GrowingQueue */
 	SocketCanFactory factory;
@@ -147,7 +147,7 @@ TEST_F( CANBufferGrowingQueueTest, resize )
 	EXPECT_FALSE( buffer->isFull() );
 }
 
-TEST_F( CANBufferGrowingQueueTest, clear )
+TEST_F( CANUtilsGrowingQueueTest, clear )
 {
 	SocketCanFactory factory;
 	CanBufferPtr buffer = factory.createCanBuffer("GrowingQueue", 16);
@@ -168,7 +168,7 @@ TEST_F( CANBufferGrowingQueueTest, clear )
 	EXPECT_TRUE( buffer->isEmpty() );
 }
 
-TEST_F( CANBufferGrowingQueueTest, read_write_single )
+TEST_F( CANUtilsGrowingQueueTest, read_write_single )
 {
     SocketCanFactory factory;
     CanBufferPtr buffer = factory.createCanBuffer("GrowingQueue");
@@ -194,7 +194,7 @@ TEST_F( CANBufferGrowingQueueTest, read_write_single )
     EXPECT_EQ( message3, msg3 );
 }
 
-TEST_F( CANBufferGrowingQueueTest, read_write_async )
+TEST_F( CANUtilsGrowingQueueTest, read_write_async )
 {
     SocketCanFactory factory;
     CanBufferPtr buffer = factory.createCanBuffer("GrowingQueue");
@@ -229,4 +229,4 @@ TEST_F( CANBufferGrowingQueueTest, read_write_async )
 }
 
 } /* namespace Test */
-} /* namespace CanSocket */
+} /* namespace CanUtils */

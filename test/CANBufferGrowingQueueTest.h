@@ -11,12 +11,12 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-namespace CanSocket
+namespace CanUtils
 {
 namespace Test
 {
 
-class CANBufferGrowingQueueTest : public ::testing::Test
+class CANUtilsGrowingQueueTest : public ::testing::Test
 {
 protected:
 	virtual void SetUp();
@@ -24,6 +24,6 @@ protected:
 };
 
 } /* namespace Test */
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif /* TEST_GROWINGQUEUETEST_H_ */

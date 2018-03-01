@@ -3,7 +3,7 @@
 
 #include "SocketCanInfo.h"
 
-namespace CanSocket
+namespace CanUtils
 {
 
 class SocketCanInfoImpl :  public SocketCanInfo
@@ -27,6 +27,6 @@ private:
 	std::string device;
 };
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif /* SRC_BASIC_SOCKETCANINFOIMPL_H_ */

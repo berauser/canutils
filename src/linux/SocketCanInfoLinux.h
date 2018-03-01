@@ -7,7 +7,7 @@
 
 #include <fstream>
 
-namespace CanSocket 
+namespace CanUtils 
 {
 
 class SocketCanInfoLinux final :  public SocketCanInfoImpl
@@ -36,6 +36,6 @@ protected:
 	Netlink::Netlink *netlink;
 };
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif // SRC_LINUX_SOCKETCANINFOLINUX_H_

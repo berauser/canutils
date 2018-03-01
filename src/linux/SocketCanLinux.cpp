@@ -20,7 +20,7 @@
 
 #define SOCKET_INVALID -1
 
-namespace CanSocket
+namespace CanUtils
 {
 
 SocketCanLinux::SocketCanLinux(const std::string& device_arg)
@@ -264,5 +264,5 @@ int SocketCanLinux::setCanErrorMask(CANErrorMask mask)
 }
 
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 

@@ -13,7 +13,7 @@
 #include <string>
 #include <memory>
 
-namespace CanSocket
+namespace CanUtils
 {
 
 class SocketCanStatistics
@@ -35,6 +35,6 @@ public:
 };
 typedef std::shared_ptr<SocketCanStatistics> SocketCanStatisticsPtr;
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif /* SRC_INCLUDE_SOCKETCANSTATISTICS_H_ */

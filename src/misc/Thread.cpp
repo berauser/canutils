@@ -15,7 +15,7 @@
 	/* windows */
 #endif
 
-namespace CanSocket
+namespace CanUtils
 {
 
 int Thread::cancel()
@@ -29,4 +29,4 @@ int Thread::cancel()
 #endif
 }
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */

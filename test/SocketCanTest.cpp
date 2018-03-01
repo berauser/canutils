@@ -18,7 +18,7 @@
 #define GTEST_TIMEOUT_END(X) return; }); \
 	EXPECT_TRUE(asyncFuture.wait_for(std::chrono::milliseconds(X)) != std::future_status::timeout);
 
-namespace CanSocket
+namespace CanUtils
 {
 namespace Test
 {
@@ -39,7 +39,7 @@ TEST_F( SocketCanTest, init )
 	ASSERT_THROW(factory.createSocketCan(""), std::invalid_argument);
 
 	/* open device */
-	CanSocket::SocketCanPtr socketcan = factory.createSocketCan("vcan0");
+	CanUtils::SocketCanPtr socketcan = factory.createSocketCan("vcan0");
 
 	EXPECT_EQ("vcan0", socketcan->getDevice());
 	EXPECT_EQ(false, socketcan->isOpen());
@@ -504,4 +504,4 @@ TEST_F( SocketCanTest, reset_filter )
 }
 
 } /* namespace Test */
-} /* namespace CanSocket */
+} /* namespace CanUtils */

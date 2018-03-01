@@ -10,7 +10,7 @@
 
 #include <cstdint>
 
-namespace CanSocket
+namespace CanUtils
 {
 
 typedef uint32_t CANErrorMask;
@@ -162,6 +162,6 @@ operator !=(const CANErrorMask &data, const CANErrorFlag &f)
 }
 
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif /* SRC_INCLUDE_CANERROR_H_ */

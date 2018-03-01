@@ -10,7 +10,7 @@
 
 #include <thread>
 
-namespace CanSocket
+namespace CanUtils
 {
 
 class Thread : public std::thread
@@ -45,6 +45,6 @@ public:
 	int cancel();
 };
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif /* SRC_MISC_THREAD_H_ */

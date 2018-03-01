@@ -13,7 +13,7 @@
 #include <string>
 #include <thread>
 
-namespace CanSocket
+namespace CanUtils
 {
 
 class SocketCanLinux final : public SocketCanImpl
@@ -47,6 +47,6 @@ private:
 	int socketfd;
 };
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif /* SRC_LINUX_SOCKETCANLINUX_H_ */

@@ -6,13 +6,13 @@
 
 #include <string>
 
-namespace CanSocket
+namespace CanUtils
 {
 
 CANErrorFlag getErrorType( const CANMessage& msg );
 
 std::string getErrorString( const CANMessage& msg );
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif /* SRC_INCLUDE_SOCKETCANERRORTRANSLATOR_H_ */

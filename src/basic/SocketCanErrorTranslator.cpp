@@ -1,7 +1,7 @@
 
 #include "SocketCanErrorTranslator.h"
 
-namespace CanSocket
+namespace CanUtils
 {
 
 std::string decodeLostArbitartionError( const CANMessage& msg )
@@ -216,4 +216,4 @@ CANErrorFlag getErrorType( const CANMessage& msg )
 	}
 }
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */

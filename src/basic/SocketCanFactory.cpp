@@ -1,5 +1,5 @@
 /*
- * CanSocketFactory.cpp
+ * CanUtilsFactory.cpp
  *
  *  Created on: 24.09.2017
  *      Author: rauser
@@ -26,7 +26,7 @@
 
 #include "logger.h"
 
-namespace CanSocket
+namespace CanUtils
 {
 
 /*************************************************************************//***
@@ -105,4 +105,4 @@ SocketCanStatisticsPtr SocketCanFactory::createSocketCanStatistics(const std::st
 }
 
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */

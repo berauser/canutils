@@ -8,12 +8,12 @@
 
 #include <memory>
 
-namespace CanSocket
+namespace CanUtils
 {
 
 typedef Buffer::Buffer<CANMessage> CanBuffer;
 typedef std::shared_ptr<CanBuffer> CanBufferPtr;
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif /* SRC_INCLUDE_CANBUFFER_H_ */

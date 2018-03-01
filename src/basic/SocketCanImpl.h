@@ -12,7 +12,7 @@
 
 #include <mutex>
 
-namespace CanSocket
+namespace CanUtils
 {
 
 class SocketCanImpl: public SocketCan
@@ -60,6 +60,6 @@ private:
 	std::mutex mutex_read;
 };
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif /* SRC_BASIC_SOCKETCANIMPL_H_ */

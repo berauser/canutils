@@ -10,20 +10,20 @@
 #include "SocketCanFactory.h"
 #include <thread>
 
-namespace CanSocket
+namespace CanUtils
 {
 namespace Test
 {
 
-void CANBufferPriortiyQueueTest::SetUp()
+void CANUtilsPriortiyQueueTest::SetUp()
 {  
 }
 
-void CANBufferPriortiyQueueTest::TearDown()
+void CANUtilsPriortiyQueueTest::TearDown()
 {
 }
 
-TEST_F( CANBufferPriortiyQueueTest, initialization )
+TEST_F( CANUtilsPriortiyQueueTest, initialization )
 {
 	SocketCanFactory factory;
 	CanBufferPtr buffer1 = factory.createCanBuffer("PriorityQueue");
@@ -43,7 +43,7 @@ TEST_F( CANBufferPriortiyQueueTest, initialization )
 	EXPECT_FALSE( buffer2->hasNext() );
 }
 
-TEST_F( CANBufferPriortiyQueueTest, isFull )
+TEST_F( CANUtilsPriortiyQueueTest, isFull )
 {
 	SocketCanFactory factory;
 	CanBufferPtr buffer = factory.createCanBuffer("PriorityQueue", 16);
@@ -69,7 +69,7 @@ TEST_F( CANBufferPriortiyQueueTest, isFull )
 }
 
 
-TEST_F( CANBufferPriortiyQueueTest, isEmpty )
+TEST_F( CANUtilsPriortiyQueueTest, isEmpty )
 {
 	SocketCanFactory factory;
 	CanBufferPtr buffer = factory.createCanBuffer("PriorityQueue", 16);
@@ -91,7 +91,7 @@ TEST_F( CANBufferPriortiyQueueTest, isEmpty )
 	EXPECT_TRUE( buffer->isEmpty() );
 }
 
-TEST_F( CANBufferPriortiyQueueTest, resize )
+TEST_F( CANUtilsPriortiyQueueTest, resize )
 {
 	SocketCanFactory factory;
 	CanBufferPtr buffer = factory.createCanBuffer("PriorityQueue", 2);
@@ -118,7 +118,7 @@ TEST_F( CANBufferPriortiyQueueTest, resize )
 	EXPECT_TRUE( buffer->isFull() );
 }
 
-TEST_F( CANBufferPriortiyQueueTest, clear )
+TEST_F( CANUtilsPriortiyQueueTest, clear )
 {
 	SocketCanFactory factory;
 	CanBufferPtr buffer = factory.createCanBuffer("PriorityQueue", 16);
@@ -139,7 +139,7 @@ TEST_F( CANBufferPriortiyQueueTest, clear )
 	EXPECT_TRUE( buffer->isEmpty() );
 }
 
-TEST_F( CANBufferPriortiyQueueTest, read_write_single )
+TEST_F( CANUtilsPriortiyQueueTest, read_write_single )
 {
     SocketCanFactory factory;
     CanBufferPtr buffer = factory.createCanBuffer("PriorityQueue");
@@ -165,7 +165,7 @@ TEST_F( CANBufferPriortiyQueueTest, read_write_single )
     EXPECT_EQ( message3, msg3 );
 }
 
-TEST_F( CANBufferPriortiyQueueTest, read_write_reorder )
+TEST_F( CANUtilsPriortiyQueueTest, read_write_reorder )
 {
     SocketCanFactory factory;
     CanBufferPtr buffer = factory.createCanBuffer("PriorityQueue");
@@ -193,7 +193,7 @@ TEST_F( CANBufferPriortiyQueueTest, read_write_reorder )
     EXPECT_EQ( message_id_3, msg3 );
 }
 
-TEST_F( CANBufferPriortiyQueueTest, read_write_async )
+TEST_F( CANUtilsPriortiyQueueTest, read_write_async )
 {
     SocketCanFactory factory;
     CanBufferPtr buffer = factory.createCanBuffer("Queue");
@@ -228,7 +228,7 @@ TEST_F( CANBufferPriortiyQueueTest, read_write_async )
     }
 }
 
-TEST_F( CANBufferPriortiyQueueTest, priority_mixed )
+TEST_F( CANUtilsPriortiyQueueTest, priority_mixed )
 {
 	EXPECT_TRUE(false);
     CANMessage message_sff_high(     0x001, CANMessage::CANFrameType::Standard, 8, 0x01 );
@@ -241,4 +241,4 @@ TEST_F( CANBufferPriortiyQueueTest, priority_mixed )
 }
 
 } /* namespace Test */
-} /* namespace CanSocket */
+} /* namespace CanUtils */

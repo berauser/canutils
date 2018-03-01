@@ -24,7 +24,7 @@
 #define GREEN      "\33[0;32m"
 #define NO_COLOR   "\33[0;0m"
 
-using namespace CanSocket;
+using namespace CanUtils;
 
 int main()
 {

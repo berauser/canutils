@@ -1,7 +1,7 @@
 
 #include "SocketCanStatisticsImpl.h"
 
-namespace CanSocket
+namespace CanUtils
 {
 
 SocketCanStatisticsImpl::SocketCanStatisticsImpl(const std::string& device_arg): SocketCanStatistics(device_arg), device(device_arg)
@@ -33,4 +33,4 @@ int SocketCanStatisticsImpl::reset()
 	return -1;
 }
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */

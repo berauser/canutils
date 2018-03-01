@@ -21,7 +21,7 @@
  */
 #define CLR_SCREEN "\33[H\33[2J"
 
-using namespace CanSocket;
+using namespace CanUtils;
 
 int main()
 {

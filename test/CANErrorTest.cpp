@@ -12,7 +12,7 @@
 
 #include "CANError.h"
 
-namespace CanSocket
+namespace CanUtils
 {
 namespace Test
 {
@@ -104,4 +104,4 @@ TEST_F( CANErrorTest, invert )
 }
 
 } /* namespace Test */
-} /* namespace CanSocket */
+} /* namespace CanUtils */

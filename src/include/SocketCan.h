@@ -18,7 +18,7 @@
 #include "CANFilter.h"
 #include "CANError.h"
 
-namespace CanSocket
+namespace CanUtils
 {
 
 class SocketCan : public Base<CANMessage>
@@ -60,6 +60,6 @@ public:
 };
 typedef std::shared_ptr<SocketCan> SocketCanPtr;
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif /* SRC_INCLUDE_SOCKETCAN_H_ */

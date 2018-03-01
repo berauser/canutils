@@ -13,7 +13,7 @@ ADD_EXECUTABLE	( example3
 		)
 
 TARGET_LINK_LIBRARIES	( example3
-				CANBuffer_shared
+				CANUtils_shared
 			)
 
 TARGET_INCLUDE_DIRECTORIES	( example3
@@ -21,6 +21,6 @@ TARGET_INCLUDE_DIRECTORIES	( example3
 				)
 
 INSTALL	( TARGETS example3
-		EXPORT CANBuffer_example3
+		EXPORT CANUtils_example3
 		DESTINATION ${CMAKE_INSTALL_BINDIR}
 	)

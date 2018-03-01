@@ -11,7 +11,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-namespace CanSocket
+namespace CanUtils
 {
 namespace Test
 {
@@ -24,6 +24,6 @@ protected:
 };
 
 } /* namespace Test */
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif /* TEST_CANFILTERTEST_H_ */

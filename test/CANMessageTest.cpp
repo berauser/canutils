@@ -9,7 +9,7 @@
 
 #include "SocketCanFactory.h"
 
-namespace CanSocket
+namespace CanUtils
 {
 namespace Test
 {
@@ -115,4 +115,4 @@ TEST_F( CANMessageTest, mask )
 }
 
 } /* namespace Test */
-} /* namespace CanSocket */
+} /* namespace CanUtils */

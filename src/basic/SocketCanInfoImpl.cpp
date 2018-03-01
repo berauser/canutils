@@ -1,7 +1,7 @@
 
 #include "SocketCanInfoImpl.h"
 
-namespace CanSocket
+namespace CanUtils
 {
 
 SocketCanInfoImpl::SocketCanInfoImpl(const std::string& device_arg): SocketCanInfo(device_arg), device(device_arg)
@@ -101,4 +101,4 @@ std::string SocketCanInfo::toString(const DeviceState& state)
 	}
 }
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */

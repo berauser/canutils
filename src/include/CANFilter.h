@@ -8,7 +8,7 @@
 #ifndef SRC_INCLUDE_CANFILTER_H_
 #define SRC_INCLUDE_CANFILTER_H_
 
-namespace CanSocket
+namespace CanUtils
 {
 
 struct CANFilter
@@ -78,6 +78,6 @@ struct CANFilter
 	uint32_t can_mask;
 };
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif /* SRC_INCLUDE_CANFILTER_H_ */

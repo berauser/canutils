@@ -8,7 +8,7 @@
 
 #include <stdexcept>
 
-namespace CanSocket
+namespace CanUtils
 {
 
 struct type_helper {
@@ -168,6 +168,6 @@ struct type_helper {
 		};
 	}
 };
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif /* SRC_LINUX_TYPEHELPER_H_ */

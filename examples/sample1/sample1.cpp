@@ -5,7 +5,7 @@
 
 #include "SocketCanFactory.h"
 
-using namespace CanSocket;
+using namespace CanUtils;
 
 int main()
 {

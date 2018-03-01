@@ -10,20 +10,20 @@
 #include "SocketCanFactory.h"
 #include <thread>
 
-namespace CanSocket
+namespace CanUtils
 {
 namespace Test
 {
 
-void CANBufferQueueTest::SetUp()
+void CANUtilsQueueTest::SetUp()
 {  
 }
 
-void CANBufferQueueTest::TearDown()
+void CANUtilsQueueTest::TearDown()
 {
 }
 
-TEST_F( CANBufferQueueTest, initialization )
+TEST_F( CANUtilsQueueTest, initialization )
 {
 	SocketCanFactory factory;
 	CanBufferPtr buffer1 = factory.createCanBuffer("Queue");
@@ -43,7 +43,7 @@ TEST_F( CANBufferQueueTest, initialization )
 	EXPECT_FALSE( buffer2->hasNext() );
 }
 
-TEST_F( CANBufferQueueTest, isFull )
+TEST_F( CANUtilsQueueTest, isFull )
 {
 	SocketCanFactory factory;
 	CanBufferPtr buffer = factory.createCanBuffer("Queue", 16);
@@ -69,7 +69,7 @@ TEST_F( CANBufferQueueTest, isFull )
 }
 
 
-TEST_F( CANBufferQueueTest, isEmpty )
+TEST_F( CANUtilsQueueTest, isEmpty )
 {
 	SocketCanFactory factory;
 	CanBufferPtr buffer = factory.createCanBuffer("Queue", 16);
@@ -91,7 +91,7 @@ TEST_F( CANBufferQueueTest, isEmpty )
 	EXPECT_TRUE( buffer->isEmpty() );
 }
 
-TEST_F( CANBufferQueueTest, resize )
+TEST_F( CANUtilsQueueTest, resize )
 {
 	SocketCanFactory factory;
 	CanBufferPtr buffer = factory.createCanBuffer("Queue", 2);
@@ -118,7 +118,7 @@ TEST_F( CANBufferQueueTest, resize )
 	EXPECT_TRUE( buffer->isFull() );
 }
 
-TEST_F( CANBufferQueueTest, clear )
+TEST_F( CANUtilsQueueTest, clear )
 {
 	SocketCanFactory factory;
 	CanBufferPtr buffer = factory.createCanBuffer("Queue", 16);
@@ -139,7 +139,7 @@ TEST_F( CANBufferQueueTest, clear )
 	EXPECT_TRUE( buffer->isEmpty() );
 }
 
-TEST_F( CANBufferQueueTest, read_write_single )
+TEST_F( CANUtilsQueueTest, read_write_single )
 {
     SocketCanFactory factory;
     CanBufferPtr buffer = factory.createCanBuffer("Queue");
@@ -165,7 +165,7 @@ TEST_F( CANBufferQueueTest, read_write_single )
     EXPECT_EQ( message3, msg3 );
 }
 
-TEST_F( CANBufferQueueTest, read_write_async )
+TEST_F( CANUtilsQueueTest, read_write_async )
 {
     SocketCanFactory factory;
     CanBufferPtr buffer = factory.createCanBuffer("Queue");
@@ -200,4 +200,4 @@ TEST_F( CANBufferQueueTest, read_write_async )
 }
 
 } /* namespace Test */
-} /* namespace CanSocket */
+} /* namespace CanUtils */

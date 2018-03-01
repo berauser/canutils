@@ -5,7 +5,7 @@
 #include <memory>
 #include <cstdint>
 
-namespace CanSocket
+namespace CanUtils
 {
 
 struct CANStatistics final 
@@ -38,6 +38,6 @@ struct CANStatistics final
 };
 typedef std::shared_ptr<CANStatistics> CANStatisticsPtr;
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif /* SRC_INCLUDE_CANSTATISTICS_H_ */

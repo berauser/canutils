@@ -1,22 +1,22 @@
 ################################################################################
 #
-# CANBuffer library
+# CANUtils library
 #
 ################################################################################
 
-SET( CANBUFFER_NAME "CANBuffer" )
+SET( CANUTILS_NAME "canutils" )
 
-SET( CANBUFFER_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/" )
-SET( CANBUFFER_MISC_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/misc/"    )
+SET( CANUTILS_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/" )
+SET( CANUTILS_MISC_DIR    "${CMAKE_CURRENT_SOURCE_DIR}/misc/"    )
 
-SET( CANBUFFER_BASIC_DIR   "${CMAKE_CURRENT_SOURCE_DIR}/basic/"   )
-SET( CANBUFFER_BUFFER_DIR  "${CMAKE_CURRENT_SOURCE_DIR}/buffer/"  )
-SET( CANBUFFER_LINUX_DIR   "${CMAKE_CURRENT_SOURCE_DIR}/linux/"   )
-SET( CANBUFFER_WINDOWS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/windows/" )
+SET( CANUTILS_BASIC_DIR   "${CMAKE_CURRENT_SOURCE_DIR}/basic/"   )
+SET( CANUTILS_BUFFER_DIR  "${CMAKE_CURRENT_SOURCE_DIR}/buffer/"  )
+SET( CANUTILS_LINUX_DIR   "${CMAKE_CURRENT_SOURCE_DIR}/linux/"   )
+SET( CANUTILS_WINDOWS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/windows/" )
 
-SET( CANBUFFER_SOURCE_DIR  "" )
+SET( CANUTILS_SOURCE_DIR  "" )
 
-SET( CANBUFFER_ADDITIONAL_LIBS "" )
+SET( CANUTILS_ADDITIONAL_LIBS "" )
 
 ################################################################################
 #
@@ -29,12 +29,12 @@ IF    ( "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux" )
 	
 	# use linux implementation
 	MESSAGE(STATUS "Compiling for Linux...")
-	SET( CANBUFFER_SOURCE_DIR "${CANBUFFER_LINUX_DIR}" )
+	SET( CANUTILS_SOURCE_DIR "${CANUTILS_LINUX_DIR}" )
 	
 	# build additional libs
-	ADD_SUBDIRECTORY( ${CANBUFFER_LINUX_DIR}/helper )
-	SET	( CANBUFFER_ADDITIONAL_LIBS
-			${CANBUFFER_ADDITIONAL_LIBS}
+	ADD_SUBDIRECTORY( ${CANUTILS_LINUX_DIR}/helper )
+	SET	( CANUTILS_ADDITIONAL_LIBS
+			${CANUTILS_ADDITIONAL_LIBS}
 			netlink
 		)
 	
@@ -42,55 +42,55 @@ ELSEIF( "${CMAKE_SYSTEM_NAME}" STREQUAL "Windows" )
 	
 	# windows implementation
 	MESSAGE(FATAL "Windows is currently not implemented")
-	SET( CANBUFFER_SOURCE_DIR "${CANBUFFER_WINDOWS_DIR}" )
+	SET( CANUTILS_SOURCE_DIR "${CANUTILS_WINDOWS_DIR}" )
 	
 ELSE  ()
 	
 	# unknown platform
 	MESSAGE(FATAL_ERROR "Unknown platform: ${CMAKE_SYSTEM_NAME}")
-	SET( CANBUFFER_SOURCE_DIR "" )
+	SET( CANUTILS_SOURCE_DIR "" )
 	
 ENDIF ()
 
-IF   ( "${CANBUFFER_SOURCE_DIR}" EQUAL "" )
+IF   ( "${CANUTILS_SOURCE_DIR}" EQUAL "" )
 	# no suitable implmentation found
 	MESSAGE(FATAL_ERROR "No suitable implementation found. Abort." )
 	
-ENDIF( "${CANBUFFER_SOURCE_DIR}" EQUAL "" )
+ENDIF( "${CANUTILS_SOURCE_DIR}" EQUAL "" )
 
-MESSAGE( STATUS "CANBUFFER_SOURCE_DIR: ${CANBUFFER_SOURCE_DIR}" )
+MESSAGE( STATUS "CANUTILS_SOURCE_DIR: ${CANUTILS_SOURCE_DIR}" )
 ################################################################################
 #
 # build steps
 #
 ################################################################################
 
-FILE	( GLOB CANBuffer_src
-		${CANBUFFER_INCLUDE_DIR}/*.cpp
-		${CANBUFFER_BASIC_DIR}/*.cpp
-		${CANBUFFER_BUFFER_DIR}/*.cpp
-		${CANBUFFER_SOURCE_DIR}/*.cpp
+FILE	( GLOB CANUtils_src
+		${CANUTILS_INCLUDE_DIR}/*.cpp
+		${CANUTILS_BASIC_DIR}/*.cpp
+		${CANUTILS_BUFFER_DIR}/*.cpp
+		${CANUTILS_SOURCE_DIR}/*.cpp
 	)
 
-ADD_LIBRARY	( CANBuffer_shared SHARED
-			${CANBuffer_src}
+ADD_LIBRARY	( CANUtils_shared SHARED
+			${CANUtils_src}
 		)
 
-TARGET_LINK_LIBRARIES	( CANBuffer_shared
+TARGET_LINK_LIBRARIES	( CANUtils_shared
 				pthread
-				${CANBUFFER_ADDITIONAL_LIBS}
+				${CANUTILS_ADDITIONAL_LIBS}
 			)
 
-TARGET_INCLUDE_DIRECTORIES	( CANBuffer_shared
-					PUBLIC    ${CANBUFFER_INCLUDE_DIR}
-					PRIVATE   ${CANBUFFER_BASIC_DIR}
-					PRIVATE   ${CANBUFFER_MISC_DIR}
+TARGET_INCLUDE_DIRECTORIES	( CANUtils_shared
+					PUBLIC    ${CANUTILS_INCLUDE_DIR}
+					PRIVATE   ${CANUTILS_BASIC_DIR}
+					PRIVATE   ${CANUTILS_MISC_DIR}
 				)
 
-SET_TARGET_PROPERTIES	( CANBuffer_shared PROPERTIES
+SET_TARGET_PROPERTIES	( CANUtils_shared PROPERTIES
 		VERSION     ${VERSION_STRING}
 		SOVERSION   ${VERSION_STRING}
-		OUTPUT_NAME ${CANBUFFER_NAME}
+		OUTPUT_NAME ${CANUTILS_NAME}
 	)
 
 ################################################################################
@@ -99,10 +99,10 @@ SET_TARGET_PROPERTIES	( CANBuffer_shared PROPERTIES
 #
 ################################################################################
 
-INSTALL	( TARGETS CANBuffer_shared
+INSTALL	( TARGETS CANUtils_shared
 		ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
 		LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
 		RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR}
 	)
 
-INSTALL	( DIRECTORY ${CANBUFFER_INCLUDE_DIR} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )
+INSTALL	( DIRECTORY ${CANUTILS_INCLUDE_DIR} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )

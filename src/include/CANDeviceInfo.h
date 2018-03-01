@@ -13,7 +13,7 @@
 #include <vector>
 #include <cstdint>
 
-namespace CanSocket
+namespace CanUtils
 {
 
 enum struct DeviceState {
@@ -137,6 +137,6 @@ struct CANDeviceInfo final
 };
 typedef std::shared_ptr<CANDeviceInfo> CANDeviceInfoPtr;
 
-} /* namespace CanSocket */
+} /* namespace CanUtils */
 
 #endif /* SRC_INCLUDE_CANDEVICEINFO_H_ */
