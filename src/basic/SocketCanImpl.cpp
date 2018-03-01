@@ -15,12 +15,12 @@
 namespace CanSocket
 {
 
-bool is_filter_equal( const CANFilter& f1, const CANFilter& f2 )
+static bool is_filter_equal( const CANFilter& f1, const CANFilter& f2 )
 {
 	return ( f1 == f2 );
 }
 
-bool compare_filter( const CANFilter& f1, const CANFilter& f2 )
+static bool compare_filter( const CANFilter& f1, const CANFilter& f2 )
 {
 	if ( f1.can_id < f2.can_id ) return true;
 	if ( f1.can_id > f2.can_id ) return false;
@@ -129,7 +129,6 @@ int SocketCanImpl::addFilter(const CANFilter& filter)
 	filterList.sort(compare_filter);
 	filterList.unique(is_filter_equal);
 	
-	LOGGER(SOCKETCAN_ERROR, "Filter size: %ld", filterList.size() );
 	return setCanFilter(filterList);
 }
 

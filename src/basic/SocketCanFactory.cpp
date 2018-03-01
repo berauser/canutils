@@ -42,6 +42,8 @@ namespace CanSocket
 	#error "No implementation found - Only Linux is implemented."
 #endif
 
+#define DEFAULT_BUFFER_IMPLEMENTATION "Queue"
+
 SocketCanFactory::SocketCanFactory()
 {
 }
@@ -52,15 +54,16 @@ SocketCanFactory::~SocketCanFactory()
 
 CanBufferPtr SocketCanFactory::createCanBuffer( const std::string& type, const unsigned int size  )
 {
+	LOGGER( SOCKETCAN_INFO, "SocketCanFactory::createCanBuffer( %s, %du )", type.c_str(), size );
 	if( CAN_BUFFER_REGISTRATION == nullptr )
 	{
 		throw std::runtime_error("Internal error: CanBuffer registration is not initialized");
 	}
 	
 	std::string buffer_type = type;
-	if( type == "default" )
+	if( type == DEFAULT_BUFFER_TYPE )
 	{
-		buffer_type = "Queue";
+		buffer_type = DEFAULT_BUFFER_IMPLEMENTATION;
 	}
 	
 	if( !CAN_BUFFER_REGISTRATION->isRegisteredClass( buffer_type ) )
