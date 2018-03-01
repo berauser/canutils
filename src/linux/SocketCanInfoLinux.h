@@ -5,7 +5,6 @@
 #include "helper/Netlink.h"
 #include "helper/NetlinkCanParser.h"
 
-#include <fstream>
 
 namespace CanUtils 
 {

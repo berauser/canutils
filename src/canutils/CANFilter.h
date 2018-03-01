@@ -8,6 +8,8 @@
 #ifndef SRC_INCLUDE_CANFILTER_H_
 #define SRC_INCLUDE_CANFILTER_H_
 
+#include <cstdint>
+
 namespace CanUtils
 {
 

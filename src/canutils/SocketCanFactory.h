@@ -8,10 +8,10 @@
 #ifndef SRC_INCLUDE_SOCKETCANFACTORY_H_
 #define SRC_INCLUDE_SOCKETCANFACTORY_H_
 
-#include "CanBuffer.h"
-#include "SocketCan.h"
-#include "SocketCanInfo.h"
-#include "SocketCanStatistics.h"
+#include "canutils/CanBuffer.h"
+#include "canutils/SocketCan.h"
+#include "canutils/SocketCanInfo.h"
+#include "canutils/SocketCanStatistics.h"
 
 namespace CanUtils
 {

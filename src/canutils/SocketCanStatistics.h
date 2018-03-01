@@ -8,7 +8,7 @@
 #ifndef SRC_INCLUDE_SOCKETCANSTATISTICS_H_
 #define SRC_INCLUDE_SOCKETCANSTATISTICS_H_
 
-#include "CANStatistics.h"
+#include "canutils/CANStatistics.h"
 
 #include <string>
 #include <memory>

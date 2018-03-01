@@ -14,7 +14,7 @@ FIND_LIBRARY	( GMOCK
 		)
 
 TARGET_INCLUDE_DIRECTORIES	( canutils_test PUBLIC
-					${PROJECT_SOURCE_DIR}/src/include/
+					${PROJECT_SOURCE_DIR}/src/
 					${PROJECT_SOURCE_DIR}/src/basic/
 				)
 

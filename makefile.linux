@@ -20,7 +20,7 @@ all:
 	@$(MAKE) -C $(BUILD_DIR) all
 
 .PHONY: install
-install:
+install: all
 	@$(MAKE) -C $(BUILD_DIR) install
 
 .PHONY: clean

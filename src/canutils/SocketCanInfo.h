@@ -8,7 +8,7 @@
 #ifndef SRC_INCLUDE_SOCKETCANINFO_H_
 #define SRC_INCLUDE_SOCKETCANINFO_H_
 
-#include "CANDeviceInfo.h"
+#include "canutils/CANDeviceInfo.h"
 
 #include <string>
 #include <memory>

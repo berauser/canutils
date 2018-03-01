@@ -3,8 +3,8 @@
 #ifndef SRC_INCLUDE_CANBUFFER_H_
 #define SRC_INCLUDE_CANBUFFER_H_
 
-#include "Buffer.h"
-#include "CANMessage.h"
+#include "canutils/Buffer.h"
+#include "canutils/CANMessage.h"
 
 #include <memory>
 

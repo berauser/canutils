@@ -8,7 +8,7 @@
 namespace CanUtils
 {
 
-struct CANStatistics final 
+struct CANStatistics final
 {
 	// Receive
 	std::uint64_t rx_bytes          = 0;

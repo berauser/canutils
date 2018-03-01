@@ -1,8 +1,8 @@
 #ifndef SRC_INCLUDE_SOCKETCANERRORTRANSLATOR_H_
 #define SRC_INCLUDE_SOCKETCANERRORTRANSLATOR_H_
 
-#include "CANMessage.h"
-#include "CANError.h"
+#include "canutils/CANMessage.h"
+#include "canutils/CANError.h"
 
 #include <string>
 

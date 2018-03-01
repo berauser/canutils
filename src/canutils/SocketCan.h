@@ -12,11 +12,11 @@
 #include <string>
 #include <memory>
 
-#include "Base.h"
+#include "canutils/Base.h"
 
-#include "CANMessage.h"
-#include "CANFilter.h"
-#include "CANError.h"
+#include "canutils/CANMessage.h"
+#include "canutils/CANFilter.h"
+#include "canutils/CANError.h"
 
 namespace CanUtils
 {
