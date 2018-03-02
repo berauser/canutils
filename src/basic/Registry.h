@@ -5,6 +5,7 @@
 #include "platform.h"
 
 #include <map>
+#include <list>
 #include <functional>
 
 /*************************************************************************//***
@@ -50,11 +51,25 @@ public:
         m_map.erase(key);
     }
 
-    bool isRegisteredClass( const Key &key)
+    bool isRegisteredClass(const Key &key)
     {
         return ( m_map.find( key ) != m_map.end() );
     }
-    // TODO method to get all registered types in a list?
+
+    std::list<Key> registeredClassKeys() const
+    {
+        std::list<Key> keys;
+        for( auto k : m_map )
+        {
+                keys.push_back( k.first );
+        }
+        return keys;
+    }
+    
+    void clear()
+    {
+            m_map.clear();
+    }
     
     Base* get(const Key &key, Args... args)
     {
