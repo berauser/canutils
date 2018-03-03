@@ -77,7 +77,7 @@ CanBufferPtr SocketCanFactory::createCanBuffer( const std::string& type, const u
 		throw std::invalid_argument("CanBuffer type is unknown");
 	}
 	
-	return CanBufferPtr( CAN_BUFFER_REGISTRATION->get( buffer_type, size ) );
+	return CAN_BUFFER_REGISTRATION->get( buffer_type, size );
 }
 
 SocketCanPtr SocketCanFactory::createSocketCan(const std::string& device)

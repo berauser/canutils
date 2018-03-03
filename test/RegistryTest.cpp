@@ -35,7 +35,7 @@ TEST_F( RegistryTest, without_args )
     registry.registerClass<DerivedBar>( "DerivedBar" );
     EXPECT_EQ( 1, registry.registeredClassKeys().size() );
     
-    Base* bar = registry.get( "DerivedBar" );
+    std::shared_ptr<Base> bar = registry.get( "DerivedBar" );
     
     EXPECT_EQ( -1, bar->arg() );
 }
@@ -48,8 +48,8 @@ TEST_F( RegistryTest, with_args )
     registry.registerClass<DerivedBar>( "DerivedBar" );
     EXPECT_EQ( 1, registry.registeredClassKeys().size() );
     
-    Base* bar1 = registry.get( "DerivedBar", 1 );
-    Base* bar2 = registry.get( "DerivedBar", 2 );
+    std::shared_ptr<Base> bar1 = registry.get( "DerivedBar", 1 );
+    std::shared_ptr<Base> bar2 = registry.get( "DerivedBar", 2 );
     
     EXPECT_EQ( 1, bar1->arg() );
     EXPECT_EQ( 2, bar2->arg() );
@@ -129,14 +129,11 @@ TEST_F( RegistryTest, get )
     registry.registerClass<DerivedFoo>( "DerivedFoo" );
     EXPECT_EQ( 2, registry.registeredClassKeys().size() );
     
-    Base* bar = registry.get( "DerivedBar" );;
-    Base* foo = registry.get( "DerivedFoo" );;
+    std::shared_ptr<Base> bar = registry.get( "DerivedBar" );;
+    std::shared_ptr<Base> foo = registry.get( "DerivedFoo" );;
     
     EXPECT_EQ( "DerivedBar", bar->getType() );
     EXPECT_EQ( "DerivedFoo", foo->getType() );
-    
-    delete bar;
-    delete foo;
 }
 
 } /* namespace Test */

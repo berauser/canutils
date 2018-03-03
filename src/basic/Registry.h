@@ -6,6 +6,7 @@
 
 #include <map>
 #include <list>
+#include <memory>
 #include <functional>
 
 /*************************************************************************//***
@@ -71,11 +72,11 @@ public:
             m_map.clear();
     }
     
-    Base* get(const Key &key, Args... args)
+    std::shared_ptr<Base> get(const Key &key, Args... args)
     {
         try
         {
-            return m_map.at(key)(std::forward<Args>(args)...);
+            return std::shared_ptr<Base>(m_map.at(key)(std::forward<Args>(args)...));
         }
         catch(const std::out_of_range &e)
         {
