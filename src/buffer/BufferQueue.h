@@ -41,7 +41,7 @@ public:
     virtual int write(const T& msg) override
     {
         std::unique_lock<std::mutex> lock(_mutex);
-        while( _queue.size() == this->size() )
+        while( _queue.size() >= this->size() )
         {
             _condition_tx.wait( lock );
         }
@@ -53,13 +53,17 @@ public:
     
     virtual int resize( unsigned int size ) override
     {
-        std::unique_lock<std::mutex> lock(_mutex);
         if( size == 0 )
         {
-                return -1;
+                throw std::invalid_argument("Null is not a valid buffer size");
+        }
+        if( size == this->size() )
+        {
+                return 0;
         }
         /* do not delete messages if the new buffer size is smaller then the older one */
         /* wait until the enough messages have been read */
+        std::unique_lock<std::mutex> lock(_mutex);
         this->_size = size;
         return 0;
     }
@@ -72,7 +76,7 @@ public:
     virtual bool isFull()  const override
     {
         std::unique_lock<std::mutex> lock(_mutex);
-        return ( _queue.size() == this->size() );
+        return ( _queue.size() >= this->size() );
     }
     virtual bool isEmpty() const override
     {

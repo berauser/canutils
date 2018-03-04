@@ -93,12 +93,70 @@ TEST_F( CANUtilsRingBufferTest, isEmpty )
 TEST_F( CANUtilsRingBufferTest, resize )
 {
 	SocketCanFactory factory;
-	CanBufferPtr buffer = factory.createCanBuffer("RingBuffer", 2);
+    const unsigned int initial_size = 2;
+	CanBufferPtr buffer = factory.createCanBuffer("RingBuffer", initial_size);
+	
+	/* add a single message */
+	CANMessage message( 0x123, CANMessage::CANFrameType::Standard, 1, 0x01 );
+	EXPECT_EQ( 0, buffer->write( message ) );
+	EXPECT_EQ( 0, buffer->write( message ) );
+	
+	/* buffer should be full */
+	EXPECT_TRUE( buffer->isFull() );
 	
 	/* double buffer size */
-	/* NOTE Resizing is currently not possible */
-	EXPECT_EQ(-1, buffer->resize( 2 * buffer->size() ) );  
+	EXPECT_EQ( 0, buffer->resize( 2 * initial_size ) );  
+	EXPECT_EQ( 2 * initial_size, buffer->size()      );
+    
+	/* buffer is not full */
+	EXPECT_FALSE( buffer->isFull() );
 	
+	/* add another two messages */
+	EXPECT_EQ( 0, buffer->write( message ) );
+	EXPECT_EQ( 0, buffer->write( message ) );
+	
+	/* buffer should be full */
+	EXPECT_TRUE( buffer->isFull() );
+    
+	/* resize to a smaller buffer */
+	EXPECT_EQ( 0, buffer->resize( initial_size ) );  
+	EXPECT_EQ( initial_size, buffer->size()      );
+    
+	/* buffer is full, but no messages are lost */
+	EXPECT_TRUE( buffer->isFull() );
+    
+    /* resize to null should throw an exception */
+    EXPECT_THROW( buffer->resize( 0 ), std::invalid_argument ); 
+}
+
+TEST_F( CANUtilsRingBufferTest, resize_not_reordered )
+{
+    SocketCanFactory factory;
+    const unsigned int initial_size = 4;
+	CanBufferPtr buffer = factory.createCanBuffer("RingBuffer", initial_size);
+    
+    /* add a single message */
+	CANMessage message1( 0x123, CANMessage::CANFrameType::Standard, 1, 0x01 );
+    CANMessage message2( 0x123, CANMessage::CANFrameType::Standard, 1, 0x02 );
+    
+	EXPECT_EQ( 0, buffer->write( message1 ) );
+    
+    /* double buffer size */
+	EXPECT_EQ( 0, buffer->resize( 2 * initial_size ) );  
+	EXPECT_EQ( 2 * initial_size, buffer->size()      );
+    
+    EXPECT_EQ( 0, buffer->write( message2 ) );
+    
+	/* resize to a smaller buffer */
+	EXPECT_EQ( 0, buffer->resize( initial_size ) );  
+	EXPECT_EQ( initial_size, buffer->size()      );
+	
+	CANMessage msg;
+	EXPECT_EQ( 0, buffer->read( msg ) );
+	EXPECT_EQ( message1, msg );
+	
+	EXPECT_EQ( 0, buffer->read( msg ) );
+	EXPECT_EQ( message2, msg );
 }
 
 TEST_F( CANUtilsRingBufferTest, clear )

@@ -29,11 +29,10 @@ public:
         std::unique_lock<std::mutex> lock(_mutex);
         while( ( _head == _tail ) )
         {
-                _condition.wait( lock );
+                _condition_rx.wait( lock );
         }
         
         msg = _ring_buffer[_tail];
-        
         _tail = (_tail + 1) % this->size();
         
         return 0;
@@ -50,21 +49,49 @@ public:
         }
         
         lock.unlock();
-        _condition.notify_one();
+        _condition_rx.notify_one();
         
         return 0;
     }
     
     virtual int resize( unsigned int size ) override
     {
-        (void)size;
-        return -1; /* TODO currently not implemented */
+        if( size == 0 )
+        {
+                throw std::invalid_argument("Null is not a valid buffer size");
+        }
+        if( size == this->size() )
+        {
+                return 0;
+        }
+        /* create a new vector, swap it with the old one */
+        /* and write all entries to empty _ring_buffer */
+        /* the oldest messages are lost, if the new buffer is smaller */
+        std::unique_lock<std::mutex> lock(_mutex);
         
-//         std::unique_lock<std::mutex> lock(_mutex);
-//         _ring_buffer.resize( size );
-//         // FIXME copy to another vector, replace _head and _tail
-//         this->_size = size;
-//         return 0;
+        std::vector<T> tmp( size );
+        std::size_t  old_head = this->_head;
+        std::size_t  old_tail = this->_tail;
+        unsigned int old_size = this->_size;
+        
+        tmp.swap( _ring_buffer );
+        this->_size = size;
+        this->_head = 0;
+        this->_tail = 0;
+        
+        while( old_tail != old_head )
+        {
+            _ring_buffer[_head] = tmp[old_tail];
+            
+            _head = ( (_head + 1) % this->_size );
+            if( _head == _tail )
+            {
+                _tail = ( (_tail + 1) % this->_size );
+            }
+            
+            old_tail = (old_tail + 1) % old_size;
+        }
+        return 0;
     }
     
     virtual bool hasNext() const override
@@ -102,7 +129,7 @@ protected:
     std::size_t _head;
     std::size_t _tail;
     mutable std::mutex _mutex;
-    std::condition_variable _condition;
+    std::condition_variable _condition_rx;
 };
 
 } /* namespace Buffer */
