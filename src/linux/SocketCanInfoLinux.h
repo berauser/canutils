@@ -5,8 +5,7 @@
 #include "netlink/Netlink.h"
 #include "netlink/NetlinkCanParser.h"
 
-
-namespace CanUtils 
+namespace CanUtils
 {
 
 class SocketCanInfoLinux final :  public SocketCanInfoImpl
@@ -32,7 +31,7 @@ private:
 protected:
 	std::string device;
 	
-	Netlink::Netlink *netlink;
+	Netlink::NetlinkPtr netlink;
 };
 
 } /* namespace CanUtils */

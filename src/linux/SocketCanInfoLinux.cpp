@@ -32,7 +32,7 @@ int SocketCanInfoLinux::openDevice()
 		throw std::logic_error("Device is already opened");
 	}
 	
-	netlink = new Netlink::Netlink;
+	netlink = Netlink::NetlinkPtr(new Netlink::Netlink);
 	if( netlink == nullptr )
 	{
 		throw std::runtime_error("Could not allocate memory");
@@ -52,8 +52,7 @@ int SocketCanInfoLinux::closeDevice()
 		throw std::logic_error("Device is already closed");
 	}
 	
-	delete netlink;
-	netlink = nullptr;
+	netlink.reset();
 	return 0;
 }
 

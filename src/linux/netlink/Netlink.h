@@ -7,7 +7,7 @@
 #include <memory>
 #include <cstdint>
 
-namespace Netlink 
+namespace Netlink
 {
 
 class Netlink
@@ -50,6 +50,7 @@ private:
 	std::uint32_t seq;
 	std::uint32_t dump;
 };
+typedef std::shared_ptr<Netlink> NetlinkPtr;
 
 } /* namespace Netlink */
 

@@ -30,7 +30,7 @@ private:
 protected:
 	std::string device;
 	
-	Netlink::Netlink *netlink;
+	Netlink::NetlinkPtr netlink;
 };
 
 } /* namespace CanUtils */
