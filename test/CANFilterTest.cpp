@@ -117,5 +117,54 @@ TEST_F( CANFilterTest, invert )
 	EXPECT_EQ( f3.can_mask, f3.can_mask);
 }
 
+TEST_F( CANFilterTest, matches )
+{
+    CANFilter f1, f2, f3;
+    CANMessage m1( 0x123, CANMessage::CANFrameType::Standard, 0);
+    CANMessage m2( 0x700, CANMessage::CANFrameType::Standard, 0);
+    CANMessage m3( 0x7F3, CANMessage::CANFrameType::Standard, 0);
+    CANMessage m4( 0x2F1, CANMessage::CANFrameType::Standard, 0);
+    CANMessage m5( 0x001, CANMessage::CANFrameType::Standard, 0);
+    CANMessage m6( 0x3F5, CANMessage::CANFrameType::Standard, 0);
+    CANMessage m7( 0x2F0, CANMessage::CANFrameType::Standard, 0);
+    
+    /* ID 0x123 */
+    f1.can_id   = 0x123;
+    f1.can_mask = 0x7FF;
+    
+    EXPECT_TRUE ( f1.matches( m1 ) );
+    EXPECT_FALSE( f1.matches( m2 ) );
+    EXPECT_FALSE( f1.matches( m3 ) );
+    EXPECT_FALSE( f1.matches( m4 ) );
+    EXPECT_FALSE( f1.matches( m5 ) );
+    EXPECT_FALSE( f1.matches( m6 ) );
+    EXPECT_FALSE( f1.matches( m7 ) );
+    
+    /* ID 0x3F0 - 0x3FF */
+    f2.can_id   = 0x3F0;
+    f2.can_mask = 0x7F0;
+    
+    EXPECT_FALSE( f2.matches( m1 ) );
+    EXPECT_FALSE( f2.matches( m2 ) );
+    EXPECT_FALSE( f2.matches( m3 ) );
+    EXPECT_FALSE( f2.matches( m4 ) );
+    EXPECT_FALSE( f2.matches( m5 ) );
+    EXPECT_TRUE ( f2.matches( m6 ) );
+    EXPECT_FALSE( f2.matches( m7 ) );
+    
+    /* ID != 0x2F0,0x2F1 */
+    f3.can_id   = 0x2F0;
+    f3.can_mask = 0x2FE;
+    f3.invert();
+    
+    EXPECT_TRUE ( f3.matches( m1 ) );
+    EXPECT_TRUE ( f3.matches( m2 ) );
+    EXPECT_TRUE ( f3.matches( m3 ) );
+    EXPECT_FALSE( f3.matches( m4 ) );
+    EXPECT_TRUE ( f3.matches( m5 ) );
+    EXPECT_TRUE ( f3.matches( m6 ) );
+    EXPECT_FALSE( f3.matches( m7 ) );
+}
+
 } /* namespace Test */
 } /* namespace CanUtils */

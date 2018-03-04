@@ -31,7 +31,7 @@ struct CANFilter
 		can_id = can_id | static_cast<uint32_t>(CANFilterFlags::Invert);
 	}
 
-	bool isInverted()
+	bool isInverted() const
 	{
 		return ( ( can_id & static_cast<uint32_t>(CANFilterFlags::Invert) )
 				== static_cast<uint32_t>(CANFilterFlags::Invert) );
@@ -75,7 +75,12 @@ struct CANFilter
 	{
 		return CANFilter(can_id | static_cast<uint32_t>(flag), can_mask);
 	}
-
+	
+	bool matches( const CANMessage& msg ) const
+	{
+		return ( ((msg.can_id & this->can_mask) == (this->can_id & this->can_mask)) != this->isInverted() );
+	}
+	
 	uint32_t can_id;
 	uint32_t can_mask;
 };
