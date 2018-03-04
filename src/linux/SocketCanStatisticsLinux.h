@@ -2,8 +2,8 @@
 #define SRC_LINUX_SOCKETCANSTATISTICSLINUX_H_
 
 #include "SocketCanStatisticsImpl.h"
-#include "helper/Netlink.h"
-#include "helper/NetlinkParser.h"
+#include "netlink/Netlink.h"
+#include "netlink/NetlinkParser.h"
 
 #include <stdexcept>
 

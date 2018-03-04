@@ -2,8 +2,8 @@
 #define SRC_LINUX_SOCKETCANINFOLINUX_H_
 
 #include "SocketCanInfoImpl.h"
-#include "helper/Netlink.h"
-#include "helper/NetlinkCanParser.h"
+#include "netlink/Netlink.h"
+#include "netlink/NetlinkCanParser.h"
 
 
 namespace CanUtils 

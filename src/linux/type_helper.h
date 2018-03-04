@@ -3,8 +3,8 @@
 #define SRC_LINUX_TYPEHELPER_H_
 
 #include "CANDeviceInfo.h"
-#include "helper/NetlinkParser.h"
-#include "helper/NetlinkCanParser.h"
+#include "netlink/NetlinkParser.h"
+#include "netlink/NetlinkCanParser.h"
 
 #include <stdexcept>
 

@@ -3,8 +3,8 @@
 
 #include <cstring>
 
-#include "helper/Netlink.h"
-#include "helper/NetlinkCanParser.h"
+#include "netlink/Netlink.h"
+#include "netlink/NetlinkCanParser.h"
 
 #include "type_helper.h"
 #include "logger.h"
