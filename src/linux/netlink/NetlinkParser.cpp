@@ -12,7 +12,7 @@
 namespace Netlink
 {
 
-NetlinkParser::NetlinkParser() 
+NetlinkParser::NetlinkParser()
 {
 }
 
@@ -32,25 +32,25 @@ NetlinkParser::DeviceDetailsPtr NetlinkParser::parseDetails(Netlink::DataPtr dat
 	{
 		throw std::bad_alloc();
 	}
-
+	
 	details->ifindex = data->index;
 	details->ifname  = data->name;
 	details->iftype  = Netlink::typeToString(data->type);
 	
 	if ( data->tb[IFLA_MTU]       )
 		details->mtu   = *(int*)RTA_DATA(data->tb[IFLA_MTU]);
-	if ( data->tb[IFLA_QDISC]     ) 
+	if ( data->tb[IFLA_QDISC]     )
 		details->qdisc = (char*)RTA_DATA(data->tb[IFLA_QDISC]);
-	if ( data->tb[IFLA_OPERSTATE] ) 
+	if ( data->tb[IFLA_OPERSTATE] )
 		details->state = operationState ( *(unsigned int*)(data->tb[IFLA_OPERSTATE]) );
-// 	if ( data->tb[IFLA_MASTER]    )
-// 		;
+//	if ( data->tb[IFLA_MASTER]    )
+//		;
 	if ( data->tb[IFLA_TXQLEN]    )
 		details->tx_qlen = *(int*)RTA_DATA(data->tb[IFLA_TXQLEN]);
-// 	if ( data->tb[IFLA_ADDRESS]   )
-// 		;
-// 	if ( data->tb[IFLA_BROADCAST] )
-// 		;
+//	if ( data->tb[IFLA_ADDRESS]   )
+//		;
+//	if ( data->tb[IFLA_BROADCAST] )
+//		;
 	if ( data->tb[IFLA_IFALIAS]   )
 		details->ifalias = (const char*)RTA_DATA(data->tb[IFLA_IFALIAS]);
 	
@@ -58,7 +58,7 @@ NetlinkParser::DeviceDetailsPtr NetlinkParser::parseDetails(Netlink::DataPtr dat
 	
 	return details;
 }
-  
+
 NetlinkParser::DeviceStatisticsPtr NetlinkParser::parseStatistics(Netlink::DataPtr data)
 {
 	DeviceStatisticsPtr stats(new DeviceStatistics);
@@ -66,7 +66,7 @@ NetlinkParser::DeviceStatisticsPtr NetlinkParser::parseStatistics(Netlink::DataP
 	{
 		throw std::bad_alloc();
 	}
-// 	memset( stats, 0, sizeof(DeviceStatistics) );
+//	memset( stats, 0, sizeof(DeviceStatistics) );
 	
 	if ( data->tb[IFLA_STATS64] )
 	{
@@ -215,7 +215,6 @@ int NetlinkParser::parseStatistics32(Netlink::DataPtr data, NetlinkParser::Devic
 	return 0;
 }
 
-
 int NetlinkParser::parseStatistics64(Netlink::DataPtr data, NetlinkParser::DeviceStatisticsPtr stats)
 {
 	struct rtnl_link_stats64* s;
@@ -250,7 +249,5 @@ int NetlinkParser::parseStatistics64(Netlink::DataPtr data, NetlinkParser::Devic
 	
 	return 0;
 }
-
-
 
 } /* namespace Netlink */

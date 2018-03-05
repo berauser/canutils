@@ -4,7 +4,7 @@
 #include "Netlink.h"
 #include "NetlinkParser.h"
 
-namespace Netlink 
+namespace Netlink
 {
 
 class NetlinkCanParser : public NetlinkParser
@@ -62,9 +62,9 @@ public:
 		uint32_t brp_max;
 		uint32_t brp_inc;
 	};
-	  
+	
 	struct CanDeviceDetails
-	{ 
+	{
 		CanState state;
 		uint32_t clock_freq;
 		uint32_t restart_ms;
@@ -87,11 +87,14 @@ public:
 protected:
 	static CanState canState(unsigned int data);
 	
-	static int parseCanClock         (Netlink::DataPtr data, CanDeviceDetailsPtr details);
-	static int parseControlMode      (Netlink::DataPtr data, CanDeviceDetailsPtr details);
-	static int parseBerrCounter      (Netlink::DataPtr data, CanDeviceDetailsPtr details);
-	static int parseCanBittiming     (Netlink::DataPtr data, CanDeviceDetailsPtr details);
-	static int parseCanBittimingConst(Netlink::DataPtr data, CanDeviceDetailsPtr details);
+	static int parseCanClock           (struct rtattr* data, CanDeviceDetailsPtr details);
+	static int parseCanState           (struct rtattr* data, CanDeviceDetailsPtr details);
+	static int parseControlMode        (struct rtattr* data, CanDeviceDetailsPtr details);
+	static int parseBerrCounter        (struct rtattr* data, CanDeviceDetailsPtr details);
+	static int parseCanBittiming       (struct rtattr* data, CanDeviceDetailsPtr details);
+	static int parseCanBittimingConst  (struct rtattr* data, CanDeviceDetailsPtr details);
+	static int parseCanDeviceStatistics(struct rtattr* data, CanDeviceDetailsPtr details);
+	
 };
 
 } /* namespace Netlink */

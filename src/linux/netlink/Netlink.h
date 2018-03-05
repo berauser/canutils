@@ -19,7 +19,6 @@ public:
 		unsigned short	type;
 		std::string	name;
 		struct rtattr*  tb[IFLA_MAX+1];
-		struct rtattr*  kind[IFLA_INFO_MAX+1];
 		Data();
 		~Data();
 	};
@@ -27,7 +26,7 @@ public:
 	
 public:
 	Netlink();
-	~Netlink();
+	~Netlink() noexcept(false);
 	
 	int open();
 	int close();
@@ -41,9 +40,6 @@ public:
 private:
 	int request(int family, int type);
 	DataPtr dump_filter(int idx);
-	static int deep_copy(DataPtr data, struct rtattr *rta, int len);
-	static int parse_rtattr(struct rtattr *tb[], int max, struct rtattr *rta, int len);
-	static int free_rtattr(struct rtattr *tb[], int max);
 	
 private:
 	int fd;

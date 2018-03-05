@@ -1,4 +1,5 @@
 #include "NetlinkCanParser.h"
+#include "NetlinkHelper.h"
 
 #include <string>
 #include <cstring>
@@ -10,7 +11,7 @@
 
 namespace Netlink
 {
-  
+
 NetlinkCanParser::NetlinkCanParser()
 {
 
@@ -18,40 +19,52 @@ NetlinkCanParser::NetlinkCanParser()
 
 NetlinkCanParser::~NetlinkCanParser()
 {
-
 }
 
 NetlinkCanParser::CanDeviceDetailsPtr NetlinkCanParser::parseCanDetails(Netlink::DataPtr data)
 {
-	if( ! data->kind )
+	if( data->tb[IFLA_LINKINFO] )
 	{
-		return CanDeviceDetailsPtr(nullptr);
+		struct rtattr *linkinfo[IFLA_INFO_MAX+1];
+		
+		Helper::parse_rtattr_nested( linkinfo, IFLA_INFO_MAX, data->tb[IFLA_LINKINFO]);
+		if( ! linkinfo[IFLA_INFO_KIND] ) return 0;
+		
+		char* kind = (char*)RTA_DATA( linkinfo[IFLA_INFO_KIND] );
+		(void) kind;
+		
+		CanDeviceDetailsPtr details(new CanDeviceDetails);
+		if( linkinfo[IFLA_INFO_DATA] )
+		{
+			struct rtattr *attr[IFLA_CAN_MAX+1];
+			Helper::parse_rtattr_nested(attr, IFLA_CAN_MAX, linkinfo[IFLA_INFO_DATA]);
+			
+			if( attr[IFLA_CAN_CTRLMODE] )
+				parseControlMode( attr[IFLA_CAN_CTRLMODE], details );
+			if( attr[IFLA_CAN_STATE] )
+				parseCanState( attr[IFLA_CAN_STATE], details );
+			if( attr[IFLA_CAN_BERR_COUNTER] )
+				parseBerrCounter( attr[IFLA_CAN_BERR_COUNTER], details );
+			if( attr[IFLA_CAN_BITTIMING] )
+				parseCanBittiming( attr[IFLA_CAN_BITTIMING], details );
+			if( attr[IFLA_CAN_BITTIMING_CONST] )
+				parseCanBittimingConst( attr[IFLA_CAN_BITTIMING_CONST], details);
+			if( attr[IFLA_CAN_CLOCK] )
+				parseCanClock( attr[IFLA_CAN_CLOCK], details );
+			if( attr[IFLA_CAN_RESTART_MS] )
+				details->restart_ms = *(uint32_t*)RTA_DATA(attr[IFLA_CAN_RESTART_MS]);
+		}
+		if( linkinfo[IFLA_INFO_XSTATS] )
+		{
+			if( linkinfo[IFLA_INFO_XSTATS] )
+				parseCanDeviceStatistics( linkinfo[IFLA_INFO_XSTATS], details );
+		}
+		return details;
 	}
 	
-	// FIXME 
-// 	struct rtattr *linkinfo[IFLA_INFO_MAX+1];
-// 	struct link_util *lu;
-// 	char* kind;
+// 	memset( details, 0, sizeof(CanDeviceDetails) )
 	
-// 	parse_rtatt
-	
-	CanDeviceDetailsPtr details(new CanDeviceDetails);
-// 	memset( details, 0, sizeof(CanDeviceDetails) );
-	
-	if( data->kind[IFLA_CAN_CTRLMODE] )
-		parseControlMode( data, details );
-	if( data->kind[IFLA_CAN_STATE] )
-		details->state = canState( *(unsigned int*)(data->kind[IFLA_CAN_STATE]) );
-	if( data->kind[IFLA_CAN_BERR_COUNTER] )
-		parseBerrCounter( data, details );
-	if( data->kind[IFLA_CAN_BITTIMING] )
-		parseCanBittiming( data, details );
-	if( data->kind[IFLA_CAN_BITTIMING_CONST] )
-		parseCanBittimingConst( data, details);
-	if( data->kind[IFLA_CAN_CLOCK] )
-		parseCanClock( data, details );
-	
-	return details;
+	return nullptr;
 }
 
 std::string NetlinkCanParser::canStateToString(NetlinkCanParser::CanState state)
@@ -103,17 +116,22 @@ NetlinkCanParser::CanState NetlinkCanParser::canState(unsigned int data)
 	}
 }
 
-int NetlinkCanParser::parseCanClock(Netlink::DataPtr data, NetlinkCanParser::CanDeviceDetailsPtr details)
+int NetlinkCanParser::parseCanClock(struct rtattr* data, NetlinkCanParser::CanDeviceDetailsPtr details)
 {
-	struct can_clock *clock = static_cast<can_clock*>(RTA_DATA(data->kind[IFLA_CAN_CLOCK]));
+	struct can_clock *clock = static_cast<can_clock*>(RTA_DATA(data));
 	details->clock_freq = clock->freq;
 	return 0;
 }
 
-
-int NetlinkCanParser::parseControlMode(Netlink::DataPtr data, NetlinkCanParser::CanDeviceDetailsPtr details)
+int NetlinkCanParser::parseCanState (struct rtattr* data, CanDeviceDetailsPtr details)
 {
-	struct can_ctrlmode *cm = static_cast<struct can_ctrlmode*>(RTA_DATA(data->kind[IFLA_CAN_CTRLMODE]));
+	details->state = canState( *(unsigned int*)RTA_DATA(data) );
+	return 0;
+}
+
+int NetlinkCanParser::parseControlMode(struct rtattr* data, NetlinkCanParser::CanDeviceDetailsPtr details)
+{
+	struct can_ctrlmode *cm = static_cast<struct can_ctrlmode*>(RTA_DATA(data));
 	for( unsigned int i = 0; i < sizeof(cm->flags)*8; i++ )
 	{
 		switch( cm->flags & (1 << i) )
@@ -132,17 +150,17 @@ int NetlinkCanParser::parseControlMode(Netlink::DataPtr data, NetlinkCanParser::
 	return 0;
 }
 
-int NetlinkCanParser::parseBerrCounter(Netlink::DataPtr data, NetlinkCanParser::CanDeviceDetailsPtr details)
+int NetlinkCanParser::parseBerrCounter(struct rtattr* data, NetlinkCanParser::CanDeviceDetailsPtr details)
 {
-	struct can_berr_counter *bc = static_cast<struct can_berr_counter*>(RTA_DATA(data->kind[IFLA_CAN_BERR_COUNTER]));
+	struct can_berr_counter *bc = static_cast<struct can_berr_counter*>(RTA_DATA(data));
 	details->berr.tx_error = bc->txerr;
 	details->berr.rx_error = bc->rxerr;
 	return 0;
 }
 
-int NetlinkCanParser::parseCanBittiming(Netlink::DataPtr data, NetlinkCanParser::CanDeviceDetailsPtr details)
+int NetlinkCanParser::parseCanBittiming(struct rtattr* data, NetlinkCanParser::CanDeviceDetailsPtr details)
 {
-	struct can_bittiming *bt = static_cast<struct can_bittiming*>(RTA_DATA(data->kind[IFLA_CAN_BITTIMING]));
+	struct can_bittiming *bt = static_cast<struct can_bittiming*>(RTA_DATA(data));
 	details->bittiming.bitrate      = bt->bitrate;
 	details->bittiming.sample_point = bt->sample_point;
 	details->bittiming.tq           = bt->tq;
@@ -154,9 +172,9 @@ int NetlinkCanParser::parseCanBittiming(Netlink::DataPtr data, NetlinkCanParser:
 	return 0;
 }
 
-int NetlinkCanParser::parseCanBittimingConst(Netlink::DataPtr data, NetlinkCanParser::CanDeviceDetailsPtr details)
+int NetlinkCanParser::parseCanBittimingConst(struct rtattr* data, NetlinkCanParser::CanDeviceDetailsPtr details)
 {
-	struct can_bittiming_const *btc = static_cast<struct can_bittiming_const*>(RTA_DATA(data->kind[IFLA_CAN_BITTIMING_CONST]));
+	struct can_bittiming_const *btc = static_cast<struct can_bittiming_const*>(RTA_DATA(data));
 	details->const_bittiming.name      = btc->name;
 	details->const_bittiming.tseg1_min = btc->tseg1_min;
 	details->const_bittiming.tseg1_max = btc->tseg1_max;
@@ -169,5 +187,12 @@ int NetlinkCanParser::parseCanBittimingConst(Netlink::DataPtr data, NetlinkCanPa
 	return 0;
 }
 
+int NetlinkCanParser::parseCanDeviceStatistics(struct rtattr* data, CanDeviceDetailsPtr details)
+{
+	struct can_device_stats *stats = static_cast<struct can_device_stats*>(RTA_DATA(data));
+	(void) stats;
+	(void) details;
+	return 0;
+}
 
 } /* namespace Netlink */

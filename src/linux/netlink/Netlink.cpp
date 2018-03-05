@@ -13,8 +13,6 @@
 #include <linux/if.h>
 #include <linux/if_arp.h>
 
-#include <linux/can/netlink.h> // FIXME Bad remove this, it depends on an spefic kind type
-
 namespace Netlink
 {
 
@@ -25,7 +23,6 @@ Netlink::Data::Data()
 	this->flags = 0;
 	this->name  = "";
 	memset(this->tb, 0, sizeof(this->tb));
-	memset(this->kind, 0, sizeof(this->kind));
 }
 
 Netlink::Data::~Data()
@@ -40,33 +37,21 @@ Netlink::Data::~Data()
 		}
 	}
 	
-	// clear rtattr kind
-	for( int i = 0; i < (IFLA_INFO_MAX+1); ++i )
-	{
-		if( this->kind[i] ) 
-		{
-			free(this->kind[i]);
-			this->kind[i] = nullptr;
-		}
-	}
-	
 	// clear all attributes
 	this->index = 0;
 	this->type  = 0;
 	this->flags = 0;
 	this->name  = "";
 	memset(this->tb, 0, sizeof(this->tb));
-	memset(this->kind, 0, sizeof(this->kind));
 }
 
-  
 Netlink::Netlink() : fd(-1)
 {
   seq = ::time(NULL);
 }
 
-Netlink::~Netlink()
-{ 
+Netlink::~Netlink() noexcept(false)
+{
 }
 
 int Netlink::open()
@@ -130,8 +115,7 @@ void Netlink::destroy(Netlink::Data* data)
 {
 	if( data == nullptr ) return;
 	
-	free_rtattr( data->tb, IFLA_MAX );
-	free_rtattr( data->kind, IFLA_CAN_MAX );
+	Helper::free_rtattr( data->tb, IFLA_MAX );
 	
 	// delete object
 	delete data;
@@ -143,9 +127,11 @@ std::string Netlink::typeToString(unsigned int type)
 {
 	switch( type )
 	{
-	/* currently only "can" is used. */ 
-	case ARPHRD_CAN: return "can";
-	default:         return "UNKNOWN";
+	case ARPHRD_ETHER:    return "ether";
+	case ARPHRD_EETHER:   return "eether";
+	case ARPHRD_CAN:      return "can";
+	case ARPHRD_LOOPBACK: return "loopback";
+	default:              return "UNKNOWN";
 	}
 }
 
@@ -155,7 +141,7 @@ int Netlink::request(int family, int type)
 		struct nlmsghdr nlh;
 		struct rtgenmsg g;
 	} req;
-
+	
 	memset(&req, 0, sizeof(req));
 	req.nlh.nlmsg_len = sizeof(req);
 	req.nlh.nlmsg_type = type;
@@ -163,7 +149,7 @@ int Netlink::request(int family, int type)
 	req.nlh.nlmsg_pid = 0;
 	req.nlh.nlmsg_seq = dump = ++seq;
 	req.g.rtgen_family = family;
-
+	
 	return send(fd, (void*)&req, sizeof(req), 0);
 }
 
@@ -182,7 +168,7 @@ Netlink::DataPtr Netlink::dump_filter(int idx)
 	};
 	
 	char buf[16384];
-
+	
 	iov.iov_base = buf;
 	struct ifinfomsg *ifi =  nullptr;
 	while (1) {
@@ -193,7 +179,7 @@ Netlink::DataPtr Netlink::dump_filter(int idx)
 		
 		iov.iov_len = sizeof(buf);
 		status = recvmsg(fd, &msg, 0);
-
+	
 		if (status < 0) {
 			if (errno == EINTR || errno == EAGAIN)
 				continue;
@@ -201,7 +187,7 @@ Netlink::DataPtr Netlink::dump_filter(int idx)
 				strerror(errno), errno);
 			return nullptr;
 		}
-
+	
 		if (status == 0) {
 			fprintf(stderr, "EOF on netlink\n");
 			return nullptr;
@@ -239,8 +225,7 @@ Netlink::DataPtr Netlink::dump_filter(int idx)
 					t->type  = ifi->ifi_type;
 					t->flags = ifi->ifi_flags;
 					
-					parse_rtattr(t->tb, IFLA_MAX, IFLA_RTA(ifi), IFLA_PAYLOAD(h));
-// 					deep_copy( t, IFLA_RTA(ifi), IFLA_PAYLOAD(h) );
+					Helper::parse_rtattr(t->tb, IFLA_MAX, IFLA_RTA(ifi), IFLA_PAYLOAD(h));
 					
 					if ( t->tb[IFLA_IFNAME] )
 						t->name = (char*)RTA_DATA(t->tb[IFLA_IFNAME]);
@@ -250,7 +235,7 @@ Netlink::DataPtr Netlink::dump_filter(int idx)
 			}
 			h = NLMSG_NEXT(h, msglen);
 		}
-
+	
 		if( done )
 			return nullptr;
 		
@@ -277,68 +262,10 @@ Netlink::DataPtr Netlink::getDeviceInformation(const std::string&  name)
 	int ifindex = Helper::index_from_name(name);
 	if( ifindex <= 0 )
 	{
-		fprintf( stdout, "Device vcan0 does not exists\n");
+		fprintf( stdout, "Device does not exists\n");
 		return nullptr;
 	}	
 	return dump_filter(ifindex);
 }
-
-int Netlink::deep_copy(Netlink::DataPtr data, rtattr* rta, int len)
-{
-	// parse rtattr
-	parse_rtattr(data->tb, IFLA_MAX, rta, len);
-	
-// 	// parse nested rtattr
-// 	if( data->tb[IFLA_LINKINFO] )
-// 	{
-// 		struct rtattr *linkinfo[IFLA_INFO_MAX+1];
-// 		struct rtattr *rta_kind = data->tb[IFLA_LINKINFO];
-// 		
-// 		parse_rtattr( linkinfo, IFLA_INFO_MAX, (struct rtattr*)RTA_DATA(rta_kind), RTA_PAYLOAD(rta_kind) );
-// // 		if( ! link[IFLA_INFO_KIND] ) return 0;
-// // 		kind = (char*)RTA_DATA( link[IFLA_INFO_KIND] );
-// 		
-// 		if( linkinfo[IFLA_INFO_DATA] )
-// 		{
-// 			parse_rtattr( data->kind, IFLA_CAN_MAX, (struct rtattr*)RTA_DATA(linkinfo[IFLA_INFO_DATA]), RTA_PAYLOAD(linkinfo[IFLA_INFO_DATA]) );
-// 		}
-// 		
-// 		free_rtattr( linkinfo, IFLA_INFO_MAX );
-// 	}
-	return 0;
-}
-
-int Netlink::parse_rtattr(struct rtattr *tb[], int max, struct rtattr *rta, int len)
-{
-	fprintf( stdout, "NEw call\n" );
-	memset(tb, 0, sizeof(struct rtattr *) * (max + 1));
-	while (RTA_OK(rta, len)) {
-		if ((rta->rta_type <= max) && (!tb[rta->rta_type]))
-		{
-			// deep copy of rta
-		  fprintf( stdout, "rta->type: %d, rta->rta_len %d\n", rta->rta_type, rta->rta_len);
-			tb[rta->rta_type] = (rtattr*)malloc(rta->rta_len);
-			memcpy(tb[rta->rta_type], rta, rta->rta_len);
-		}
-		rta = RTA_NEXT(rta,len);
-	}
-	if (len)
-		fprintf(stderr, "!!!Deficit %d, rta_len=%d\n", len, rta->rta_len);
-	return 0;
-}
-
-int Netlink::free_rtattr(rtattr* tb[], int max)
-{
-	for( int i = 0; i <= max; ++i )
-	{
-		if( tb[i] )
-		{
-			free(tb[i]);
-			tb[i] = nullptr;
-		}
-	}
-	return 0;
-}
-
 
 } /* namespace Netlink */

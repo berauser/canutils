@@ -89,7 +89,7 @@ public:
 		DeviceState state;
 	};
 	typedef std::shared_ptr<DeviceDetails> DeviceDetailsPtr;
-  
+	
 public:
 	NetlinkParser();
 	~NetlinkParser();
