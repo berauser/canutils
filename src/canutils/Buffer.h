@@ -14,7 +14,9 @@ template<typename T>
 class Buffer : public Base<T>
 {
 public:
-	virtual ~Buffer() {}
+	virtual ~Buffer()  noexcept(false)
+	{
+	}
 	
 	virtual int read(T& msg) override = 0;
 	virtual int write(const T& msg) override = 0;

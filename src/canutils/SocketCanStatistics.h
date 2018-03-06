@@ -24,7 +24,7 @@ public:
 	{
 		(void)device_arg;
 	}
-	virtual ~SocketCanStatistics()
+	virtual ~SocketCanStatistics() noexcept(false)
 	{
 	}
 	

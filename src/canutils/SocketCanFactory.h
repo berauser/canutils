@@ -11,6 +11,7 @@
 #include "canutils/CanBuffer.h"
 #include "canutils/SocketCan.h"
 #include "canutils/SocketCanInfo.h"
+#include "canutils/SocketCanWorker.h"
 #include "canutils/SocketCanStatistics.h"
 
 namespace CanUtils
@@ -22,12 +23,14 @@ class SocketCanFactory
 {    
 public:
 	SocketCanFactory();
-	virtual ~SocketCanFactory();
+	virtual ~SocketCanFactory() noexcept(false);
 	
 	static std::string version();
 	
 	CanBufferPtr createCanBuffer(const std::string& type = DEFAULT_BUFFER_TYPE, const unsigned int size = DEFAULT_BUFFER_SIZE );
 	SocketCanPtr createSocketCan(const std::string& device);
+    
+	SocketCanWorkerPtr createSocketCanWorker();
 	SocketCanInfoPtr createSocketCanInfo( const std::string& device);
 	SocketCanStatisticsPtr createSocketCanStatistics(const std::string& device);
 };

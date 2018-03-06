@@ -12,7 +12,7 @@
 #include <string>
 #include <memory>
 
-#include "canutils/Base.h"
+#include "canutils/CanBase.h"
 
 #include "canutils/CANMessage.h"
 #include "canutils/CANFilter.h"
@@ -21,7 +21,7 @@
 namespace CanUtils
 {
 
-class SocketCan : public Base<CANMessage>
+class SocketCan : public CanBase
 {
 
 public:
@@ -30,7 +30,7 @@ public:
 	{
 		(void)device_arg;
 	}
-	virtual ~SocketCan()
+	virtual ~SocketCan() noexcept(false)
 	{
 	}
 

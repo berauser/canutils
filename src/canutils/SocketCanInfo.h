@@ -24,7 +24,7 @@ public:
 	{
 		(void)device_arg;
 	}
-	virtual ~SocketCanInfo()
+	virtual ~SocketCanInfo() noexcept(false)
 	{
 	}
 	
