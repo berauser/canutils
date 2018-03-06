@@ -17,6 +17,7 @@
 #ifdef __linux__
 	#include "../linux/SocketCanLinux.h"
 	#include "../linux/SocketCanInfoLinux.h"
+	#include "../linux/SocketCanWorkerLinux.h"
 	#include "../linux/SocketCanStatisticsLinux.h"
 #else
 	#error "No implementation found - Only Linux is implemented" 
@@ -38,6 +39,7 @@ namespace CanUtils
 #ifdef __linux__
 	#define SocketCanCreate           SocketCanLinux
 	#define SocketCanInfoCreate       SocketCanInfoLinux
+	#define SocketCanWorkerCreate     SocketCanWorkerLinux
 	#define SocketCanStatisticsCreate SocketCanStatisticsLinux
 #else
 	#error "No implementation found - Only Linux is implemented."
@@ -49,7 +51,7 @@ SocketCanFactory::SocketCanFactory()
 {
 }
 
-SocketCanFactory::~SocketCanFactory()
+SocketCanFactory::~SocketCanFactory() noexcept(false)
 {
 }
 
@@ -87,7 +89,12 @@ SocketCanPtr SocketCanFactory::createSocketCan(const std::string& device)
 	{
 		throw std::invalid_argument( "Device is empty" );
 	}
-	return std::shared_ptr<SocketCan>(new SocketCanCreate(device));
+	return SocketCanPtr(new SocketCanCreate(device));
+}
+
+SocketCanWorkerPtr SocketCanFactory::createSocketCanWorker()
+{
+        return SocketCanWorkerPtr(new SocketCanWorkerCreate());
 }
 
 SocketCanInfoPtr SocketCanFactory::createSocketCanInfo(const std::string& device)
@@ -97,7 +104,7 @@ SocketCanInfoPtr SocketCanFactory::createSocketCanInfo(const std::string& device
 	{
 		throw std::invalid_argument( "Device is empty" );
 	}
-	return std::shared_ptr<SocketCanInfo>(new SocketCanInfoCreate(device));
+	return SocketCanInfoPtr(new SocketCanInfoCreate(device));
 }
 
 SocketCanStatisticsPtr SocketCanFactory::createSocketCanStatistics(const std::string& device)
@@ -107,7 +114,7 @@ SocketCanStatisticsPtr SocketCanFactory::createSocketCanStatistics(const std::st
 	{
 		throw std::invalid_argument( "Device is empty" );
 	}
-	return std::shared_ptr<SocketCanStatistics>(new SocketCanStatisticsCreate(device));
+	return SocketCanStatisticsPtr(new SocketCanStatisticsCreate(device));
 }
 
 

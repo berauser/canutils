@@ -59,7 +59,7 @@ int SocketCanImpl::close()
 	if (!isOpen())
 	{
 		LOGGER(SOCKETCAN_INFO, "Device is already closed");
-		return 0;
+		throw std::logic_error("Device is already closed");
 	}
 	return closeDevice();
 }
