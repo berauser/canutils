@@ -49,12 +49,12 @@ TEST_F( SocketCanTest, init )
 	EXPECT_EQ(0, socketcan->open());
 	EXPECT_EQ(true, socketcan->isOpen());
 
-	ASSERT_THROW( socketcan->open(), std::logic_error );
+	EXPECT_THROW( socketcan->open(), std::logic_error );
 
 	EXPECT_EQ(0, socketcan->close());
 	EXPECT_EQ(false, socketcan->isOpen());
 
-	EXPECT_EQ(0, socketcan->close());
+	EXPECT_THROW( socketcan->close(), std::logic_error );
 }
 
 TEST_F( SocketCanTest, filter_basic )
