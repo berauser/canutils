@@ -19,24 +19,24 @@
 
 namespace CanUtils
 {
-    
+
 class SocketCanWorker
 {
 public:
-    virtual ~SocketCanWorker() noexcept(false)
-    {
-    }
-    
-    virtual int  start() = 0;
-    virtual int  stop()  = 0;
-    virtual bool isStarted() const = 0;
-    
-    virtual int setInput ( CanBasePtr input ) = 0;
-    virtual int delInput ( CanBasePtr input ) = 0;
-    virtual int addOutput( CanBasePtr output ) = 0;
-    virtual int addOutput( CanBasePtr output, const CANFilter& filter ) = 0;
-    virtual int addOutput( CanBasePtr output, const std::vector<CANFilter>& filters ) = 0;
-    virtual int delOutput( CanBasePtr output ) = 0;
+	virtual ~SocketCanWorker() noexcept(false)
+	{
+	}
+	
+	virtual int  start() = 0;
+	virtual int  stop()  = 0;
+	virtual bool isStarted() const = 0;
+	
+	virtual int setInput ( CanBasePtr input ) = 0;
+	virtual int delInput ( CanBasePtr input ) = 0;
+	virtual int addOutput( CanBasePtr output ) = 0;
+	virtual int addOutput( CanBasePtr output, const CANFilter& filter ) = 0;
+	virtual int addOutput( CanBasePtr output, const std::vector<CANFilter>& filters ) = 0;
+	virtual int delOutput( CanBasePtr output ) = 0;
 };
 typedef std::shared_ptr<SocketCanWorker> SocketCanWorkerPtr;
 

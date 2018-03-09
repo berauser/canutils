@@ -11,7 +11,13 @@
 namespace CanUtils
 {
 
+/*!
+ * Defines the Buffer base for CANMessages
+ */
 typedef Buffer::Buffer<CANMessage> CanBuffer;
+/*!
+ * Pointer definition to Buffer< CANMessage >
+ */
 typedef std::shared_ptr<CanBuffer> CanBufferPtr;
 
 } /* namespace CanUtils */
