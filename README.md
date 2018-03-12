@@ -92,4 +92,35 @@ $ make clean        # delete compiled sources
 $ make dist-clean   # delete cmake work dir
 ```
 
+## Testing ##
+
+To run the test the cmake option BUILD_TEST must be enabled.
+
+Start vcan interface:
+```
+$ sudo ./scripts/vcan.sh start vcan0
+$ sudo ./scripts/vcan.sh up vcan0
+```
+
+### Run tests ###
+```
+$ ./scripts/run_test.sh
+```
+
+### Run code coverage ###
+```
+$ ./scripts/run_gcov.sh
+```
+
+### Run valgrind ###
+```
+$ ./scripts/run_cppcheck.sh
+```
+
+### Run valgrind ###
+```
+$ ./scripts/run_valgrind.sh
+```
+
+
 
