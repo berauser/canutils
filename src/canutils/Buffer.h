@@ -12,6 +12,7 @@ namespace Buffer
 
 /*!
  * Buffer < T > is the Base class for all buffer implementations
+ * @tparam T Template parameter
  */
 template<typename T>
 class Buffer : public Base<T>
@@ -25,16 +26,16 @@ public:
 	}
 	
 	/*!
-	* Reads < T > from Buffer< T >
+	* Reads T from Buffer
 	 * Read is blocking when the buffer is empty.
-	 * @param T A reference to store the readed value.
+	 * @param msg A reference to store the readed value.
 	 * @return 0 on success, -1 on error
 	 */
 	virtual int read(T& msg) override = 0;
 	/*!
-	 * Write < T > to the Buffer< T >
+	 * Write T to the Buffer
 	 * Write is blocking, when the buffer is full.
-	 * @param T A reference with the value to store in the Buffer
+	 * @tparam msg A reference with the value to store in the Buffer
 	 * @return 0 on success, -1 on error
 	 */
 	virtual int write(const T& msg) override = 0;
