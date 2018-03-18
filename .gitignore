@@ -15,6 +15,7 @@ cmake_install.cmake
 # output
 *.xml
 *.memtest
+*.smp
 
 # generated header
 version.h
