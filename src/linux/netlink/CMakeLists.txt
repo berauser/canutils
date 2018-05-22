@@ -26,7 +26,7 @@ FILE	( GLOB NETLINK_src
 		${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
 	)
 
-ADD_LIBRARY	( netlink STATIC
+ADD_LIBRARY	( netlink SHARED
 			${NETLINK_src}
 		)
 
