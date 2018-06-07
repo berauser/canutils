@@ -30,7 +30,7 @@ OPTION( USE_GCOV       "Enable gcov flags"       FALSE )
 
 SET( MAJOR_VERSION "1" )
 SET( MINOR_VERSION "0" )
-SET( PATCH_VERSION "0" )
+SET( PATCH_VERSION "1" )
 SET( VERSION_STRING "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}")
 
 ################################################################################
