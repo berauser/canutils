@@ -100,3 +100,22 @@ IF   ( BUILD_DOC )
 	ADD_SUBDIRECTORY( doc )
 ENDIF( BUILD_DOC )
 
+################################################################################
+#
+# print summary
+#
+################################################################################
+MESSAGE( "" )
+MESSAGE( "Summary:" )
+MESSAGE( "" )
+MESSAGE( "System:    ${CMAKE_SYSTEM_NAME}" )
+MESSAGE( "processor: ${CMAKE_SYSTEM_PROCESSOR}" )
+MESSAGE( "" )
+MESSAGE( "BUILD_EXAMPLE:  ${BUILD_EXAMPLE}" )
+MESSAGE( "BUILD_TEST:     ${BUILD_TEST}" )
+MESSAGE( "BUILD_DOC:      ${BUILD_DOC}" )
+MESSAGE( "BUILD_PARANOID: ${BUILD_PARANOID}" )
+MESSAGE( "USE_GCOV:       ${USE_GCOV}" )
+MESSAGE( "" )
+
+
