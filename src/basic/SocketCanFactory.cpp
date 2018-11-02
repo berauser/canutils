@@ -63,10 +63,6 @@ std::string SocketCanFactory::version()
 CanBufferPtr SocketCanFactory::createCanBuffer( const std::string& type, const unsigned int size  )
 {
 	LOGGER( SOCKETCAN_INFO, "SocketCanFactory::createCanBuffer( %s, %u )", type.c_str(), size );
-	if( CAN_BUFFER_REGISTRATION == nullptr )
-	{
-		throw std::runtime_error("Internal error: CanBuffer registration is not initialized");
-	}
 	
 	std::string buffer_type = type;
 	if( type == DEFAULT_BUFFER_TYPE )

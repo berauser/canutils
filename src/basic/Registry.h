@@ -2,8 +2,6 @@
 #ifndef SRC_BASIC_REGISTRY_H_
 #define SRC_BASIC_REGISTRY_H_
 
-#include "platform.h"
-
 #include <map>
 #include <list>
 #include <memory>
@@ -142,32 +140,5 @@ public:
 private:
     std::map<Key, Constructor > m_map; //!< map of registered types
 };
-
-/*************************************************************************//***
- *
- * Priorities for construcotr/destructor functions
- *
- * ***************************************************************************/
-#define FACTORY_PRIORITY  1000
-#define REGISTER_PRIORITY 2000
-
-/*************************************************************************//***
- *
- * Macros to register/unregister types on loading/unloading
- *
- * ***************************************************************************/
-#define REGISTER_TYPE( type, key, database )    \
-    CONSTRUCTOR(REGISTER_PRIORITY)              \
-    static void register_##type(void)           \
-    {                                           \
-        (database)->registerClass<type>( key ); \
-    }
-
-#define UNREGISTER_TYPE( type, key, database )  \
-    DESTRUCTOR(REGISTER_PRIORITY)               \
-    static void unregister_##type(void)         \
-    {                                           \
-        (database)->unregisterClass( key );     \
-    }
 
 #endif /* SRC_BASIC_REGISTRY_H_ */
