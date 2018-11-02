@@ -2,8 +2,8 @@
 #define SRC_LINUX_SOCKETCANINFOLINUX_H_
 
 #include "SocketCanInfoImpl.h"
-#include "netlink/Netlink.h"
-#include "netlink/NetlinkCanParser.h"
+
+#include "netlink_wrapper.h"
 
 namespace CanUtils
 {
@@ -22,16 +22,21 @@ protected:
 	virtual CANDeviceInfoPtr  readDevice() override final;
 	
 private:
-	static int copyDetails   (CANDeviceInfoPtr info, Netlink::NetlinkParser::DeviceDetailsPtr dev);
-	static int copyCanDetails(CANDeviceInfoPtr info, Netlink::NetlinkCanParser::CanDeviceDetailsPtr cdev);
-	
-	static std::vector<DeviceFlags> copyDeviceFlags(std::vector<Netlink::NetlinkParser::DeviceFlags>&    vec);
-	static std::vector<ControlMode> copyControlMode(std::vector<Netlink::NetlinkCanParser::ControlMode>& vec);
+	static bool isCanDevice(struct rtnl_link* link);
+	static CanState getCanState(struct rtnl_link* link);
+	static uint32_t getClockFrequency(struct rtnl_link* link);
+	static uint32_t getRestartMS(struct rtnl_link* link);
+	static uint16_t getBerrCountTxErr(struct rtnl_link* link);
+	static uint16_t getBerrCountRxErr(struct rtnl_link* link);
+	static void getBittiming(struct rtnl_link* link, CanBittiming* bittiming);
+	static void getBittimingConst(struct rtnl_link* link, CanBittimingConst* bittiming_const);
+	static std::vector<DeviceFlags> getDeviceFlags(struct rtnl_link* link);
+	static std::vector<ControlMode> getControlMode(struct rtnl_link* link);
 	
 protected:
 	std::string device;
 	
-	Netlink::NetlinkPtr netlink;
+    Netlink::NetlinkWrapperPtr netlink;
 };
 
 } /* namespace CanUtils */

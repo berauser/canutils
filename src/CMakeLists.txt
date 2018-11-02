@@ -35,11 +35,17 @@ IF    ( "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux" )
 	MESSAGE(STATUS "Compiling for Linux...")
 	SET( CANUTILS_SOURCE_DIR "${CANUTILS_LINUX_DIR}" )
 	
+	FIND_PACKAGE(Nl REQUIRED)
+	
+	# additional include paths
+	SET	( CANUTILS_ADDITIONAL_INCS
+			${NL_INCLUDE_DIR}
+		)
+	
 	# build additional libs
-	ADD_SUBDIRECTORY( ${CANUTILS_LINUX_DIR}/netlink )
 	SET	( CANUTILS_ADDITIONAL_LIBS
 			${CANUTILS_ADDITIONAL_LIBS}
-			netlink
+			${NL_LIBRARIES}
 		)
 	
 ELSEIF( "${CMAKE_SYSTEM_NAME}" STREQUAL "Windows" )
@@ -90,6 +96,11 @@ ADD_LIBRARY	( CANUtils_shared SHARED
 			${CANUtils_src}
 		)
 
+TARGET_INCLUDE_DIRECTORIES	( CANUtils_shared
+					PUBLIC
+					${CANUTILS_ADDITIONAL_INCS}
+				)
+		
 TARGET_LINK_LIBRARIES	( CANUtils_shared
 				pthread
 				${CANUTILS_ADDITIONAL_LIBS}

@@ -2,8 +2,7 @@
 #define SRC_LINUX_SOCKETCANSTATISTICSLINUX_H_
 
 #include "SocketCanStatisticsImpl.h"
-#include "netlink/Netlink.h"
-#include "netlink/NetlinkParser.h"
+#include "netlink_wrapper.h"
 
 #include <stdexcept>
 
@@ -24,13 +23,10 @@ protected:
 	virtual CANStatisticsPtr readDevice() override final;
 	virtual int  resetStatistics() override final;
 	
-private:
-	static int copyStatistics( CANStatisticsPtr stats, Netlink::NetlinkParser::DeviceStatisticsPtr nstats );
-	
 protected:
 	std::string device;
 	
-	Netlink::NetlinkPtr netlink;
+	Netlink::NetlinkWrapperPtr netlink;
 };
 
 } /* namespace CanUtils */

@@ -3,17 +3,13 @@
 
 #include <cstring>
 
-#include "netlink/Netlink.h"
-#include "netlink/NetlinkCanParser.h"
-
 #include "logger.h"
 
 namespace CanUtils
 {
-  
-SocketCanStatisticsLinux::SocketCanStatisticsLinux(const std::string& device_arg): SocketCanStatisticsImpl(device_arg), device(device_arg), netlink(nullptr)
+
+SocketCanStatisticsLinux::SocketCanStatisticsLinux(const std::string& device_arg): SocketCanStatisticsImpl(device_arg), device(device_arg), netlink(Netlink::NetlinkWrapperPtr(new Netlink::NetlinkWrapper))
 {
-	static_assert( sizeof( CanUtils::CANStatistics ) == sizeof( Netlink::NetlinkParser::DeviceStatistics ), "CANStatistics and DeviceStatistics has not the same size" ); 
 }
 
 SocketCanStatisticsLinux::~SocketCanStatisticsLinux()
@@ -31,16 +27,11 @@ int SocketCanStatisticsLinux::openDevice()
 		throw std::logic_error("Device is already opened");
 	}
 	
-	netlink = Netlink::NetlinkPtr(new Netlink::Netlink);
-	if( netlink == nullptr )
+	if( netlink->open() < 0 )
 	{
-		throw std::runtime_error("Could not allocate memory");
+		throw std::runtime_error("Could not open netlink");
 	}
 	
-	if( netlink->open() != 0 )
-	{
-		throw std::runtime_error("Could not create netlink socket");
-	}
 	return 0;
 }
 
@@ -50,75 +41,59 @@ int SocketCanStatisticsLinux::closeDevice()
 	{
 		throw std::logic_error("Device is already closed");
 	}
-	
-	netlink.reset();
+	netlink->close();
 	return 0;
 }
 
 bool SocketCanStatisticsLinux::deviceIsOpen()
 {
-	return ( netlink != nullptr );
+	return netlink->isOpen();
 }
 
 CANStatisticsPtr SocketCanStatisticsLinux::readDevice()
 {
 	CANStatisticsPtr stats(new struct CANStatistics);
-	
-	if( stats == nullptr )
+	struct rtnl_link* link =  netlink->link_get(device.c_str());
+	if(link == nullptr)
 	{
-		throw std::bad_alloc();
+		return nullptr; // FIXME
 	}
+	    
+	// Receive stats
+	stats->rx_bytes   = rtnl_link_get_stat(link, RTNL_LINK_RX_BYTES);
+	stats->rx_packets = rtnl_link_get_stat(link, RTNL_LINK_RX_PACKETS);
+	stats->rx_errors  = rtnl_link_get_stat(link, RTNL_LINK_RX_ERRORS);
+	stats->rx_dropped = rtnl_link_get_stat(link, RTNL_LINK_RX_DROPPED);
+	stats->rx_overrun_errors = rtnl_link_get_stat(link, RTNL_LINK_RX_OVER_ERR);
+	stats->rx_multicast      = rtnl_link_get_stat(link, RTNL_LINK_MULTICAST);
+	stats->rx_compressed     = rtnl_link_get_stat(link, RTNL_LINK_RX_COMPRESSED);
+	stats->rx_length_errors  = rtnl_link_get_stat(link, RTNL_LINK_RX_LEN_ERR);
+	stats->rx_crc_errors     = rtnl_link_get_stat(link, RTNL_LINK_RX_CRC_ERR);
+	stats->rx_frame_errors   = rtnl_link_get_stat(link, RTNL_LINK_RX_FRAME_ERR);
+	stats->rx_fifo_errors    = rtnl_link_get_stat(link, RTNL_LINK_RX_FIFO_ERR);
+	stats->rx_missed_errors = rtnl_link_get_stat(link, RTNL_LINK_RX_MISSED_ERR);
 	
-	Netlink::Netlink::DataPtr data = netlink->getDeviceInformation( device );
-	if( data == nullptr )
-	{
-		throw std::bad_alloc();
-	}
+	// Transmit
+	stats->tx_bytes   = rtnl_link_get_stat(link, RTNL_LINK_TX_BYTES);
+	stats->tx_packets = rtnl_link_get_stat(link, RTNL_LINK_TX_PACKETS);
+	stats->tx_errors  = rtnl_link_get_stat(link, RTNL_LINK_TX_ERRORS);
+	stats->tx_dropped = rtnl_link_get_stat(link, RTNL_LINK_TX_DROPPED);
+	stats->tx_carrier_errors   = rtnl_link_get_stat(link, RTNL_LINK_TX_CARRIER_ERR);
+	stats->tx_collisions       = rtnl_link_get_stat(link, RTNL_LINK_COLLISIONS);
+	stats->tx_compressed       = rtnl_link_get_stat(link, RTNL_LINK_TX_COMPRESSED);
+	stats->tx_aborted_errors   = rtnl_link_get_stat(link, RTNL_LINK_TX_ABORT_ERR);
+	stats->tx_fifo_errors      = rtnl_link_get_stat(link, RTNL_LINK_TX_FIFO_ERR);
+	stats->tx_window_errors    = rtnl_link_get_stat(link, RTNL_LINK_TX_WIN_ERR);
+	stats->tx_heartbeat_errors = rtnl_link_get_stat(link, RTNL_LINK_TX_HBEAT_ERR);
 	
-	Netlink::NetlinkParser::DeviceStatisticsPtr nstats = Netlink::NetlinkCanParser::parseStatistics( data );
-	if ( nstats == nullptr )
-	{
-		throw std::runtime_error("Netlink returns a nullptr");
-	}
-	copyStatistics( stats, nstats );
+	netlink->link_put(link);
 	return stats;
 }
 
 int SocketCanStatisticsLinux::resetStatistics()
 {
+	// not possible
 	return -1;
-}
-
-int SocketCanStatisticsLinux::copyStatistics(CANStatisticsPtr stats, Netlink::NetlinkParser::DeviceStatisticsPtr nstats)
-{
-	// Receive stats
-	stats->rx_bytes   = nstats->rx_bytes;
-	stats->rx_packets = nstats->rx_packets;
-	stats->rx_errors  = nstats->rx_errors;
-	stats->rx_dropped = nstats->rx_dropped;
-	stats->rx_overrun_errors = nstats->rx_overrun_errors;
-	stats->rx_multicast      = nstats->rx_multicast;
-	stats->rx_compressed     = nstats->rx_compressed;
-	stats->rx_length_errors  = nstats->rx_length_errors;
-	stats->rx_crc_errors     = nstats->rx_crc_errors;
-	stats->rx_frame_errors   = nstats->rx_frame_errors;
-	stats->rx_fifo_errors    = nstats->rx_fifo_errors;
-	stats->rx_missed_errors = nstats->rx_missed_errors;
-	
-	// Transmit
-	stats->tx_bytes   = nstats->tx_bytes;
-	stats->tx_packets = nstats->tx_packets;
-	stats->tx_errors  = nstats->tx_errors;
-	stats->tx_dropped = nstats->tx_dropped;
-	stats->tx_carrier_errors   = nstats->tx_carrier_errors;
-	stats->tx_collisions       = nstats->tx_collisions;
-	stats->tx_compressed       = nstats->tx_compressed;
-	stats->tx_aborted_errors   = nstats->tx_aborted_errors;
-	stats->tx_fifo_errors      = nstats->tx_fifo_errors;
-	stats->tx_window_errors    = nstats->tx_window_errors;
-	stats->tx_heartbeat_errors = nstats->tx_heartbeat_errors;
-	
-	return 0;
 }
 
 

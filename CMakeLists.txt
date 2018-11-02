@@ -70,6 +70,9 @@ ENDIF( USE_GCOV )
 # add sources
 #
 ################################################################################
+# set module path for find_package
+SET(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+
 SET( EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin"  CACHE INTERNAL "" )
 SET( LIBRARY_OUTPUT_PATH    "${PROJECT_SOURCE_DIR}/lib"  CACHE INTERNAL "" )
 

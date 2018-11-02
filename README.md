@@ -29,9 +29,12 @@ Interface for software CAN mux.
 
 * make
 * cmake
+* libnl-3-dev (Linux, library)
+* libnl-3-200 (Linux, library)
+* libnl-route-3-200 (Linux, library)
 * doxygen  (documentation)
 * graphviz (documentation)
-* ibgtest-dev (testing)
+* libgtest-dev (testing)
 * google-mock (testing)
 
 ### compile ###
