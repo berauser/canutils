@@ -27,11 +27,14 @@ OPTION( USE_GCOV       "Enable gcov flags"       FALSE )
 # versioning
 #
 ################################################################################
+include(${CMAKE_CURRENT_SOURCE_DIR}/versioning.cmake)
+git_version(MAJOR_VERSION MINOR_VERSION PATCH_VERSION CUSTOM_VERSION "release_canutils_")
 
-SET( MAJOR_VERSION "1" )
-SET( MINOR_VERSION "0" )
-SET( PATCH_VERSION "1" )
-SET( VERSION_STRING "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}")
+IF   (CUSTOM_VERSION STREQUAL "")
+	SET( VERSION_STRING "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}")
+ELSE (CUSTOM_VERSION STREQUAL "")
+	SET( VERSION_STRING "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}-${CUSTOM_VERSION}")
+ENDIF(CUSTOM_VERSION STREQUAL "")
 
 ################################################################################
 #
@@ -107,6 +110,9 @@ ENDIF( BUILD_DOC )
 ################################################################################
 MESSAGE( "" )
 MESSAGE( "Summary:" )
+MESSAGE( "" )
+MESSAGE( "Build type: ${CMAKE_BUILD_TYPE}" )
+MESSAGE( "Version:    ${VERSION_STRING}" )
 MESSAGE( "" )
 MESSAGE( "System:    ${CMAKE_SYSTEM_NAME}" )
 MESSAGE( "processor: ${CMAKE_SYSTEM_PROCESSOR}" )
