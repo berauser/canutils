@@ -10,8 +10,6 @@ if(NL_INCLUDE_DIR)
     set(NL_FIND_QUIETLY TRUE)
 endif(NL_INCLUDE_DIR)
 
-MESSAGE("CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH}")
-
 find_path(NL_INCLUDE_DIR netlink/netlink.h
     PATH_SUFFIXES libnl3
 )
